@@ -16,7 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from PaceMaker.views import *
+
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("",HomeView)
+    path("",LoginView.as_view(), name='login'),
+    path('index/', HomeView.as_view(), name='index')
 ]
