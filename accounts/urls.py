@@ -13,13 +13,15 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
+from accounts.views import login, agree
+from django.contrib.auth import views as auth_views
+# ??? 이런 접근이 맞는건가
+from PaceMaker import settings
 
-from PaceMaker.views import *
-
+app_name='accounts'
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("",include('accounts.urls')),
-    path('index/', HomeView.as_view(), name='index'),
+    path('', login, name='login'),
+    path('logout/', auth_views.logout, name='logout', kwargs={'next_page':settings.LOGIN_URL}),
+    path('agree/', agree, name='agree')
 ]

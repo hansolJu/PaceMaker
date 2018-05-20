@@ -6,8 +6,5 @@ from django.contrib.auth.decorators import login_required
 
 
 #--- TemplateView
-class LoginView(TemplateView):
-    template_name = 'login.html'
-
 class HomeView(TemplateView):
     template_name = 'index.html'
