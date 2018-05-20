@@ -29,6 +29,7 @@ class StudentInfo(models.Model):
     #공학인증구분
     enginCertifi = models.CharField(max_length=20)
 
+
 class StudentGrade(models.Model):
     hukbun = models.ForeignKey(StudentInfo,on_delete=models.CASCADE)
     #이수구분
@@ -49,3 +50,49 @@ class StudentGrade(models.Model):
     grade = models.CharField(max_length=50, blank=True,null=True)
     # 유효구분
     valid = models.CharField(max_length=50, blank=True,null=True)
+
+
+class StudentHopeCareers(models.Model):
+    "개인 신상정보 -- 학생취업신상정보"
+    hukbun = models.ForeignKey(StudentInfo,on_delete=models.CASCADE)
+    # 진로구분
+    careers = models.CharField(max_length=50, blank=True,null=True)
+    # 지망순위
+    ranking = models.IntegerField()
+    # 직업(중분류)
+
+    # 직업(소분류)
+    job = models.CharField(max_length=50, blank=True, null=True)
+    # 희망기업
+    Enterprise = models.CharField(max_length=50, blank=True,null=True)
+    # 희망연봉
+    Salary = models.CharField(max_length=50, blank=True,null=True)
+    # 희망근무지역
+    Address = models.CharField(max_length=50, blank=True,null=True)
+
+    def __str__(self):
+        return self.ranking
+
+
+class Schedule(models.Model):
+    # 과목번호
+    subjectCode = models.IntegerField()
+    # 과목이름
+    subjectName = models.CharField(max_length=50, blank=True,null=True)
+    # 추천학년(학교에서)
+    grade = models.IntegerField()
+    # 이수구분
+    eisu = models.CharField(max_length=50, blank=True,null=True)
+    # 학점
+    score = models.IntegerField()
+    # 담당교수
+    professor = models.CharField(max_length=50, blank=True,null=True)
+    # 비고
+    remarks = models.CharField(max_length=50, blank=True, null=True)
+    # 교시
+    time = models.CharField(max_length=50, blank=True,null=True)
+    # 강의실
+    lectureRoom = models.CharField(max_length=100, blank=True,null=True)
+
+    def __str__(self):
+        return self.subjectName

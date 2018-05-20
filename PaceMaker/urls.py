@@ -21,5 +21,5 @@ from PaceMaker.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",LoginView.as_view(), name='login'),
-    path('index/', HomeView.as_view(), name='index')
+    path('index/', HomeView.as_view(), name='index'),
 ]
