@@ -176,51 +176,52 @@ class StudentParser(KutisParser):
 
     def save_info(self, hukbun, infos):
         """Save info from student infomation list to database."""
-        info_object = StudentInfo(hukbun=infos['hukbun'],
-                                  # 성명
-                                  name=infos['name'],
-                                  # 주민등록번호
-                                  jumin=infos['jumin'] ,
-                                  # 한자성명
-                                  name_Hanja=infos['name_Hanja'],
-                                  # 영문성명
-                                  name_English=infos['name_English'] ,
-                                  # 과정구분
-                                  # 캠퍼스구분
-                                  campus=infos['campus'] ,
-                                  # 주야구분
-                                  dayNight=infos['dayNight'] ,
-                                  # 학적구분
-                                  state=infos['state'],
-                                  # 학적변동
-                                  variance=infos['variance'] ,
-                                  # 졸업학점
-                                  graduationCredit=infos['graduationCredit'],
-                                  # 전공
-                                  major=infos['major'] ,
-                                  # 지도교수
-                                  advisor=infos['advisor'],
-                                  # 현 학년학기
-                                  currentGrade=infos['currentGrade'] ,
-                                  # 이수학기 / 편입인정학기
-                                  compleSemester=infos['compleSemester'] ,
-                                  # 조기졸업대상여부
-                                  earlyGraduation=infos['earlyGraduation'] ,
-                                  # 입학일자23
-                                  admission=infos['admission'],
-                                  # 인증구분
-                                  enginCertification=infos['enginCertification'],
-                                  # 거주지주소27
-                                  address=infos['address'],
-                                  # 전화번호
-                                  phone=infos['phone'],
-                                  # 전자우편
-                                  email=infos['email'] ,
-                                  # 휴대폰30
-                                  cellPhone=infos['cellPhone'] ,
-                                  # 보호자전화번호38
-                                  parentsPhone=infos['parentsPhone']
-                                  )
+        info_object = StudentInfo(
+            hukbun=infos['hukbun'],
+            # 성명
+            name=infos['name'],
+            # 주민등록번호
+            jumin=infos['jumin'] ,
+            # 한자성명
+            name_Hanja=infos['name_Hanja'],
+            # 영문성명
+            name_English=infos['name_English'] ,
+            # 과정구분
+            # 캠퍼스구분
+            campus=infos['campus'] ,
+            # 주야구분
+            dayNight=infos['dayNight'] ,
+            # 학적구분
+            state=infos['state'],
+            # 학적변동
+            variance=infos['variance'] ,
+            # 졸업학점
+            graduationCredit=infos['graduationCredit'],
+            # 전공
+            major=infos['major'] ,
+            # 지도교수
+            advisor=infos['advisor'],
+            # 현 학년학기
+            currentGrade=infos['currentGrade'] ,
+            # 이수학기 / 편입인정학기
+            compleSemester=infos['compleSemester'] ,
+            # 조기졸업대상여부
+            earlyGraduation=infos['earlyGraduation'] ,
+            # 입학일자23
+            admission=infos['admission'],
+            # 인증구분
+            enginCertification=infos['enginCertification'],
+            # 거주지주소27
+            address=infos['address'],
+            # 전화번호
+            phone=infos['phone'],
+            # 전자우편
+            email=infos['email'] ,
+            # 휴대폰30
+            cellPhone=infos['cellPhone'] ,
+            # 보호자전화번호38
+            parentsPhone=infos['parentsPhone']
+        )
         info_object.save()
 
     def parse_grade(self):
@@ -279,25 +280,26 @@ class StudentParser(KutisParser):
     def save_grade(self,hukbun, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
-            info_object = StudentGrade(hukbun_id=hukbun,
-                                       # 이수구분
-                                       eisu=td[0],
-                                       # 인증구분
-                                       certification=td[1],
-                                       # 년도학기
-                                       yearNsemester=td[2],
-                                       # 학수코드
-                                       subject_code=td[3],
-                                       # 교과목명
-                                       subject=td[4],
-                                       # 학점
-                                       # 설계학점
-                                       grade_design=td[6],
-                                       # 등급
-                                       grade=td[7],
-                                       # 유효구분
-                                       valid=td[8],
-                                       )
+            info_object = StudentGrade(
+                hukbun_id=hukbun,
+                # 이수구분
+                eisu=td[0],
+                # 인증구분
+                certification=td[1],
+                # 년도학기
+                yearNsemester=td[2],
+                # 학수코드
+                subject_code=td[3],
+                # 교과목명
+                subject=td[4],
+                # 학점
+                # 설계학점
+                grade_design=td[6],
+                # 등급
+                grade=td[7],
+                # 유효구분
+                valid=td[8]
+            )
             info_object.save()
 
     def parse_hope(self):
@@ -347,21 +349,22 @@ class StudentParser(KutisParser):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
 
         for td in tdLists:
-            info_object = StudentHopeCareers(hukbun_id=hukbun,
-                                             # 진로구분
-                                             careers=td[0],
-                                             # 지망순위
-                                             ranking=td[1],
-                                             # 지망순위
-                                             # 직업(소분류)
-                                             job=td[3],
-                                             # 희망기업
-                                             Enterprise=td[4],
-                                             # 희망연봉
-                                             Salary=td[5],
-                                             # 희망근무지역
-                                             Address=td[6]
-                                             )
+            info_object = StudentHopeCareers(
+                hukbun_id=hukbun,
+                # 진로구분
+                careers=td[0],
+                # 지망순위
+                ranking=td[1],
+                # 지망순위
+                # 직업(소분류)
+                job=td[3],
+                # 희망기업
+                Enterprise=td[4],
+                # 희망연봉
+                Salary=td[5],
+                # 희망근무지역
+                Address=td[6]
+            )
             info_object.save()
 
 
@@ -444,28 +447,32 @@ class ServerParser(KutisParser):
         return resultTr
 
 
-    def save_schedule_major(self,hukbun,tdLists):
+    def save_schedule_major(self,year,semester,tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
-            info_object = StudentHopeCareers(hukbun_id=hukbun,
-                                             # 과목번호
-                                             subjectCode=td[0],
-                                             # 과목이름
-                                             subjectName=td[1],
-                                             # 추천학년(학교에서)
-                                             grade=td[2],
-                                             # 이수구분
-                                             eisu=td[3],
-                                             # 학점
-                                             score=td[4],
-                                             # 담당교수
-                                             professor=td[5],
-                                             # 비고
-                                             remarks=td[6],
-                                             # 교시
-                                             time=td[7],
-                                             # 강의실
-                                             lectureRoom=td[8]
-                                             )
+            info_object = StudentHopeCareers(
+                # 년도
+                year = year,
+                # 학기
+                semester = semester,
+                # 과목번호
+                subjectCode=td[0],
+                # 과목이름
+                subjectName=td[1],
+                # 추천학년(학교에서)
+                grade=td[2],
+                # 이수구분
+                eisu=td[3],
+                # 학점
+                score=td[4],
+                # 담당교수
+                professor=td[5],
+                # 비고
+                remarks=td[6],
+                # 교시
+                time=td[7],
+                # 강의실
+                lectureRoom=td[8]
+            )
             info_object.save()
 
