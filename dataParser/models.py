@@ -29,6 +29,12 @@ class StudentInfo(models.Model):
     #공학인증구분
     enginCertifi = models.CharField(max_length=20)
 
+    # object = StudentInfoManager()
+    USERNAME_FIELD = 'hukbun'
+    REQUIRED_FIELDS = []
+    is_anonymous = models.BooleanField()
+    is_authenticated = models.BooleanField()
+
 
 class StudentGrade(models.Model):
     hukbun = models.ForeignKey(StudentInfo,on_delete=models.CASCADE)

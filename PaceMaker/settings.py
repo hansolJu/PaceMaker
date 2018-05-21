@@ -121,12 +121,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 """ Custom Auth를 위한 설정"""
-AUTH_USER_MODEL = 'accounts.StudentInfo'
+AUTH_USER_MODEL = 'dataParser.StudentInfo'
 
 LOGIN_REDIRECT_URL = "/index"
 LOGOUT_REDIRECT_URL = "/"
 LOGIN_URL = "/"
 
 AUTHENTICATION_BACKENDS = [
-    'accounts.my_auth.UserBackend',  # 우리가 만든 AUTH를 먼저 검사
+    'dataParser.my_auth.UserBackend',  # 우리가 만든 AUTH를 먼저 검사
 ]
