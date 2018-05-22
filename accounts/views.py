@@ -32,17 +32,11 @@ def login(request):
 
         parser = KutisParser()
         kutis_login_success = parser.login(hukbun, password)  # 쿠티스 로그인 시도
-        user = UserBackend.authenticate(hukbun=hukbun)
 
         if kutis_login_success:  # 쿠티스 로그인에 성공했다면
-            print('kutis login success')
-            try:
-                # 디비에 회원 정보가 있는지 검사
-                user = StudentInfo.objects.get(hukbun=hukbun)
-            except:
-                user = None
-            # 모든 로그인 성공('user'변수안에 내용이 존재하지 않으면 None임)
-            if not user:
+            user = UserBackend.authenticate(hukbun=hukbun)  # 장고 custom auth
+
+            if not user: # 모든 로그인 성공('user'변수안에 내용이 존재하지 않으면 None임)
                 return render(request, 'index.html', {})
             # 첫 사용자
             else:
@@ -50,7 +44,8 @@ def login(request):
                 parser.save_info("201511868", passingdata)
                 agree(request)
         else:
-            HttpResponse('로그인 실패. 학번과 비밀번호를 확인해주세요.')  # TO DO : 창 띄우기
+            return redirect('accounts:login')
+            #HttpResponse('로그인 실패. 학번과 비밀번호를 확인해주세요.')  # TO DO : 창 띄우기
 
     else:
         form = LoginForm()
