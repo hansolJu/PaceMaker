@@ -35,10 +35,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # parser
-    'dataParser.apps.DataparserConfig',
-    # custom auth
-    'accounts.apps.AccountsConfig',
+    'dataParser.apps.DataparserConfig',# parser
+    'accounts.apps.AccountsConfig',    # custom auth
 ]
 
 MIDDLEWARE = [

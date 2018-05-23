@@ -79,11 +79,11 @@ class StudentHopeCareers(models.Model):
     def __str__(self):
         return self.ranking
 
-class Schedule(models.Model):
+class Course(models.Model):
     # 년도
-    year = models.IntegerField(max_length=4)
+    year = models.IntegerField()
     # 학기
-    semester = models.IntegerField(max_length=1)
+    semester = models.IntegerField()
     # 과목번호
     subjectCode = models.CharField(max_length=15)
     # 과목이름

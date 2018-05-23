@@ -44,11 +44,6 @@ class KutisParser(object):
         return BeautifulSoup(html, "html.parser")
 
     @staticmethod
-    def get_table_data(Obj, table_list):
-        """get table from original data and returns BeautifulSoup object."""
-        return Obj.findAll("table", {'class': table_list})
-
-    @staticmethod
     def parse_string_to_int(duration, default=0):
         """Try to parse string to int, or return default value."""
         try:
@@ -60,10 +55,6 @@ class KutisParser(object):
     def remove_html_tags(data):
         p = re.compile(r'<.*?>')
         return p.sub('', data)
-
-    def parse_item(self,item):
-        pass
-
 
 class StudentParser(KutisParser):
     studentInfoUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj111s.jsp?submenu=1&m_menu=wsco1s02&s_menu=wshj111s'
@@ -371,7 +362,7 @@ class StudentParser(KutisParser):
 class ServerParser(KutisParser):
     """Crawing Semester Schedule and parse data """
 
-    def parse_schedule_major(self,year, semester):
+    def parse_course_major(self, year, semester):
         """년도와 원하는 학기를 받으면 해당 년도 학기에 열린 과목의 정보를 크롤하여 parse한후 리스트에 담아서 리턴한다.
         :param: year(찾고자하는 년도){2009~2018}
         :param: semester(찾고자 하는 학기) {1,2}
@@ -447,7 +438,7 @@ class ServerParser(KutisParser):
         return resultTr
 
 
-    def save_schedule_major(self,year,semester,tdLists):
+    def save_course_major(self, year, semester, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
             info_object = StudentHopeCareers(
@@ -476,3 +467,6 @@ class ServerParser(KutisParser):
             )
             info_object.save()
 
+
+    def parse_course_detail(self,year, semester, course_num, profess_num):
+        pass

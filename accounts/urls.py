@@ -22,6 +22,6 @@ from PaceMaker import settings
 app_name='accounts'
 urlpatterns = [
     path('', login, name='login'),
-    path('logout/', auth_views.logout, name='logout', kwargs={'next_page':settings.LOGIN_URL}),
+    # path('logout/', auth_views.logout, name='logout', kwargs={'next_page':settings.LOGIN_URL}),
     path('agree/', agree, name='agree')
 ]
