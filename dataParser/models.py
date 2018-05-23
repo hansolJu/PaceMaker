@@ -33,7 +33,7 @@ class StudentInfo(models.Model):
     USERNAME_FIELD = 'hukbun'
     REQUIRED_FIELDS = []
     is_anonymous = models.BooleanField()
-    is_authenticated = models.BooleanField()
+    is_authenticated = models.BooleanField(default=True)
 
 
 class StudentGrade(models.Model):
