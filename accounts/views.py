@@ -1,16 +1,15 @@
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 from dataParser.models import StudentInfo
 from dataParser.parser import *
-from .forms import LoginForm, AgreeForm
-from .my_auth import UserBackend
-from .custom_auth import check_if_user
-from django.contrib.auth import login, logout
-from django.contrib.auth.decorators import login_required
+from accounts.forms import LoginForm, AgreeForm
+from accounts.my_auth import UserBackend
+from accounts.custom_auth import check_if_user
+from django.contrib.auth import login as django_login, logout
 
 hukbunToSave = ''
 passwordToSave = ''
+
 def agree(request):
     global hukbunToSave, passwordToSave
     if request.method == 'POST':
@@ -51,7 +50,7 @@ def login(request):
         if kutis_login_success:  # 쿠티스 로그인에 성공했다면
             user = userBackend.authenticate(hukbun=hukbun)  # DB 조사
             if user: # 모든 로그인 성공('user'변수안에 내용이 존재하지 않으면 None임)
-                login(request, user)
+                django_login(request, user)
                 return render(request, 'index.html', {})
             # 첫 사용자
             else:
