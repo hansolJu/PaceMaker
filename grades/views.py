@@ -34,5 +34,5 @@ class GeGradeLV(ListView):
     context_object_name = 'ge_list'
 
     def get_queryset(self):
-        test = self.request.user.hakbun
-        return StudentGrade.objects.filter(hakbun=test).filter(Q(eisu='M자')|Q(eisu='필수')|Q(eisu='역철')|Q(eisu='경사')|Q(eisu='체기')|Q(eisu='사회'))
+        test = self.request.user.hukbun
+        return StudentGrade.objects.filter(hukbun=test).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회'))

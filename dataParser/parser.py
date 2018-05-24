@@ -249,6 +249,8 @@ class StudentParser(KutisParser):
                             if resultTr[i - 1].__len__() == 8:
                                 resultTr[i - 1].insert(0, tmp)
                                 # print(resultTr[i-1])
+                    elif resultTd.__len__() <3:
+                        pass
                     else:
                         resultTr.append(resultTd)
         # print(resultTh)

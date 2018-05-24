@@ -37,6 +37,9 @@ class StudentInfo(models.Model):
     is_anonymous = models.NullBooleanField()
     is_authenticated = models.BooleanField(default=True)
 
+    def __str__(self):
+        return self.name
+
 
 class StudentGrade(models.Model):
     hukbun = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
