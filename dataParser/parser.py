@@ -187,7 +187,7 @@ class StudentParser(KutisParser):
             # 학적변동
             variance=infos['variance'] ,
             # 졸업학점
-            graduationCredit=infos['graduationCredit'],
+            gradeCredit=infos['graduationCredit'],
             # 전공
             major=infos['major'] ,
             # 지도교수
@@ -477,19 +477,22 @@ class ServerParser(KutisParser):
               "&gyosu_no="+str(profess_num)+ \
               "&gwajung=1"
         soup = self.get_original_data(url)
-
+        result = []
         tables = soup.findAll("table", {'class': 'list06'})
         # table[1] 교과목 해설
         Course_description_th = self.remove_html_tags(str(tables[1].findAll("th")))
-        Course_description = self.remove_html_tags(str(tables[1].findAll("td")))
-
+        Course_description = self.remove_html_tags(str(tables[1].findAll("td")[0]))
+        result.append(Course_description)
         print(Course_description_th)
         print(Course_description)
         print("----------------")
         # table[2] 새부핵심역량 과의 관계
         Core_Competencies_th = self.remove_html_tags(str(tables[2].findAll("th")))
-        Core_Competencies = self.remove_html_tags(str(tables[2].findAll("td")))
-
+        Core_Competencies = tables[2].findAll("td")
+        list = []
+        for td in Core_Competencies:
+            list.append(self.remove_html_tags(str(td)))
+        result.append(list)
         print(Core_Competencies_th)
         print(Core_Competencies)
         print("----------------")
@@ -526,6 +529,193 @@ class ServerParser(KutisParser):
             else:
                 nextRow = False
                 tmp = ''
+
+        result.append(resultRow)
         print(evaluation_th)
         print(resultRow)
         print("----------------")
+
+        # table[4] 강의방법 <input 으로 split 후 'checked'을 포함하는지 확인후, 테그삭제후 리턴
+        Lecture_method_th = self.remove_html_tags(str(tables[4].findAll("th")))
+        print(Lecture_method_th)
+        Lecture_methods = tables[4].findAll("td")
+        result_td = []
+        for Lecture_method in Lecture_methods:
+            tdRemove = (str)(Lecture_method)
+            tdRemove = tdRemove.replace('\xa0', "")
+            tdRemove = tdRemove.replace('\n', "")
+            tdRemove = tdRemove.replace('\t', "")
+            # print(tdRemove)
+            tdRemove = tdRemove.split('<input')
+
+            # print(tdRemove)
+            for i in tdRemove:
+                # print(i)
+                if 'checked' in i:
+                    i = '<input' + i
+                    i = self.remove_html_tags(i)
+                    result_td.append(i)
+        result.append(result_td)
+        print(result_td)
+        print("------------------")
+
+        # table[5] 과제물
+        Assignment_th = self.remove_html_tags(str(tables[5].findAll("th")))
+        Assignment = self.remove_html_tags(str(tables[5].findAll("td")[0]))
+
+        result.append(Assignment)
+        print(Assignment_th)
+        print(Assignment)
+        print("----------------")
+
+        # table[6] 성적 구성비율 존나 머리 안돌아가서 하드코딩되있음.
+        composition_ratio = self.remove_html_tags(
+            str(tables[6].findAll("td")).replace('\n', "").replace("\t", "").replace("\xa0", ""))
+        list = composition_ratio.replace('[', "").replace(']', "").split(",")
+
+        th = []
+        td = []
+        for i in list:
+            th_td = i.split(" ")
+            if th_td.__len__() > 2:
+                th.append(th_td[0] + th_td[1] + th_td[2])
+                td.append(th_td[3])
+
+                th.append(th_td[5])
+                td.append(th_td[7])
+            else:
+                th.append(th_td[0])
+                td.append(th_td[1])
+        result.append(td)
+        print(th)
+        print(td)
+        print("----------------")
+
+        # table[7] 주별 강좌내용
+        course_contents_th = self.remove_html_tags((str)(tables[7].findAll("th")))
+        rows = tables[7].findAll("tr")
+        resultRow_course = []
+        for columns in rows:
+            resultColumn = []
+            columns = columns.findAll("td")
+            for column in columns:
+                resultColumn.append(
+                    self.remove_html_tags(str(column)).replace('\n', "").replace("\t", "").replace("\xa0", ""))
+                # print("result column :",resultColumn)
+            if resultColumn:
+                resultRow_course.append(resultColumn)
+
+        result.append(resultRow_course)
+        print(course_contents_th)
+        print(resultRow_course)
+
+        print("----------------")
+
+        # table[8] 책
+        book_th = self.remove_html_tags((str)(tables[8].findAll("th")))
+        book = tables[8].findAll("td")
+        list = []
+        for td in book:
+            list.append(self.remove_html_tags(str(td)))
+        result.append(list)
+        print(book_th)
+        print(book)
+        print("----------------")
+        return result
+
+
+    def save_course_detail(self,year, semester, course_num, list):
+        info_object = Subject_desription(
+            year = year,
+            semester = semester,
+            subjectCode= course_num,
+            desription = list[0]
+        )
+        info_object.save()
+
+        info_object = Core_Competence(
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
+            Knowledge_application=list[1][0],
+            verification_ability = list[1][1],
+            problem_solving = list[1][2],
+            tool_utilization = list[1][3],
+            design_ability = list[1][4],
+            teamwork_skill = list[1][5],
+            communication = list[1][6],
+            understanding_of_influence = list[1][7],
+            responsibility = list[1][8]
+
+        )
+        info_object.save()
+        for i in list[2]:
+            info_object = Learning_Objectives(
+                year=year,
+                semester=semester,
+                subjectCode=course_num,
+                Core_competencies=i[0],
+                detailed_core_competencies = i[1],
+                reflectance = i[2],
+                learning_objectives = i[3],
+                performance_criteria = i[4],
+                achievement_goals = i[5],
+                evaluation_methods = i[6],
+            )
+            info_object.save()
+
+        info_object = Lecture_method(
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            # [강의형태, 수업방식, 교육용기자재]
+            Lecture_type=list[3][0],
+            teaching_method = list[3][1],
+            educational_equipment = list[3][2]
+        )
+        info_object.save()
+
+        info_object = Assignment(
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            Assignment=list[4]
+        )
+        info_object.save()
+
+        info_object = School_composition_ratio(
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            Midterm_exam=list[5][0],
+            final_exam = list[5][1],
+            attendance = list[5][2],
+            assignments_and_others = list[5][3],
+            grading_division = list[5][4]
+        )
+        info_object.save()
+        for i in list[6]:
+            info_object = Weekly_course_contents(
+                year=year,
+                semester=semester,
+                subjectCode=course_num,
+
+                week=i[0],
+                contents = i[1],
+                methods = i[2],
+                related_materials = i[3],
+                assignments = i[4]
+            )
+            info_object.save()
+
+        info_object = Book(
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            title=list[7][0],
+            author = list[7][1],
+            publisher = list[7][2],
+            year_of_publication = list[7][3],
+        )
+        info_object.save()
