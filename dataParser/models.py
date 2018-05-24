@@ -1,12 +1,14 @@
 from compositefk.fields import CompositeForeignKey
 from django.db import models
+from django.contrib.auth.models import BaseUserManager, AbstractUser
+from django.contrib.auth.hashers import make_password
 
 
 # Create your models here.
+class StudentInfo(AbstractUser):
 
-class StudentInfo(models.Model):
     hukbun = models.CharField(max_length=15, primary_key=True)
-    name = models.CharField(max_length=10, blank=True, null=True)
+    #name = models.CharField(max_length=10, blank=True, null=True) username으로 사용합시다
     jumin = models.CharField(max_length=12, blank=True, null=True)
     # 과정구분
     course = models.CharField(max_length=5, blank=True, null=True)
@@ -31,14 +33,27 @@ class StudentInfo(models.Model):
     # 공학인증구분
     enginCertification = models.CharField(max_length=20, blank=True, null=True)
 
-    # object = StudentInfoManager()
     USERNAME_FIELD = 'hukbun'
-    REQUIRED_FIELDS = []
-    is_anonymous = models.NullBooleanField()
-    is_authenticated = models.BooleanField(default=True)
+    REQUIRED_FIELDS = ['username', 'email']
+    # is_anonymous = models.NullBooleanField()
+    # is_active = models.BooleanField(default=True)
+    # is_admin = models.BooleanField(default=False)
+    # is_superuser = models.BooleanField(default=False)
+    # is_staff = models.BooleanField(default=False)
+    #
+    # @property
+    # def is_authenticated(self):
+    #     """
+    #     Always return True. This is a way to tell if the user has been
+    #     authenticated in templates.
+    #     """
+    #     return True
+    # def set_password(self, raw_password):
+    #     self.password = make_password(raw_password)
+    #     self._password = raw_password
 
     def __str__(self):
-        return self.name
+        return self.username
 
 
 class StudentGrade(models.Model):
