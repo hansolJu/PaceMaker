@@ -18,9 +18,9 @@ def agree(request):
             if hukbunToSave == '' or passwordToSave == '': #혹시 모를 에러 검사
                 print('데이터 저장 안됨')
                 return redirect('accounts:login')
-            test = StudentParser()
-            test.login(hukbunToSave, passwordToSave)
-            test.save_info(hukbunToSave, test.parse_info())
+            test = StudentParser(hukbunToSave, passwordToSave)
+            test.save_info(test.parse_info())
+            test.save_grade(hukbunToSave, test.parse_grade())
             # TO-DO : 동의성공 창 띄우기
             # TO-DO : 디비에 데이터 저장하기
             userBackend = UserBackend()

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Major Subject Grade List</title>
+</head>
+<body>
+<h1>전공 성적</h1>
+{% for grade in major_list %}
+    <ul>
+        <li>{{ grade.hakbun }}</li>
+        <li>{{ grade.eisu }}</li>
+        <li>{{ grade.certification }}</li>
+        <li>{{ grade.yearNsemester }}</li>
+        <li>{{ grade.subject_code }}</li>
+        <li>{{ grade.score }}</li>
+        <li>{{ grade.grade_design }}</li>
+        <li>{{ grade.grade }}</li>
+        <li>{{ grade.valid }}</li>
+    </ul>
+{% endfor %}
+</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Grades_list</title>
+</head>
+<body>
+<h1>성적</h1>
+
+{% for grade in grades_list %}
+    <!-- 아래 두개의 url은 같다. -->
+    <ul>
+        <li>{{ grade.hakbun }}</li>
+        <li>{{ grade.eisu }}</li>
+        <li>{{ grade.certification }}</li>
+        <li>{{ grade.yearNsemester }}</li>
+        <li>{{ grade.subject_code }}</li>
+        <li>{{ grade.score }}</li>
+        <li>{{ grade.grade_design }}</li>
+        <li>{{ grade.grade }}</li>
+        <li>{{ grade.valid }}</li>
+    </ul>
+{% endfor %}
+
+<br/>
+
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>교양 성적</title>
+</head>
+<body>
+<h1>교양 성적</h1>
+{% for grade in ge_list %}
+<ul>
+    <li>{{ grade.hakbun }}</li>
+        <li>{{ grade.eisu }}</li>
+        <li>{{ grade.certification }}</li>
+        <li>{{ grade.yearNsemester }}</li>
+        <li>{{ grade.subject_code }}</li>
+        <li>{{ grade.score }}</li>
+        <li>{{ grade.grade_design }}</li>
+        <li>{{ grade.grade }}</li>
+        <li>{{ grade.valid }}</li>
+</ul>
+{% endfor %}
+</body>
+</html>

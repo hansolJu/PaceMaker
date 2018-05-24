@@ -173,7 +173,7 @@ class StudentParser(KutisParser):
             # 학적변동
             variance=infos['variance'],
             # 졸업학점
-            gradeCredit=infos['graduationCredit'],
+            graduationCredit=infos['graduationCredit'],
             # 전공
             major=infos['major'],
             # 지도교수
@@ -252,7 +252,7 @@ class StudentParser(KutisParser):
                     else:
                         resultTr.append(resultTd)
         # print(resultTh)
-        # print(resultTr)
+        #print(resultTr)
         return resultTr
 
     @staticmethod

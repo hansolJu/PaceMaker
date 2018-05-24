@@ -290,7 +290,19 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a href="tables.html"><i class="fa fa-table fa-fw"></i> Tables</a>
+                    <a href="index.html"><i class="fa fa-table fa-fw"></i> 성적<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="{% url 'grades:semester' %}">학기 성적</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'grades:major' %}">전공 성적</a>
+                        </li>
+                        <li>
+                            <a href="morris.html">교양 성적</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
                 </li>
                 <li>
                     <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
