@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dataParser.apps.DataparserConfig',# parser
     'accounts.apps.AccountsConfig',    # custom auth
+    'community.apps.CommunityConfig',  #커뮤니티 게시판
+    'tagging.apps.TaggingConfig',      #게시판 태그
     'grades.apps.GradesConfig',
     'classes.apps.ClassesConfig',
 

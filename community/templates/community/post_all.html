@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %} {# css파일을 쓰려면 무조건 써줘야함 ! setting.py에서도 경로 설정 해줘야함 #}
+{% block title %}커뮤니티 리스트{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">커뮤니티</h1>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <h4><td>현재 페이지 게시물 수: {{ object_list.count }}</td></h4>
+
+        <table class="table table-hover">
+            <tr>
+                <th ><p align="center">번호</p></th>
+                <th ><p align="center">작성자</p></th>
+                <th ><p align="center">제목</p></th>
+                <th ><p align="center">등록일(수정일)</p></th>
+                <th ><p align="center">조회수</p></th>
+            </tr>
+
+            {% for item in object_list %}
+                <tr>
+                    <td width=30><p align="center">{{ item.id }}</p></td>
+                    <td width=50><p align="center">{{ item.owner.name }} ({{ item.owner.hukbun }})</p></td>
+                    <td width=320><p align="center">
+                        <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                    </p></td>
+                    <td width=115><p align="center">{{ item.modify_date|date:"Y년 N d일" }}</p></td>
+                    <td width=100><p align="center">{{ item.hits }}</p></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <hr/>
+        <a class="btn btn-default pull-right" OnClick="location.href='{% url 'community:add' %}'">글쓰기</a>
+        <br/>
+        {# <input type=button value="글쓰기"  OnClick="location.href='{% url 'cm:add' %}'"> #}
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2">
+                    <div class="input-group">
+                        {#                        <div class="input-group-btn search-panel">#}
+                        {#                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">#}
+                        {#                                <span id="search_concept">종류</span> <span class="caret"></span>#}
+                        {#                            </button>#}
+                        {#                            <ul class="dropdown-menu" role="menu">#}
+                        {#                                <li><a href="#contains">Contains</a></li>#}
+                        {#                                <li><a href="#its_equal">It's equal</a></li>#}
+                        {#                                <li><a href="#greather_than">Greather than ></a></li>#}
+                        {#                                <li><a href="#less_than">Less than < </a></li>#}
+                        {#                                <li class="divider"></li>#}
+                        {#                                <li><a href="#all">Anything</a></li>#}
+                        {#                            </ul>#}
+                        {#                        </div>#}
+                        {#                        <input type="hidden" name="search_param" value="all" id="search_param">#}
+                        <input type="text" class="form-control" name="x" placeholder="검색어를 입력하세요..">
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-default" type="button"><span class="glyphicon glyphicon-search"></span></button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br/>
+        <br/>
+
+{#        {% if object_list %}#}
+{#            {% for post in object_list %}#}
+{#                <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a> </h2>#}
+{#                {{ post.modify_date|date:"N d, Y" }}#}
+{#                <p>{{ post.description }}</p>#}
+{#            {% endfor %}#}
+{##}
+{#        {% elif search_term %}#}
+{#            <b><i>검색어 ({{search_term }}) 는 발견되지 않았습니다. </i></b>#}
+{#        {% endif %}#}
+
+
+        <div align="center">
+
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                    {% if page_obj.has_previous %}
+
+                        <li class="page-link"><a href="?page={{ page_obj.previous_page_number }}"><span>이전</span></a></li>
+
+                    {% else %}
+                        <li class="page-item disabled">
+                    <a href="#"><span>이전</span></a>
+                    </li>
+                    {% endif %}
+
+                        {% for page in paginator.page_range %}
+                            <li class="page-item" {% if page == page_obj.number %}class="active"{% endif %}>
+                            <a href="?page={{ page }}">{{ page }}</a></li>
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-link"><a href="?page={{ page_obj.next_page_number }}"><span>다음</span></a></li>
+                        {% else %}
+                            <li class="page-item disabled">
+                    <a href="#"><span>다음</span></a>
+                    </li>
+                        {% endif %}
+                </ul>
+                </nav>
+
+        </div>
+
+
+    </div>
+{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>
+
+
+{# <li {% if not page_obj.has_next %}class="disabled"{% endif %}>  #}

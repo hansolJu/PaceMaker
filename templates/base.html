@@ -46,7 +46,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="index.html">Pace MAKER</a>
+        <a class="navbar-brand" href="{% url "index" %}">Pace MAKER v0.1</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -305,8 +305,21 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>
+                    <a href="#"><i class="fa fa-edit fa-fw"></i> 커뮤니티<span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="{% url 'community:post_list' %}">중고 장터</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'community:post_list' %}">정보 교류</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
                 </li>
+
+{#                <li>#}
+{#                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>#}
+{#                </li>#}
                 <li>
                     <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
