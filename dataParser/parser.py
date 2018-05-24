@@ -1,9 +1,7 @@
 import os,re,time
 from bs4 import BeautifulSoup
 from selenium import webdriver
-
 from dataParser.models import *
-
 
 
 class KutisParser(object):
@@ -111,6 +109,7 @@ class StudentParser(KutisParser):
         # 영문성명
         infos['name_English'] = resultTd[5]
         # 과정구분
+        infos['course'] = resultTd[6]
         # 캠퍼스구분
         infos['campus'] = resultTd[7]
         # 주야구분
@@ -173,15 +172,16 @@ class StudentParser(KutisParser):
             name=infos['name'],
             # 주민등록번호
             jumin=infos['jumin'] ,
-            # 한자성명
-            name_Hanja=infos['name_Hanja'],
-            # 영문성명
-            name_English=infos['name_English'] ,
+            # # 한자성명
+            # name_Hanja=infos['name_Hanja'],
+            # # 영문성명
+            # name_English=infos['name_English'] ,
             # 과정구분
-            # 캠퍼스구분
-            campus=infos['campus'] ,
-            # 주야구분
-            dayNight=infos['dayNight'] ,
+            course=infos['course'],
+            # # 캠퍼스구분
+            # campus=infos['campus'] ,
+            # # 주야구분
+            # dayNight=infos['dayNight'] ,
             # 학적구분
             state=infos['state'],
             # 학적변동
@@ -202,16 +202,16 @@ class StudentParser(KutisParser):
             admission=infos['admission'],
             # 인증구분
             enginCertification=infos['enginCertification'],
-            # 거주지주소27
-            address=infos['address'],
-            # 전화번호
-            phone=infos['phone'],
-            # 전자우편
-            email=infos['email'] ,
-            # 휴대폰30
-            cellPhone=infos['cellPhone'] ,
-            # 보호자전화번호38
-            parentsPhone=infos['parentsPhone']
+            # # 거주지주소27
+            # address=infos['address'],
+            # # 전화번호
+            # phone=infos['phone'],
+            # # 전자우편
+            # email=infos['email'] ,
+            # # 휴대폰30
+            # cellPhone=infos['cellPhone'] ,
+            # # 보호자전화번호38
+            # parentsPhone=infos['parentsPhone']
         )
         info_object.save()
 
@@ -467,6 +467,65 @@ class ServerParser(KutisParser):
             )
             info_object.save()
 
-
+    # course_num = 그학기에 해당하는 과목번호
     def parse_course_detail(self,year, semester, course_num, profess_num):
-        pass
+        url = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?" \
+              "year="+str(year)+ \
+              "&hakgi="+str(semester)+ \
+              "&jojik=A1000" \
+              "&gwamok_no="+str(course_num)+ \
+              "&gyosu_no="+str(profess_num)+ \
+              "&gwajung=1"
+        soup = self.get_original_data(url)
+
+        tables = soup.findAll("table", {'class': 'list06'})
+        # table[1] 교과목 해설
+        Course_description_th = self.remove_html_tags(str(tables[1].findAll("th")))
+        Course_description = self.remove_html_tags(str(tables[1].findAll("td")))
+
+        print(Course_description_th)
+        print(Course_description)
+        print("----------------")
+        # table[2] 새부핵심역량 과의 관계
+        Core_Competencies_th = self.remove_html_tags(str(tables[2].findAll("th")))
+        Core_Competencies = self.remove_html_tags(str(tables[2].findAll("td")))
+
+        print(Core_Competencies_th)
+        print(Core_Competencies)
+        print("----------------")
+
+        # table[3] 교과목 학습목표 및 평가방법 td 갯수세기
+        evaluation_th = self.remove_html_tags(str(tables[3].findAll("th")))
+        rows = tables[3].findAll("tr")
+
+        count = 0
+        tmp = ''
+        nextRow = False
+        resultRow = []
+
+        for columns in rows:
+            resultColumn = []
+            columns = columns.findAll("td")
+            if nextRow == True:
+                resultColumn.append(tmp)
+                count -= 1
+            for column in columns:
+                # 핵심역량인지 판별한후, 맞으면 저장, 몇번해야할지도 저장
+                if 'rowspan' in str(column):
+                    tmp = self.remove_html_tags(str(column))
+                    count = int(re.findall('\d+', str(column))[0]) - 1
+                resultColumn.append(self.remove_html_tags(str(column)).replace('\n', ""))
+                # print("result column :",resultColumn)
+
+            if resultColumn:
+                resultRow.append(resultColumn)
+
+            # 핵심역량을 몇번 출력할지 확인
+            if count != 0:
+                nextRow = True
+            else:
+                nextRow = False
+                tmp = ''
+        print(evaluation_th)
+        print(resultRow)
+        print("----------------")
