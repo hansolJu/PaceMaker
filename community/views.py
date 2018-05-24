@@ -44,23 +44,24 @@ class PostTOL(TaggedObjectList):
     model = Post
     template_name = 'tagging/tagging_post_list.html'
 
+
 # --- DeatilView
 class PostDV(LoginRequiredMixin,DetailView):
     model = Post
     template_name = 'community/post_detail.html'
 
-    def pageCounter(self, pk):
-        post = Post.objects.get(id=pk)
-        post.hits += 1
-        post.save()
-        return render('blog/post_detail.hmtl', {'post': post})
+    # def pageCounter(self, pk):
+    #     post = Post.objects.get(id=pk)
+    #     post.hits += 1
+    #     post.save()
+    #     return render('community/post_detail.hmtl', {'post': post})
 
 
 
 # --- CRUD View
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = Post
-    fields = ['title', 'slug', 'description', 'content', 'tag']
+    fields = ['title',  'description', 'content', 'tag']
     initial = {'slug': 'auto-filling-do-not-input'}
     # slug 필드를 처리하는 또 다른 방법은 fields속성에서 제외해 폼에 나타나지 않도록 하는 방법입니다. \
     # 폼에는 보이지 않지만, Post 모델의 save()함수에 의해 테리블의 레코드에는 자동으로 채워집니다.
@@ -74,11 +75,11 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 
 class PostUpdateView(LoginRequiredMixin, UpdateView):
     model = Post
-    fields = ['title', 'slug', 'description', 'content', 'tag']
-    success_url = reverse_lazy('community:index')
+    fields = ['title', 'description', 'content', 'tag']
+    success_url = reverse_lazy('community:post_list')
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
-    success_url = reverse_lazy('community:index')
+    success_url = reverse_lazy('community:post_list')
 # Create your views here.

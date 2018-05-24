@@ -4,6 +4,7 @@ from tagging.fields import TagField
 from dataParser.models import StudentInfo
 from django.utils.text import slugify
 
+
 class Post(models.Model):
     title =  models.CharField('제목', max_length=50)
     slug = models.SlugField('슬러그', unique=True, allow_unicode=True, help_text='one word for title alias.')
