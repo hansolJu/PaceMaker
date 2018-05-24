@@ -14,26 +14,26 @@ class StudentInfo(models.Model):
     # 학적변동
     variance = models.CharField(max_length=10, blank=True, null=True)
     # 졸업학점
-    gradeCredit = models.CharField(max_length=10, blank=True, null=True)
+    graduationCredit = models.CharField(max_length=10, blank=True, null=True)
     # 전공
     major = models.CharField(max_length=20, blank=True, null=True)
     # 지도교수
     advisor = models.CharField(max_length=10, blank=True, null=True)
     # 현학년학기
-    cntCredit = models.CharField(max_length=10, blank=True, null=True)
+    currentGrade = models.CharField(max_length=10, blank=True, null=True)
     # 이수학기/현입인정학기
     compleSemester = models.CharField(max_length=3, blank=True, null=True)
     # 조기졸업대상여부 ???이거 못정하겠음.
-    earlyGradu = models.CharField(max_length=1, blank=True, null=True)
+    earlyGraduation = models.CharField(max_length=1, blank=True, null=True)
     # 입학일자
     admission = models.CharField(max_length=10, blank=True, null=True)
     # 공학인증구분
-    enginCertifi = models.CharField(max_length=20, blank=True, null=True)
+    enginCertification = models.CharField(max_length=20, blank=True, null=True)
 
     # object = StudentInfoManager()
     USERNAME_FIELD = 'hukbun'
     REQUIRED_FIELDS = []
-    is_anonymous = models.BooleanField()
+    is_anonymous = models.NullBooleanField()
     is_authenticated = models.BooleanField(default=True)
 
 

@@ -24,7 +24,7 @@ def agree(request):
             # TO-DO : 동의성공 창 띄우기
             # TO-DO : 디비에 데이터 저장하기
             userBackend = UserBackend()
-            login(request, userBackend.get_user(hukbunToSave)) #로그인
+            django_login(request, userBackend.get_user(hukbunToSave)) #로그인
             hukbunToSave = ''
             passwordToSave = ''
             return render(request, 'index.html', {}) #인덱스 페이지 이동
