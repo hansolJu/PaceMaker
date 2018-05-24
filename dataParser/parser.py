@@ -86,7 +86,7 @@ class StudentParser(KutisParser):
         # 학번
         infos['hukbun'] = resultTd[1]
         # 성명
-        infos['name'] = resultTd[2]
+        infos['username'] = resultTd[2]
         # 주민등록번호
         infos['jumin'] = resultTd[3]
         # 한자성명
@@ -155,7 +155,7 @@ class StudentParser(KutisParser):
         info_object = StudentInfo(
             hukbun=infos['hukbun'],
             # 성명
-            name=infos['name'],
+            username=infos['username'],
             # 주민등록번호
             jumin=infos['jumin'],
             # # 한자성명
