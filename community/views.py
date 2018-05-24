@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import render
 from tagging.views import TaggedObjectList
 
-from PaceMaker.views import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from community.models import Post
 from dataParser.models import StudentInfo
 
