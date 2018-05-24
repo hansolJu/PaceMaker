@@ -21,5 +21,6 @@ from PaceMaker.views import *
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("",include('accounts.urls')),
+    path("",include('classes.urls')),
     path('index/', HomeView.as_view(), name='index'),
 ]
