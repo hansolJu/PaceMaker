@@ -27,7 +27,8 @@ def agree(request):
             django_login(request, userBackend.get_user(hukbunToSave)) #로그인
             hukbunToSave = ''
             passwordToSave = ''
-            return render(request, 'index.html', {}) #인덱스 페이지 이동
+            return redirect('index')
+            #return render(request, 'index.html', {}) #인덱스 페이지 이동
     else:
         form = AgreeForm()
         return render(request, 'agree.html', {'form': form})
@@ -51,7 +52,8 @@ def login(request):
             user = userBackend.authenticate(hukbun=hukbun)  # DB 조사
             if user: # 모든 로그인 성공('user'변수안에 내용이 존재하지 않으면 None임)
                 django_login(request, user)
-                return render(request, 'index.html', {})
+                return redirect('index')
+                #return render(request, 'index.html', {})
             # 첫 사용자
             else:
                 hukbunToSave = hukbun
@@ -60,7 +62,6 @@ def login(request):
                 #agree(request, hukbun, password)
         else:
             return redirect('accounts:login')
-            #HttpResponse('로그인 실패. 학번과 비밀번호를 확인해주세요.')  # TO DO : 창 띄우기
 
     else:
         form = LoginForm()

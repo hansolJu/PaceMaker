@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}전공상세정보{% endblock %}
+
+{% block content %}
+    <div id="content">
+        <p class="other_posts">
+            {% if object.get_previous_by_modify_date %}
+                <a href="{{ object.get_previous_post.get_absolute_url }}" title="View previous subject"> &laquo;--{{ object.get_previous_post }}</a>
+            {% endif %}
+
+            {% if object.get_next_by_modify_date %}
+                | <a href="{{ object.get_next_post.get_absolute_url }}" title="View next subject">{{ object.get_next_post }}--&raquo;</a>
+            {% endif %}
+        </p>
+
+        <p class="date">{{ object.title }}</p> <!-- 추가해야함 -->
+        <br />
+
+        <div class="body">
+            <!-- 추가해야함 -->
+        </div>
+    </div>
+{% endblock %}
