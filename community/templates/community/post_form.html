@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% load static %} {# css파일을 쓰려면 무조건 써줘야함 ! setting.py에서도 경로 설정 해줘야함 #}
+{% load widget_tweaks %}
+
+{% block title %}커뮤니티 리스트{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">Write</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <h3 align="center">Blog Create/Update - {{ user.name }}</h3>
+
+    <form action="." method="post">{% csrf_token %}
+
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        {% for field in form.visible_fields %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field|add_class:'form-control' }}
+                {% for error in field.errors %}
+                    <span class="help-block">{{ error }}</span>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+
+        <div class="center-block" style='width:300px'>
+            <input class = "btn btn-default" type="submit" value="저장하기">
+            <input class = "btn btn-default" type="reset" value="다시쓰기">
+            <input class = "btn btn-default" type="button" value="Back" onclick="history.back(1)"></div>
+
+        <script type="text/javascript">document.getElementById('id_title').focus();</script>
+    </form>
+{% endblock %}
+{#        {% if form.errors %}#}
+{#            <p class="errornote">Wrong! Please correct the error(s) below.</p>#}
+{#        {% endif %}#}
+
+{#            <div class="form-group">#}
+{#            <label for="subject">{{ form.title.label_tag }}</label>#}
+{#            <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title" >#}
+{#                {{ form.title }}#}
+{#            </div>#}
+{##}
+{#            <div class="form-group">#}
+{#            <label for="slug">{{ form.slug.label_tag }}</label>#}
+{#            <input type="text" class="form-control" name ="slug" id="slug" placeholder="slug">#}
+{#                {{ form.slug }}#}
+{#            </div>#}
+{##}
+{#            <div class="form-group">#}
+{#            <label for="description">{{ form.description.label_tag }}</label>#}
+{#            <input type="text" class="form-control" name ="description" id="description" placeholder="한줄로 쓰시오">#}
+{#                {{ form.description }}#}
+{#            </div>#}
+{##}
+{#            <div class="form-group">#}
+{#            <label for="tag">{{ form.tag.label_tag }}</label>#}
+{#            <input type="text" class="form-control" name ="tag" id="tag" placeholder="한줄로 쓰시오">#}
+{#                {{ form.tag }}#}
+{#            </div>#}
+{##}
+{#            <div class="form-group">#}
+{#            <label for="content">{{ form.content.label_tag }}</label>#}
+{#            <textarea class="form-control" rows="10" name="content" id="content"></textarea>#}
+{#                {{ form.content }}#}
+{#            </div>#}
+
+
+
+{# <li {% if not page_obj.has_next %}class="disabled"{% endif %}>  #}

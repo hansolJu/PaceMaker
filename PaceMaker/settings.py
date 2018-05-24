@@ -37,7 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dataParser.apps.DataparserConfig',# parser
     'accounts.apps.AccountsConfig',    # custom auth
-    'classes.apps.ClassesConfig'
+    'community.apps.CommunityConfig',  #커뮤니티 게시판
+    'tagging.apps.TaggingConfig',      #게시판 태그
+    'widget_tweaks',                     #게시판 form 관련설치
 ]
 
 MIDDLEWARE = [
