@@ -1,44 +1,30 @@
-import os,re,time
+import re
+
+import requests
 from bs4 import BeautifulSoup
-from selenium import webdriver
+
 from dataParser.models import *
 
 
 class KutisParser(object):
     """Parse something from table of kutis website."""
 
-    def __init__(self):
-        self.base_url = "http://kutis.kyonggi.ac.kr/webkutis/view/indexWeb.jsp"
-        self.login_url = "http://kutis.kyonggi.ac.kr/webkutis/view/indexWeb.jsp"
+    def __init__(self, user_id, user_pw):
+        self.s = self.login(user_id,user_pw)
 
-        self.subjectUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?year=2018&hakgi=10&jojik=A1000&gwamok_no=1199&gyosu_no=20100118&gwajung=1"
-        #
-        self.driverPath = abspath = os.path.abspath("static/parser/chromedriver.exe")
-        self.driver = webdriver.Chrome(self.driverPath)
-        self.driver.implicitly_wait(3)
+    # 로그인후 섹션 반환
+    @staticmethod
+    def login(user_id, user_pw):
+        LOGIN_URL = 'https://kutis.kyonggi.ac.kr/webkutis/view/hs/wslogin/loginCheck.jsp?'
+        LOGIN_DATA = {'id': user_id, 'pw': user_pw}
+        with requests.Session() as s:
+            res = s.post(LOGIN_URL, data=LOGIN_DATA, verify=False, allow_redirects=False)
+            return s
 
-    def login(self, id , pw):
-        # url에 접근한다.
-        self.driver.get(self.login_url)
-        # 아이디/비밀번호를 입력해준다.
-        self.driver.find_element_by_name("id").send_keys(id)
-        self.driver.find_element_by_name('pw').send_keys(pw)
-        # 로그인 버튼을 눌러주자.
-        btn = self.driver.find_element_by_css_selector('#login_scroll > form > fieldset > p > a')
-        btn.click()
-
-        # 로그인이 됬는지 확인 하기.
-        try:
-            self.driver.get(self.studentInfoUrl)
-        except:
-            print("Kutis password 가 틀렸습니다.")
-            time.sleep(1000)
-            return False
-
-    def get_original_data(self, url):
-        """Get source from web and returns BeautifulSoup object."""
-        self.driver.get(url)
-        html = self.driver.page_source
+    @staticmethod
+    def get_original_data(url, s):
+        "Get source from web and returns BeautifulSoup object."
+        html = s.get(url).text
         return BeautifulSoup(html, "html.parser")
 
     @staticmethod
@@ -54,16 +40,15 @@ class KutisParser(object):
         p = re.compile(r'<.*?>')
         return p.sub('', data)
 
+
 class StudentParser(KutisParser):
-    studentInfoUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj111s.jsp?submenu=1&m_menu=wsco1s02&s_menu=wshj111s'
-    studentHopeCareersUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj190s.jsp?m_menu=wsco1s02&s_menu=wshj190s'
-    studentgradeUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssj1/wssj170s.jsp?submenu=2'
     def parse_info(self):
         """
         학생정보를 parse 후 dict object에 담아 리턴한다.
         :return: infos(dict Object)
         """
-        soup = self.get_original_data(self.studentInfoUrl)
+        studentInfoUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj111s.jsp?submenu=1&m_menu=wsco1s02&s_menu=wshj111s'
+        soup = self.get_original_data(studentInfoUrl,self.s)
 
         i = 0
         infos = dict()
@@ -164,14 +149,15 @@ class StudentParser(KutisParser):
         # 혈액형41
         return infos
 
-    def save_info(self, hukbun, infos):
+    @staticmethod
+    def save_info(infos):
         """Save info from student infomation list to database."""
         info_object = StudentInfo(
             hukbun=infos['hukbun'],
             # 성명
             name=infos['name'],
             # 주민등록번호
-            jumin=infos['jumin'] ,
+            jumin=infos['jumin'],
             # # 한자성명
             # name_Hanja=infos['name_Hanja'],
             # # 영문성명
@@ -185,19 +171,19 @@ class StudentParser(KutisParser):
             # 학적구분
             state=infos['state'],
             # 학적변동
-            variance=infos['variance'] ,
+            variance=infos['variance'],
             # 졸업학점
             gradeCredit=infos['graduationCredit'],
             # 전공
-            major=infos['major'] ,
+            major=infos['major'],
             # 지도교수
             advisor=infos['advisor'],
             # 현 학년학기
-            currentGrade=infos['currentGrade'] ,
+            currentGrade=infos['currentGrade'],
             # 이수학기 / 편입인정학기
-            compleSemester=infos['compleSemester'] ,
+            compleSemester=infos['compleSemester'],
             # 조기졸업대상여부
-            earlyGraduation=infos['earlyGraduation'] ,
+            earlyGraduation=infos['earlyGraduation'],
             # 입학일자23
             admission=infos['admission'],
             # 인증구분
@@ -220,7 +206,8 @@ class StudentParser(KutisParser):
         parse grade data, and return tds_list Object.
         :return: resultTr--> listObject
         """
-        soup = self.get_original_data(self.studentgradeUrl)
+        studentgradeUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssj1/wssj170s.jsp?submenu=2'
+        soup = self.get_original_data(studentgradeUrl,self.s)
 
         resultTr = []
         tables = soup.findAll("table", {'class': 'list06'})
@@ -231,13 +218,13 @@ class StudentParser(KutisParser):
             for tr in trs:
 
                 ths = tr.findAll("th")
-                resultTh = [] # for문안에서 사용후 제거.
+                resultTh = []  # for문안에서 사용후 제거.
                 for th in ths:
                     removeTag = self.remove_html_tags(str(th))
                     resultTh.append(removeTag)
 
                 tds = tr.findAll("td")
-                resultTd = [] # for문안에서 사용후 제거.
+                resultTd = []  # for문안에서 사용후 제거.
                 for td in tds:
                     removeTagTd = self.remove_html_tags(str(td))
                     removeTagTd = removeTagTd.replace('\xa0', "")
@@ -268,7 +255,8 @@ class StudentParser(KutisParser):
         # print(resultTr)
         return resultTr
 
-    def save_grade(self,hukbun, tdLists):
+    @staticmethod
+    def save_grade(hukbun, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
             info_object = StudentGrade(
@@ -298,19 +286,20 @@ class StudentParser(KutisParser):
         parse Hope data, and return tds_list Object.
         :return: resultTr--> listObject
         """
-        soup = self.get_original_data(self.studentHopeCareersUrl)
+        studentHopeCareersUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj190s.jsp?m_menu=wsco1s02&s_menu=wshj190s'
+        soup = self.get_original_data(studentHopeCareersUrl,self.s)
 
         resultTr = []
         tables = soup.findAll("table", {'class': 'list06'})
         for table in tables:
             ths = table.findAll("th")
-            resultTh = [] # for문안에서 사용후 제거.
+            resultTh = []  # for문안에서 사용후 제거.
             for th in ths:
                 removeTag = KutisParser.remove_html_tags(str(th))
                 resultTh.append(removeTag)
 
             tds = table.findAll("td")
-            resultTd = [] # for문안에서 사용후 제거.
+            resultTd = []  # for문안에서 사용후 제거.
             for td in tds:
                 removeTagTd = KutisParser.remove_html_tags(str(td))
                 removeTagTd = removeTagTd.replace('\xa0', "")
@@ -319,7 +308,7 @@ class StudentParser(KutisParser):
                 removeTagTd = removeTagTd.replace('변동내역', "")
                 print(removeTagTd)
                 resultTd.append(removeTagTd)
-            #resultTd에 아무정보 없으면 저장X(Th 단 걸러내기)
+            # resultTd에 아무정보 없으면 저장X(Th 단 걸러내기)
             if resultTd:
                 pass
             else:
@@ -327,7 +316,7 @@ class StudentParser(KutisParser):
         return resultTr
 
         '''for debuging'''
-        #i = 0
+        # i = 0
         # for th in resultTh:
         #     print("%d" % i, th)
         #     i += 1
@@ -336,7 +325,8 @@ class StudentParser(KutisParser):
         #     print("%d" % i, td)
         #     i += 1
 
-    def save_hope(self,hukbun,tdLists):
+    @staticmethod
+    def save_hope(hukbun, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
 
         for td in tdLists:
@@ -360,7 +350,7 @@ class StudentParser(KutisParser):
 
 
 class ServerParser(KutisParser):
-    """Crawing Semester Schedule and parse data """
+    """Crawing 학기 수강가능과목 and parse data """
 
     def parse_course_major(self, year, semester):
         """년도와 원하는 학기를 받으면 해당 년도 학기에 열린 과목의 정보를 크롤하여 parse한후 리스트에 담아서 리턴한다.
@@ -437,15 +427,15 @@ class ServerParser(KutisParser):
         #     print(td)
         return resultTr
 
-
-    def save_course_major(self, year, semester, tdLists):
+    @staticmethod
+    def save_course_major(year, semester, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
             info_object = StudentHopeCareers(
                 # 년도
-                year = year,
+                year=year,
                 # 학기
-                semester = semester,
+                semester=semester,
                 # 과목번호
                 subjectCode=td[0],
                 # 과목이름
@@ -468,13 +458,13 @@ class ServerParser(KutisParser):
             info_object.save()
 
     # course_num = 그학기에 해당하는 과목번호
-    def parse_course_detail(self,year, semester, course_num, profess_num):
+    def parse_course_detail(self, year, semester, course_num, profess_num):
         url = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?" \
-              "year="+str(year)+ \
-              "&hakgi="+str(semester)+ \
+              "year=" + str(year) + \
+              "&hakgi=" + str(semester) + \
               "&jojik=A1000" \
-              "&gwamok_no="+str(course_num)+ \
-              "&gyosu_no="+str(profess_num)+ \
+              "&gwamok_no=" + str(course_num) + \
+              "&gyosu_no=" + str(profess_num) + \
               "&gwajung=1"
         soup = self.get_original_data(url)
         result = []
@@ -623,13 +613,13 @@ class ServerParser(KutisParser):
         print("----------------")
         return result
 
-
-    def save_course_detail(self,year, semester, course_num, list):
+    @staticmethod
+    def save_course_detail(year, semester, course_num, list):
         info_object = Subject_desription(
-            year = year,
-            semester = semester,
-            subjectCode= course_num,
-            desription = list[0]
+            year=year,
+            semester=semester,
+            subjectCode=course_num,
+            desription=list[0]
         )
         info_object.save()
 
@@ -639,14 +629,14 @@ class ServerParser(KutisParser):
             subjectCode=course_num,
             # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
             Knowledge_application=list[1][0],
-            verification_ability = list[1][1],
-            problem_solving = list[1][2],
-            tool_utilization = list[1][3],
-            design_ability = list[1][4],
-            teamwork_skill = list[1][5],
-            communication = list[1][6],
-            understanding_of_influence = list[1][7],
-            responsibility = list[1][8]
+            verification_ability=list[1][1],
+            problem_solving=list[1][2],
+            tool_utilization=list[1][3],
+            design_ability=list[1][4],
+            teamwork_skill=list[1][5],
+            communication=list[1][6],
+            understanding_of_influence=list[1][7],
+            responsibility=list[1][8]
 
         )
         info_object.save()
@@ -656,12 +646,12 @@ class ServerParser(KutisParser):
                 semester=semester,
                 subjectCode=course_num,
                 Core_competencies=i[0],
-                detailed_core_competencies = i[1],
-                reflectance = i[2],
-                learning_objectives = i[3],
-                performance_criteria = i[4],
-                achievement_goals = i[5],
-                evaluation_methods = i[6],
+                detailed_core_competencies=i[1],
+                reflectance=i[2],
+                learning_objectives=i[3],
+                performance_criteria=i[4],
+                achievement_goals=i[5],
+                evaluation_methods=i[6],
             )
             info_object.save()
 
@@ -671,8 +661,8 @@ class ServerParser(KutisParser):
             subjectCode=course_num,
             # [강의형태, 수업방식, 교육용기자재]
             Lecture_type=list[3][0],
-            teaching_method = list[3][1],
-            educational_equipment = list[3][2]
+            teaching_method=list[3][1],
+            educational_equipment=list[3][2]
         )
         info_object.save()
 
@@ -689,10 +679,10 @@ class ServerParser(KutisParser):
             semester=semester,
             subjectCode=course_num,
             Midterm_exam=list[5][0],
-            final_exam = list[5][1],
-            attendance = list[5][2],
-            assignments_and_others = list[5][3],
-            grading_division = list[5][4]
+            final_exam=list[5][1],
+            attendance=list[5][2],
+            assignments_and_others=list[5][3],
+            grading_division=list[5][4]
         )
         info_object.save()
         for i in list[6]:
@@ -702,10 +692,10 @@ class ServerParser(KutisParser):
                 subjectCode=course_num,
 
                 week=i[0],
-                contents = i[1],
-                methods = i[2],
-                related_materials = i[3],
-                assignments = i[4]
+                contents=i[1],
+                methods=i[2],
+                related_materials=i[3],
+                assignments=i[4]
             )
             info_object.save()
 
@@ -714,8 +704,8 @@ class ServerParser(KutisParser):
             semester=semester,
             subjectCode=course_num,
             title=list[7][0],
-            author = list[7][1],
-            publisher = list[7][2],
-            year_of_publication = list[7][3],
+            author=list[7][1],
+            publisher=list[7][2],
+            year_of_publication=list[7][3],
         )
         info_object.save()
