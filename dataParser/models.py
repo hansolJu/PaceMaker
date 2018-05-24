@@ -100,6 +100,11 @@ class StudentHopeCareers(models.Model):
         return self.ranking
 
 
+class Professor(models.Model):
+    hukbun = models.CharField(max_length=20,primary_key=True)
+    name = models.CharField(max_length=20,null=False)
+
+
 class Course(models.Model):
     # 년도
     year = models.CharField(max_length=15)
