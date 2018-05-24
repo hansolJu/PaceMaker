@@ -23,5 +23,6 @@ urlpatterns = [
     path('',include('accounts.urls')),
     path("classes/",include('classes.urls')),
     path('index/', HomeView.as_view(), name='index'),
+    path('grades/', include('grades.urls')),
     path('community/',include('community.urls')),
 ]

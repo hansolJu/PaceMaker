@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}
+    home.html
+{% endblock title%}
+
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">전체 성적</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>이수구분</th>
+                                    <th>인증구분</th>
+                                    <th>년도학기</th>
+                                    <th>학수코드</th>
+                                    <th>교과목명</th>
+                                    <th>학점</th>
+                                    <th>설계학점</th>
+                                    <th>등급</th>
+                                    <th>유효구분</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for grade in grades_list %}
+                                    <tr>
+                                        <td>{{ grade.eisu }}</td>
+                                        <td>{{ grade.certification }}</td>
+                                        <td>{{ grade.yearNsemester }}</td>
+                                        <td>{{ grade.subject_code }}</td>
+                                        <td>{{ grade.subject }}</td>
+                                        <td>{{ grade.score }}</td>
+                                        <td>{{ grade.grade_design }}</td>
+                                        <td>{{ grade.grade }}</td>
+                                        <td>{{ grade.valid }}</td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+{% endblock content %}
+
+{% block footer %}
+    <div id="footer">
+        &copy; Hansol Ju 2018
+    </div>
+{% endblock footer%}
+
