@@ -128,3 +128,6 @@ LOGIN_URL = "/"
 AUTHENTICATION_BACKENDS = [
     'dataParser.my_auth.UserBackend',  # 우리가 만든 AUTH를 먼저 검사
 ]
+
+#SESSION_COOKIE_AGE = 1800 #세션 만기 시간(초단위)
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True  #브라우저가 닫히면 세션 종료
