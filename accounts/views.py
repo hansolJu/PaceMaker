@@ -28,7 +28,6 @@ def agree(request):
             hukbunToSave = ''
             passwordToSave = ''
             return redirect('index')
-            #return render(request, 'index.html', {}) #인덱스 페이지 이동
     else:
         form = AgreeForm()
         return render(request, 'agree.html', {'form': form})

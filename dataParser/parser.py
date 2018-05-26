@@ -636,7 +636,7 @@ class ServerParser(KutisParser):
         return result
 
     @staticmethod
-    def save_course_detail(year, semester, course_num, list):
+    def cousrse_detail(year, semester, course_num, list):
         info_object = Subject_desription(
             year=year,
             semester=semester,

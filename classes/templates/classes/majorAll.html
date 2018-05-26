@@ -27,6 +27,8 @@
             <th>강의실</th>
             <tr/>
             {% for subject in subjects %}
+                <td>{{ subject.year }}</td>
+                <td>{{ subject.semester }}</td>
                 <td><h2><a href="{{ subject.get_absolute_url }}">{{ subject.subjectName }}</a></h2></td>
                 <td>{{ subject.subjectCode }}</td>
                 <td>{{ subject.grade }}</td>
