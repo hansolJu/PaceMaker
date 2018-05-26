@@ -445,8 +445,8 @@ class ServerParser(KutisParser):
         """년도와 원하는 학기를 받으면 해당 년도 학기에 열린 과목의 정보를 크롤하여 parsing 한후 리스트에 담아서 리턴한다.
         :param: year(찾고자하는 년도){2008~2018}
         :param: semester(찾고자 하는 학기) {10,20}
-        :param: course_num(그 학기에 해당하는 과목번호) {1,2}
-        :param: profess_num(교수 학번) {1,2}
+        :param: course_num(그 학기에 해당하는 과목번호) ex>{A1199}
+        :param: profess_num(교수 학번) ex>{20140000}
         :return:(list)
         """
         url = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?" \
@@ -457,7 +457,7 @@ class ServerParser(KutisParser):
               "&gyosu_no=" + str(profess_num) + \
               "&gwajung=1"
         soup = self.get_original_data(url)
-        
+
         result = []
         tables = soup.findAll("table", {'class': 'list06'})
         # table[1] 교과목 해설
