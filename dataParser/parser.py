@@ -328,9 +328,9 @@ class ServerParser(KutisParser):
         """
         # 파라미터 초기화
         year = str(year)
-        if semester == 1:
+        if semester == 10:
             semester = str(10)
-        elif semester == 2:
+        elif semester == 20:
             semester = str(20)
         else:
             print("학기 오류 1학기로 초기화")
@@ -342,7 +342,7 @@ class ServerParser(KutisParser):
                       "curPage=" + str(page) + \
                       "&hakgwa_cd=91017&gyear=" + year + \
                       "&gwamok_name=&ghakgi=" + semester
-        soup = self.get_original_data(scheduleUrl)
+        soup = self.get_original_data(scheduleUrl,self.s)
 
         # 최대페이지 추적
         pages = str(soup.findAll("p", {'class': 'fr'}))
@@ -359,10 +359,7 @@ class ServerParser(KutisParser):
                 id = str(spans).split("\'")[3]
 
                 # 하드코딩 디비저장
-                if id in Professor.pk:
-                    pass
-                else:
-                    Professor(hukbun=id, name=name).save()
+                Professor(hukbun=id, name=name).save()
                 print("-----")
 
         resultTh = []
@@ -416,9 +413,9 @@ class ServerParser(KutisParser):
         for td in tdLists:
             info_object = StudentHopeCareers(
                 # 년도
-                year=year,
+                year=str(year),
                 # 학기
-                semester=semester,
+                semester=str(semester),
                 # 과목번호
                 subjectCode=td[0],
                 # 과목이름
