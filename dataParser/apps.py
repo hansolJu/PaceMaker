@@ -11,6 +11,7 @@ class DataparserConfig(AppConfig):
         admin_pw = "1019711"
         print("init")
         parser = ServerParser(admin_id, admin_pw)
-        for year in range(2009, 2018):
-            for semester in range(10, 20):
-                parser.save_course_major(year, semester, parser.parse_course_major(year, semester))
+        for year in range(2010, 2018):
+            for semester in range(1, 2):
+                tmp= parser.parse_course_major(year, semester*10)
+                parser.save_course_major(year, semester*10, tmp)

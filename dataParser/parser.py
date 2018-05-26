@@ -386,6 +386,7 @@ class ServerParser(KutisParser):
                         removeTagTd = removeTagTd.replace('\xa0', "")
                         removeTagTd = removeTagTd.replace('\n', "")
                         removeTagTd = removeTagTd.replace('\t', "")
+                        removeTagTd = removeTagTd.replace('\r', "")
                         removeTagTd = removeTagTd.replace('       보기', "")
                         removeTagTd = removeTagTd.replace('보기', "")
                         resultTd.append(removeTagTd)
@@ -402,20 +403,21 @@ class ServerParser(KutisParser):
                 page += 1
                 scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?curPage=" \
                               + str(page) + "&hakgwa_cd=91017&gyear=" + year + "&gwamok_name=&ghakgi=" + semester
-                soup = self.get_original_data(scheduleUrl)
+                soup = self.get_original_data(scheduleUrl , self.s)
 
         '''for debuging'''
+        print(resultTr)
         return resultTr
 
     @staticmethod
     def save_course_major(year, semester, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
         for td in tdLists:
-            info_object = StudentHopeCareers(
+            info_object = Course(
                 # 년도
-                year=str(year),
+                year=year,
                 # 학기
-                semester=str(semester),
+                semester=semester,
                 # 과목번호
                 subjectCode=td[0],
                 # 과목이름

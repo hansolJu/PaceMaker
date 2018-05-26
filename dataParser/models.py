@@ -129,8 +129,8 @@ class Course(models.Model):
     # 강의실
     lectureRoom = models.CharField(max_length=100, blank=True, null=True)
 
-    class Meta:
-        unique_together = ('year', 'semester', 'subjectCode')
+    # class Meta:
+    #     unique_together = ('year', 'semester', 'subjectCode')
 
     def __str__(self):
         return self.subjectName
