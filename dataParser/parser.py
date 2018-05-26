@@ -10,7 +10,7 @@ class KutisParser(object):
     """Parse something from table of kutis website."""
 
     def __init__(self, user_id, user_pw):
-        self.s = self.login(user_id,user_pw)
+        self.s = self.login(user_id, user_pw)
 
     # 로그인후 섹션 반환
     @staticmethod
@@ -48,7 +48,7 @@ class StudentParser(KutisParser):
         :return: infos(dict Object)
         """
         studentInfoUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj111s.jsp?submenu=1&m_menu=wsco1s02&s_menu=wshj111s'
-        soup = self.get_original_data(studentInfoUrl,self.s)
+        soup = self.get_original_data(studentInfoUrl, self.s)
 
         i = 0
         infos = dict()
@@ -207,7 +207,7 @@ class StudentParser(KutisParser):
         :return: resultTr--> listObject
         """
         studentgradeUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssj1/wssj170s.jsp?submenu=2'
-        soup = self.get_original_data(studentgradeUrl,self.s)
+        soup = self.get_original_data(studentgradeUrl, self.s)
 
         resultTr = []
         tables = soup.findAll("table", {'class': 'list06'})
@@ -249,12 +249,12 @@ class StudentParser(KutisParser):
                             if resultTr[i - 1].__len__() == 8:
                                 resultTr[i - 1].insert(0, tmp)
                                 # print(resultTr[i-1])
-                    elif resultTd.__len__() <3:
+                    elif resultTd.__len__() < 3:
                         pass
                     else:
                         resultTr.append(resultTd)
         # print(resultTh)
-        #print(resultTr)
+        # print(resultTr)
         return resultTr
 
     @staticmethod
@@ -289,7 +289,7 @@ class StudentParser(KutisParser):
         :return: resultTr--> listObject
         """
         studentHopeCareersUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj190s.jsp?m_menu=wsco1s02&s_menu=wshj190s'
-        soup = self.get_original_data(studentHopeCareersUrl,self.s)
+        soup = self.get_original_data(studentHopeCareersUrl, self.s)
 
         resultTr = []
         tables = soup.findAll("table", {'class': 'list06'})
@@ -362,7 +362,6 @@ class ServerParser(KutisParser):
         """
         # 파라미터 초기화
         year = (str)(year)
-
         if semester == 1:
             semester = (str)(10)
         elif semester == 2:
@@ -373,12 +372,33 @@ class ServerParser(KutisParser):
 
         # find total page num
         page = 1
-        scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?curPage=" \
-                      + (str)(page) + "&hakgwa_cd=91017&gyear=" + year + "&gwamok_name=&ghakgi=" + semester
+        scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?" \
+                      "curPage=" + (str)(page) + \
+                      "&hakgwa_cd=91017&gyear=" + year + \
+                      "&gwamok_name=&ghakgi=" + semester
         soup = self.get_original_data(scheduleUrl)
 
+        # 최대페이지 추적
         pages = (str)(soup.findAll("p", {'class': 'fr'}))
         totalpage = int(re.findall('\d+', pages)[0])
+
+        # 교수 학번 디비 저장
+        tds = soup.findAll("td")
+        for td in tds:
+            if "detailView_gyosu" in str(td):
+                removeTag = self.remove_html_tags(str(td))
+                name = removeTag.split("\r")[0]
+
+                spans = td.findAll("span")[1]
+                id = str(spans).split("\'")[3]
+
+                #하드코딩 디비저장
+                if id in Professor.pk:
+                    pass
+                else:
+                    Professor(hukbun = id,name = name).save()
+                print("-----")
+
 
         resultTh = []
         resultTr = []
