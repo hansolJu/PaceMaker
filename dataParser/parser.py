@@ -10,6 +10,7 @@ class KutisParser(object):
     """Parse something from table of kutis website."""
 
     def __init__(self, user_id, user_pw):
+        print("객체 생성,", user_id, user_pw)
         self.s = self.login(user_id, user_pw)
 
     # 로그인후 섹션 반환
@@ -42,19 +43,20 @@ class KutisParser(object):
 
 
 class StudentParser(KutisParser):
+    # print("StudentParser 객체 생성")
     def parse_info(self):
         """
         학생정보를 parse 후 dict object에 담아 리턴한다.
         :return: infos(dict Object)
         """
+        print("학생정보 파싱 시작")
         studentInfoUrl = 'http://kutis.kyonggi.ac.kr/webkutis/view/hs/wshj1/wshj111s.jsp?submenu=1&m_menu=wsco1s02&s_menu=wshj111s'
         soup = self.get_original_data(studentInfoUrl, self.s)
 
         i = 0
-        infos = dict()
         resultTd = []
         resultTh = []
-
+        result = []
         tables = soup.findAll("table", {'class': 'list06'})
         for table in tables:
             # print(type(table))
@@ -72,6 +74,7 @@ class StudentParser(KutisParser):
                 removeTagTd = removeTagTd.replace('※ 본인인증은 개인정보 변경에서 하시기 바랍니다.', "")
                 print(removeTagTd)
                 resultTd.append(removeTagTd)
+            result.append(resultTd)
         '''for debug'''
         # i = 0
         # for th in resultTh:
@@ -81,125 +84,82 @@ class StudentParser(KutisParser):
         # for td in resultTd:
         #     print("%d" % i, td)
         #     i += 1
-
-        """Make Student information object with table Crawling data and dictionary."""
-        # 학번
-        infos['hukbun'] = resultTd[1]
-        # 성명
-        infos['username'] = resultTd[2]
-        # 주민등록번호
-        infos['jumin'] = resultTd[3]
-        # 한자성명
-        infos['name_Hanja'] = resultTd[4]
-        # 영문성명
-        infos['name_English'] = resultTd[5]
-        # 과정구분
-        infos['course'] = resultTd[6]
-        # 캠퍼스구분
-        infos['campus'] = resultTd[7]
-        # 주야구분
-        infos['dayNight'] = resultTd[8]
-        # 학적구분
-        infos['state'] = resultTd[9]
-        # 학적변동
-        infos['variance'] = resultTd[10]
-        # 졸업학점
-        infos['graduationCredit'] = resultTd[11]
-        # 전공
-        infos['major'] = resultTd[12]
-        # 지도교수
-        infos['advisor'] = resultTd[13]
-        # 학생구분
-        # 산업체여부
-        # 학점교류구분
-        # 병역구분
-        # 현 학년학기
-        infos['currentGrade'] = resultTd[18]
-        # 이수학기 / 편입인정학기
-        infos['compleSemester'] = resultTd[19]
-        # 조기졸업대상여부
-        infos['earlyGraduation'] = resultTd[20]
-        # 특기자구분
-        # 입학구분
-        # 입학일자
-        infos['admission'] = resultTd[23]
-        # 인증구분
-        infos['enginCertification'] = resultTd[24]
-        # 본인인증
-        # 본적지주소
-        # 거주지주소
-        infos['address'] = resultTd[27]
-        # 전화번호
-        infos['phone'] = resultTd[28]
-        # 전자우편
-        infos['email'] = resultTd[29]
-        # 휴대폰
-        infos['cellPhone'] = resultTd[30]
-        # 카카오톡ID
-        # 메신저QQ
-        # blank
-        # 보호자
-        # 관계
-        # 근무지
-        # 보호자주소
-        # 보호자전화번호
-        infos['parentsPhone'] = resultTd[38]
-        # 취미39
-        # 특기40
-        # 혈액형41
-        return infos
+        print("result: ", result)
+        return result
 
     @staticmethod
-    def save_info(infos):
-        """Save info from student infomation list to database."""
-        info_object = StudentInfo(
-            hukbun=infos['hukbun'],
-            # 성명
-            username=infos['username'],
-            # 주민등록번호
-            jumin=infos['jumin'],
-            # # 한자성명
-            # name_Hanja=infos['name_Hanja'],
-            # # 영문성명
-            # name_English=infos['name_English'] ,
-            # 과정구분
-            course=infos['course'],
-            # # 캠퍼스구분
-            # campus=infos['campus'] ,
-            # # 주야구분
-            # dayNight=infos['dayNight'] ,
-            # 학적구분
-            state=infos['state'],
-            # 학적변동
-            variance=infos['variance'],
-            # 졸업학점
-            graduationCredit=infos['graduationCredit'],
-            # 전공
-            major=infos['major'],
-            # 지도교수
-            advisor=infos['advisor'],
-            # 현 학년학기
-            currentGrade=infos['currentGrade'],
-            # 이수학기 / 편입인정학기
-            compleSemester=infos['compleSemester'],
-            # 조기졸업대상여부
-            earlyGraduation=infos['earlyGraduation'],
-            # 입학일자23
-            admission=infos['admission'],
-            # 인증구분
-            enginCertification=infos['enginCertification'],
-            # # 거주지주소27
-            # address=infos['address'],
-            # # 전화번호
-            # phone=infos['phone'],
-            # # 전자우편
-            # email=infos['email'] ,
-            # # 휴대폰30
-            # cellPhone=infos['cellPhone'] ,
-            # # 보호자전화번호38
-            # parentsPhone=infos['parentsPhone']
-        )
-        info_object.save()
+    def save_info(tdLists):
+        '''학생정보를 데이터베이스에 저장
+        :param:tdList : parse_info()의 리턴값. 2차원 배열로 구성되어있음.
+        '''
+        for td in tdLists:
+            oneLineinfo = StudentInfo(
+                hukbun=td[1],
+                # 성명 2
+                username=td[2],
+                # 주민등록번호 3
+                jumin=td[3],
+                # 한자성명 4
+                # name_Hanja=infos[4],
+                # 영문성명 5
+                # name_English=infos[5] ,
+                # 과정구분
+                course=td[6],
+                # 캠퍼스구분
+                # campus=infos[7] ,
+                # 주야구분
+                # dayNight=infos[8] ,
+                # 학적구분 9
+                state=td[9],
+                # 학적변동 10
+                variance=td[10],
+                # 졸업학점
+                graduationCredit=td[11],
+                # 전공
+                major=td[12],
+                # 지도교수
+                advisor=td[13],
+                # 학생구분 14
+                # 산업체여부 15
+                # 학점교류구분 16
+                # 병역구분 17
+                # 현 학년학기 18
+                currentGrade=td[18],
+                # 이수학기 / 편입인정학기
+                compleSemester=td[19],
+                # 조기졸업대상여부 20
+                earlyGraduation=td[20],
+                # 특기자구분 21
+                # 입학구분22
+                # 입학일자23
+                admission=td[23],
+                # 인증구분 24
+                enginCertification=td[24],
+                # 본인인증 25
+                # 본적지주소 26
+                # 거주지주소 27
+                # address=td['address'],
+                # # 전화번호
+                # phone=td['phone'],
+                # # 전자우편
+                # email=td['email'] ,
+                # # 휴대폰30
+                # cellPhone=td['cellPhone'] ,
+                # # 보호자전화번호38
+                # parentsPhone=td['parentsPhone']
+                # 카카오톡ID
+                # 메신저QQ
+                # blank
+                # 보호자
+                # 관계
+                # 근무지
+                # 보호자주소
+                # 보호자전화번호
+                # 취미39
+                # 특기40
+                # 혈액형41
+            )
+            oneLineinfo.save()
 
     def parse_grade(self):
         """
@@ -254,15 +214,20 @@ class StudentParser(KutisParser):
                     else:
                         resultTr.append(resultTd)
         # print(resultTh)
-        # print(resultTr)
+        print(resultTr)
         return resultTr
 
     @staticmethod
     def save_grade(hukbun, tdLists):
-        """ td단위로 구성된 리스트를 DB에 저장한다. """
+        """ 저장이나 업데이트를 위한 오브젝트 리스트를 만들어 객체리스트 리턴
+        :param  hukbun: 저장할 학생의 학번 타입은 str ex)"20100000"
+        :param tdLists: parse_grade()의 리턴값 , 이차원 배열
+        """
+        # 저장하기전에 학번의 성적을 다 지운다.
+        StudentGrade.objects.filter(hukbun_id=hukbun).delete()
         for td in tdLists:
-            info_object = StudentGrade(
-                hukbun_id=hukbun,
+            oneLineinfo = StudentGrade(
+                hukbun_id="201511868",
                 # 이수구분
                 eisu=td[0],
                 # 인증구분
@@ -274,6 +239,7 @@ class StudentParser(KutisParser):
                 # 교과목명
                 subject=td[4],
                 # 학점
+                score=td[5],
                 # 설계학점
                 grade_design=td[6],
                 # 등급
@@ -281,7 +247,7 @@ class StudentParser(KutisParser):
                 # 유효구분
                 valid=td[8]
             )
-            info_object.save()
+            oneLineinfo.save()
 
     def parse_hope(self):
         """
@@ -330,7 +296,7 @@ class StudentParser(KutisParser):
     @staticmethod
     def save_hope(hukbun, tdLists):
         """ td단위로 구성된 리스트를 DB에 저장한다. """
-
+        StudentHopeCareers.objects.filter(hukbun_id=hukbun).delete()
         for td in tdLists:
             info_object = StudentHopeCareers(
                 hukbun_id=hukbun,
@@ -361,25 +327,25 @@ class ServerParser(KutisParser):
         :return:(list)
         """
         # 파라미터 초기화
-        year = (str)(year)
+        year = str(year)
         if semester == 1:
-            semester = (str)(10)
+            semester = str(10)
         elif semester == 2:
-            semester = (str)(20)
+            semester = str(20)
         else:
             print("학기 오류 1학기로 초기화")
-            semester = (str)(10)
+            semester = str(10)
 
         # find total page num
         page = 1
         scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?" \
-                      "curPage=" + (str)(page) + \
+                      "curPage=" + str(page) + \
                       "&hakgwa_cd=91017&gyear=" + year + \
                       "&gwamok_name=&ghakgi=" + semester
         soup = self.get_original_data(scheduleUrl)
 
         # 최대페이지 추적
-        pages = (str)(soup.findAll("p", {'class': 'fr'}))
+        pages = str(soup.findAll("p", {'class': 'fr'}))
         totalpage = int(re.findall('\d+', pages)[0])
 
         # 교수 학번 디비 저장
@@ -392,13 +358,12 @@ class ServerParser(KutisParser):
                 spans = td.findAll("span")[1]
                 id = str(spans).split("\'")[3]
 
-                #하드코딩 디비저장
+                # 하드코딩 디비저장
                 if id in Professor.pk:
                     pass
                 else:
-                    Professor(hukbun = id,name = name).save()
+                    Professor(hukbun=id, name=name).save()
                 print("-----")
-
 
         resultTh = []
         resultTr = []
@@ -439,14 +404,10 @@ class ServerParser(KutisParser):
             else:
                 page += 1
                 scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?curPage=" \
-                              + (str)(page) + "&hakgwa_cd=91017&gyear=" + year + "&gwamok_name=&ghakgi=" + semester
+                              + str(page) + "&hakgwa_cd=91017&gyear=" + year + "&gwamok_name=&ghakgi=" + semester
                 soup = self.get_original_data(scheduleUrl)
 
         '''for debuging'''
-        # # 결과물 출력
-        # print(resultTh)
-        # for td in resultTr:
-        #     print(td)
         return resultTr
 
     @staticmethod
@@ -481,6 +442,13 @@ class ServerParser(KutisParser):
 
     # course_num = 그학기에 해당하는 과목번호
     def parse_course_detail(self, year, semester, course_num, profess_num):
+        """년도와 원하는 학기를 받으면 해당 년도 학기에 열린 과목의 정보를 크롤하여 parsing 한후 리스트에 담아서 리턴한다.
+        :param: year(찾고자하는 년도){2008~2018}
+        :param: semester(찾고자 하는 학기) {10,20}
+        :param: course_num(그 학기에 해당하는 과목번호) {1,2}
+        :param: profess_num(교수 학번) {1,2}
+        :return:(list)
+        """
         url = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?" \
               "year=" + str(year) + \
               "&hakgi=" + str(semester) + \
@@ -489,6 +457,7 @@ class ServerParser(KutisParser):
               "&gyosu_no=" + str(profess_num) + \
               "&gwajung=1"
         soup = self.get_original_data(url)
+        
         result = []
         tables = soup.findAll("table", {'class': 'list06'})
         # table[1] 교과목 해설
@@ -508,11 +477,9 @@ class ServerParser(KutisParser):
         print(Core_Competencies_th)
         print(Core_Competencies)
         print("----------------")
-
         # table[3] 교과목 학습목표 및 평가방법 td 갯수세기
         evaluation_th = self.remove_html_tags(str(tables[3].findAll("th")))
         rows = tables[3].findAll("tr")
-
         count = 0
         tmp = ''
         nextRow = False
@@ -553,7 +520,7 @@ class ServerParser(KutisParser):
         Lecture_methods = tables[4].findAll("td")
         result_td = []
         for Lecture_method in Lecture_methods:
-            tdRemove = (str)(Lecture_method)
+            tdRemove = str(Lecture_method)
             tdRemove = tdRemove.replace('\xa0', "")
             tdRemove = tdRemove.replace('\n', "")
             tdRemove = tdRemove.replace('\t', "")
