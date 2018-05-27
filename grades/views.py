@@ -7,7 +7,7 @@ from dataParser import parser
 # Create your views here.
 
 
-class GradeLV(ListView):
+class GradeLV(LoginRequiredMixin,ListView):
     model = StudentGrade
     template_name = 'grades/grades_list.html'
     context_object_name = 'grades_list'
@@ -17,10 +17,11 @@ class GradeLV(ListView):
         return StudentGrade.objects.filter(hukbun=s)
 
 
-class MajorGradeLV(ListView):
+class MajorGradeLV(LoginRequiredMixin,ListView):
     model = StudentGrade
     template_name = 'grades/major_subject_list.html'
     context_object_name = 'major_list'
+
 
     def get_queryset(self):
         # 학번과 이수로 filter를 사용해서 리스트를 가져와야 한다.
@@ -28,7 +29,7 @@ class MajorGradeLV(ListView):
         return StudentGrade.objects.filter(hukbun=test).filter(Q(eisu='컴과') | Q(eisu='전필'))
 
 
-class GeGradeLV(ListView):
+class GeGradeLV(LoginRequiredMixin,ListView):
     model = StudentGrade
     template_name = 'grades/ge_subject_list.html'
     context_object_name = 'ge_list'
