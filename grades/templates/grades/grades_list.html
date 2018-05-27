@@ -3,7 +3,7 @@
 {% block title %}
     home.html
 {% endblock title%}
-
+{% load static %}
 {% load staticfiles %}
 {% block extrastyle %}
 
@@ -42,11 +42,26 @@
                                         <td>{{ grade.subject_code }}</td>
                                         <td>{{ grade.subject }}</td>
                                         <td>{{ grade.score }}</td>
+                                        {% with total_score=0 %}
+                                            {{ total_score|add:grade.score }}
+                                        {% endwith %}
                                         <td>{{ grade.grade_design }}</td>
                                         <td>{{ grade.grade }}</td>
                                         <td>{{ grade.valid }}</td>
                                     </tr>
                                 {% endfor %}
+                                </tbody>
+                            </table>
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>전체 이수 학점</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ total_score }}</td>
+                                </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -66,3 +81,6 @@
     </div>
 {% endblock footer%}
 
+{% comment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>{% endcomment %}

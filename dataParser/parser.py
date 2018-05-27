@@ -319,6 +319,7 @@ class ServerParser(KutisParser):
     @staticmethod
     def save_course_major(year, semester, parsed_data_list):
         """ td 단위로 구성된 리스트를 DB에 저장한다. """
+        Course.objects.filter(year=year,semester = semester).delete()
         for table_data in parsed_data_list:
             course_object = Course(
                 # 년도
@@ -347,20 +348,16 @@ class ServerParser(KutisParser):
             course_object.save()
 
     @staticmethod
-    def save_course_detail(year, semester, course_num, parsed_data_list):
-        # table[1] 교과목 해설
+    def save_course_detail(course_id, parsed_data_list):
+        # table[0] 교과목 해설
         desription_object = Subject_desription(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id=course_id,
             desription=parsed_data_list[0]
         )
         desription_object.save()
-        # table[2] 새부핵심역량 과의 관계
+        # table[1] 새부핵심역량 과의 관계
         Competence_object = Core_Competence(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id = course_id,
             # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
             Knowledge_application=parsed_data_list[1][0],
             verification_ability=parsed_data_list[1][1],
@@ -374,12 +371,10 @@ class ServerParser(KutisParser):
 
         )
         Competence_object.save()
-        # table[3] 교과목 학습목표 및 평가방법
+        # table[2] 교과목 학습목표 및 평가방법
         for i in parsed_data_list[2]:
             Learning_object = Learning_Objectives(
-                year=year,
-                semester=semester,
-                subjectCode=course_num,
+                course_id=course_id,
                 Core_competencies=i[0],
                 detailed_core_competencies=i[1],
                 reflectance=i[2],
@@ -389,30 +384,24 @@ class ServerParser(KutisParser):
                 evaluation_methods=i[6],
             )
             Learning_object.save()
-        # table[4] 강의방법
+        # table[3] 강의방법
         Lecture_object = Lecture_method(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id=course_id,
             # [강의형태, 수업방식, 교육용기자재]
             Lecture_type=parsed_data_list[3][0],
             teaching_method=parsed_data_list[3][1],
             educational_equipment=parsed_data_list[3][2]
         )
         Lecture_object.save()
-        # table[5] 과제물
+        # table[4] 과제물
         Assignment_object = Assignment(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id=course_id,
             Assignment=parsed_data_list[4]
         )
         Assignment_object.save()
-        # table[6] 성적 구성비율
+        # table[5] 성적 구성비율
         ratio_object = School_composition_ratio(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id=course_id,
             Midterm_exam=parsed_data_list[5][0],
             final_exam=parsed_data_list[5][1],
             attendance=parsed_data_list[5][2],
@@ -420,12 +409,10 @@ class ServerParser(KutisParser):
             grading_division=parsed_data_list[5][4]
         )
         ratio_object.save()
-        # table[7] 주별 강좌내용
+        # table[6] 주별 강좌내용
         for i in parsed_data_list[6]:
             Weekly_object = Weekly_course_contents(
-                year=year,
-                semester=semester,
-                subjectCode=course_num,
+                course_id=course_id,
 
                 week=i[0],
                 contents=i[1],
@@ -434,11 +421,9 @@ class ServerParser(KutisParser):
                 assignments=i[4]
             )
             Weekly_object.save()
-        # table[8] 책
+        # table[7] 책
         Book_object = Book(
-            year=year,
-            semester=semester,
-            subjectCode=course_num,
+            course_id=course_id,
             title=parsed_data_list[7][0],
             author=parsed_data_list[7][1],
             publisher=parsed_data_list[7][2],
@@ -549,7 +534,14 @@ class ServerParser(KutisParser):
               "&gwamok_no=" + str(course_num) + \
               "&gyosu_no=" + str(profess_num) + \
               "&gwajung=1"
-        soup = self.get_original_data(url , self.s)
+        test = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu5/wssu511s.jsp?" \
+               "year=2018" \
+               "&hakgi=10" \
+               "&jojik=A1000" \
+               "&gwamok_no=1199" \
+               "&gyosu_no=20100118" \
+               "&gwajung=1"
+        soup = self.get_original_data(test , self.s)
 
         result = []
         tables = soup.findAll("table", {'class': 'list06'})
@@ -563,15 +555,15 @@ class ServerParser(KutisParser):
         print("----------------")
 
         # table[2] 새부핵심역량 과의 관계
-        Competencies_table_header = self.remove_html_tags(str(tables[2].findAll("th")))
-        Competencies_parsed_list = []
+        competencies_table_header = self.remove_html_tags(str(tables[2].findAll("th")))
+        competencies_parsed_list = []
 
-        Competencies_table_data = tables[2].findAll("td")
-        for td in Competencies_table_data:
-            Competencies_parsed_list.append(self.remove_html_tags(str(td)))
-        result.append(Competencies_parsed_list)
-        print(Competencies_table_header)
-        print(Competencies_table_data)
+        competencies_table_data = tables[2].findAll("td")
+        for td in competencies_table_data:
+            competencies_parsed_list.append(self.remove_html_tags(str(td)))
+        result.append(competencies_parsed_list)
+        print(competencies_table_header)
+        print(competencies_parsed_list)
         print("----------------")
 
         # table[3] 교과목 학습목표 및 평가방법 td 갯수세기
@@ -597,7 +589,7 @@ class ServerParser(KutisParser):
                 if 'rowspan' in str(td):
                     attribute_data = self.remove_html_tags(str(td))
                     count_attrib_trs = int(re.findall('\d+', str(td))[0]) - 1
-                parsed_table_data.append(self.remove_html_tags(str(td)).replace('\n', ""))
+                parsed_table_data.append(self.remove_line_feed(self.remove_html_tags(str(td))))
                 # print("result td :",parsed_table_data)
 
             if parsed_table_data:
@@ -704,4 +696,5 @@ class ServerParser(KutisParser):
         print(book_parsed_list)
         print("----------------")
 
+        print(result)
         return result
