@@ -199,3 +199,10 @@ venv/Lib/site-packages/django/views/decorators/__pycache__/
 venv/Lib/site-packages/django/views/generic/__pycache__/
 venv/Lib/site-packages/pytz/__pycache__/
 venv/Scripts/__pycache__/
+.idea/dataSources/28966d8d-57e7-41f6-9658-2cd2498bda62/
+classes/__pycache__/
+community/__pycache__/
+community/migrations/__pycache__/
+dataParser/migrations/__pycache__/
+db.sqlite3
+grades/__pycache__/
