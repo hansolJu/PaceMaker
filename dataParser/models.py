@@ -141,11 +141,7 @@ class Subject_desription(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKeymodels.ForeignKey(Course, on_delete=models.CASCADE)
     desription = models.CharField(max_length=1000)
 
 
@@ -154,11 +150,7 @@ class Core_Competence(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
     Knowledge_application = models.CharField(max_length=5)
     verification_ability = models.CharField(max_length=5)
@@ -176,11 +168,7 @@ class Learning_Objectives(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     # [핵심역량, 세부핵심역량, 반영률, 학습목표, 수행준거, 성취목표, 평가방법]
     Core_competencies = models.CharField(max_length=10)
     detailed_core_competencies = models.CharField(max_length=10)
@@ -196,11 +184,7 @@ class Lecture_method(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     #[강의형태, 수업방식, 교육용기자재]
     Lecture_type = models.CharField(max_length=100)
     teaching_method = models.CharField(max_length=100)
@@ -212,11 +196,7 @@ class Assignment(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     #[과제물]
     Assignment = models.CharField(max_length=500)
 
@@ -226,11 +206,7 @@ class School_composition_ratio(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     #['중간시험', '기말시험', '출석', '과제물및기타', '성적평가구분']
     Midterm_exam = models.CharField(max_length=10)
     final_exam = models.CharField(max_length=10)
@@ -244,11 +220,7 @@ class Weekly_course_contents(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     # [주, 교수내용, 방법, 관련자료, 과제물]
     week = models.CharField(max_length=1)
     contents = models.CharField(max_length=500)
@@ -262,11 +234,7 @@ class Book(models.Model):
     year = models.CharField(max_length=15)
     semester = models.CharField(max_length=15)
     subjectCode = models.CharField(max_length=15)
-    course = CompositeForeignKey(Course, on_delete=models.CASCADE, to_fields={
-        "year": "year",
-        "semester": "semester",
-        "subjectCode": "subjectCode",
-    }, nullable_fields=["subjectCode"])
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
     #[도서명, 저자, 출판사, 출판년도]
     title= models.CharField(max_length=200)
     author= models.CharField(max_length=300)

@@ -319,6 +319,7 @@ class ServerParser(KutisParser):
     @staticmethod
     def save_course_major(year, semester, parsed_data_list):
         """ td 단위로 구성된 리스트를 DB에 저장한다. """
+        Course.objects.filter(year=year,semester = semester).delete()
         for table_data in parsed_data_list:
             course_object = Course(
                 # 년도
