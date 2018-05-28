@@ -1,4 +1,3 @@
-from compositefk.fields import CompositeForeignKey
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.contrib.auth.hashers import make_password
