@@ -459,7 +459,10 @@ class ServerParser(KutisParser):
 
         # 최대페이지 추적
         pages = str(soup.findAll("p", {'class': 'fr'}))
-        totalpage = int(re.findall('\d+', pages)[0])
+        try:
+            totalpage = int(re.findall('\d+', pages)[0])
+        except IndexError:
+            return None
 
         # 교수 학번 추적 후 디비 저장
         tds = soup.findAll("td")
