@@ -4,6 +4,7 @@ from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 import operator
+from datetime import datetime
 
 
 # Create your views here.
@@ -11,7 +12,10 @@ class majorLV(LoginRequiredMixin, ListView):
     model = Course
     template_name = 'classes/majorAll.html'
     context_object_name = 'subjects'
-    paginate_by = 2
+    paginate_by = 20
+
+    def get_queryset(self):
+        return Course.objects.filter(year=datetime.today().year)
 
 
 class majorDV(LoginRequiredMixin, DetailView):

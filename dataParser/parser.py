@@ -142,7 +142,7 @@ class StudentParser(KutisParser):
         StudentGrade.objects.filter(hukbun_id=hukbun).delete()
         for table_data in parsed_data_list:
             grade_object = StudentGrade(
-                hukbun_id="201511868",
+                hukbun_id=hukbun,
                 # 이수구분
                 eisu=table_data[0],
                 # 인증구분
