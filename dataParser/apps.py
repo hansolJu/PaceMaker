@@ -12,7 +12,8 @@ class DataparserConfig(AppConfig):
             Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
 
         serverParser = ServerParser('201511858', 'Eunjin1221')
-        serverParser.save_course_detail(12377,serverParser.parse_course_detail(1,2,3,4))
+
+        serverParser.save_course_detail(287,serverParser.parse_course_detail(1,2,3,4))
 
 
 
