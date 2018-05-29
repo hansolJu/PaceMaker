@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from dataParser.models import StudentInfo, Course, StudentGrade
-from django.views.generic import ListView, DetailView
+from dataParser.models import (StudentInfo, Course, StudentGrade, Subject_desription,
+                               Core_Competence, Learning_Objectives, Lecture_method,
+                               Assignment, School_composition_ratio, Weekly_course_contents, Book)
+from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 import operator
@@ -18,9 +20,53 @@ class majorLV(LoginRequiredMixin, ListView):
         return Course.objects.filter(year=datetime.today().year)
 
 
-class majorDV(LoginRequiredMixin, DetailView):
-    model = Course
+class majorDV(LoginRequiredMixin, TemplateView):
+    template_name = 'classes/majorDetail.html'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(majorDV, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+
+        #Subject_desription, Core_Competence, Learning_Objectives,
+        #Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
+        try:
+            context['subjectName'] = Course.objects.get(id = context['pk'])
+        except Course.DoesNotExist:
+            context['subjectName'] = None
+        try:
+            context['subjectDescription'] = Subject_desription.objects.get(course=context['pk'])
+        except Subject_desription:
+            context['subjectDescription'] = None
+        try:
+            context['coreCompetence'] = Core_Competence.objects.get(id = context['pk'])
+        except Core_Competence.DoesNotExist:
+            context['coreCompetence'] = None
+        try:
+            context['learningObjectives'] = Learning_Objectives.objects.get(id=context['pk'])
+        except Learning_Objectives:
+            context['learningObjectives'] = None
+        try:
+            context['lectureMethod'] = Lecture_method.objects.get(id=context['pk'])
+        except Lecture_method:
+            context['lectureMethod'] = None
+        try:
+            context['assignment'] = Assignment.objects.get(id=context['pk'])
+        except Assignment.DoesNotExist:
+            context['assignment'] = None
+        try:
+            context['schoolCompositionRatio'] = School_composition_ratio.objects.get(id=context['pk'])
+        except School_composition_ratio.DoesNotExist:
+            context['schoolCompositionRatio']
+        try:
+            context['weeklyCourseContents'] = Weekly_course_contents.objects.get(id=context['pk'])
+        except Weekly_course_contents.DoesNotExist:
+            context['weeklyCourseContents'] = None
+        try:
+            context['book'] = Book.objects.get(id=context['pk'])
+        except Book.DoesNotExist:
+            context['book'] = None
+        return context
 
 class recommand(LoginRequiredMixin, View):
     """
