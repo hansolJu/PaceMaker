@@ -1,6 +1,66 @@
 {% extends "base.html" %}
 {% block title %}전공상세정보{% endblock %}
 
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">{{ subjectName }}</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <ul>
+                            <li><h4>교과목 해설</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>교과목해설</th>
+                                        <td>{{ subjectDescription.description }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <li><h4>세부핵심역량(학습성과)과의 관계</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>지식응용</th>
+                                        <th>검증능력</th>
+                                        <th>문제해결</th>
+                                        <th>도구활용</th>
+                                        <th>설계능력</th>
+                                        <th>팀웍스킬</th>
+                                        <th>의사전달</th>
+                                        <th>영향이해</th>
+                                        <th>책임의식</th>
+                                        <th>자기주도</th>
+                                    </tr>
+                                    <tr>
+                                        <td>{{ coreCompetence.Knowledge_application }}</td>
+                                        <td>{{ coreCompetence.verification_ability }}</td>
+                                        <td>{{ coreCompetence.problem_solving }}</td>
+                                        <td>{{ coreCompetence.tool_utilization }}</td>
+                                        <td>{{ coreCompetence.design_ability }}</td>
+                                        <td>{{ coreCompetence.teamwork_skill }}</td>
+                                        <td>{{ coreCompetence.communication }}</td>
+                                        <td>{{ coreCompetence.understanding_of_influence }}</td>
+                                        <td>{{ coreCompetence.responsibility }}</td>
+                                        <td>{{ coreCompetence }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
 {% block content %}
     <div id="content">
         <p class="other_posts">
@@ -13,7 +73,7 @@
             {% endif %}
         </p>
 
-        <p class="date">{{ object.title }}</p> <!-- 추가해야함 -->
+        <p>{{ object.title }}</p> <!-- 추가해야함 -->
         <br />
 
         <div class="body">

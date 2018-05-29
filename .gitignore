@@ -206,3 +206,11 @@ community/migrations/__pycache__/
 dataParser/migrations/__pycache__/
 db.sqlite3
 grades/__pycache__/
+.idea/PaceMaker.iml
+.idea/libraries/
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+community/migrations/
+/dataParser/migrations/
+/community/migrations/
