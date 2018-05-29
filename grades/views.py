@@ -91,12 +91,51 @@ class MajorGradeLV(LoginRequiredMixin,ListView):
     template_name = 'grades/major_subject_list.html'
     context_object_name = 'major_list'
 
+    def get_score_sum(self):
+        s = self.request.user.hukbun
+        sum = 0
+        scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(valid = '유효').values_list('score', flat=True)
+        for i in scorelist:
+            sum = sum + i
+
+        return sum
+
+    def get_avgGrade(self):
+        s = self.request.user.hukbun
+        avg = 0.0
+        sum = 0.0
+        gradelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(valid = '유효').filter(Q(grade='A+') | Q(grade='A') | Q(grade='B+') |Q(grade='B') |Q(grade='C+') |Q(grade='C') |Q(grade='D+') |Q(grade='D') |Q(grade='F')).values_list('grade', flat=True)
+        count = len(gradelist)
+        for g in gradelist:
+            s = getIntScore(self, g)
+            if s == None:
+                continue
+            else:
+                sum = sum + s
+        avg = sum/count
+        return avg
+
+    def get_fake_grade_sum(self):
+        s = self.request.user.hukbun
+        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).values_list('score', flat=True)
+        sum = 0
+        for i in fake_grade_sum:
+            sum = sum + i
+
+        return sum
 
     def get_queryset(self):
         # 학번과 이수로 filter를 사용해서 리스트를 가져와야 한다.
-        test = self.request.user.hukbun
-        return StudentGrade.objects.filter(hukbun=test).filter(Q(eisu='컴과') | Q(eisu='전필'))
+        s = self.request.user.hukbun
+        return StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필'))
 
+    def get_context_data(self,**kwargs):
+        context = super(MajorGradeLV, self).get_context_data(**kwargs)
+        context['major_list'] = self.get_queryset()
+        context['grade_sum'] = self.get_score_sum()
+        context['avgGrade'] = self.get_avgGrade()
+        context['fake_grade_sum'] = self.get_fake_grade_sum()
+        return context
 
 class GeGradeLV(LoginRequiredMixin,ListView):
     model = StudentGrade
@@ -106,3 +145,44 @@ class GeGradeLV(LoginRequiredMixin,ListView):
     def get_queryset(self):
         test = self.request.user.hukbun
         return StudentGrade.objects.filter(hukbun=test).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회'))
+
+    def get_score_sum(self):
+        s = self.request.user.hukbun
+        sum = 0
+        scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회')).filter(valid = '유효').values_list('score', flat=True)
+        for i in scorelist:
+            sum = sum + i
+
+        return sum
+
+    def get_avgGrade(self):
+        s = self.request.user.hukbun
+        avg = 0.0
+        sum = 0.0
+        gradelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회')).filter(valid = '유효').filter(Q(grade='A+') | Q(grade='A') | Q(grade='B+') |Q(grade='B') |Q(grade='C+') |Q(grade='C') |Q(grade='D+') |Q(grade='D') |Q(grade='F')).values_list('grade', flat=True)
+        count = len(gradelist)
+        for g in gradelist:
+            s = getIntScore(self, g)
+            if s == None:
+                continue
+            else:
+                sum = sum + s
+        avg = sum/count
+        return avg
+
+    def get_fake_grade_sum(self):
+        s = self.request.user.hukbun
+        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회')).values_list('score', flat=True)
+        sum = 0
+        for i in fake_grade_sum:
+            sum = sum + i
+
+        return sum
+
+    def get_context_data(self,**kwargs):
+        context = super(GeGradeLV, self).get_context_data(**kwargs)
+        context['ge_list'] = self.get_queryset()
+        context['grade_sum'] = self.get_score_sum()
+        context['avgGrade'] = self.get_avgGrade()
+        context['fake_grade_sum'] = self.get_fake_grade_sum()
+        return context

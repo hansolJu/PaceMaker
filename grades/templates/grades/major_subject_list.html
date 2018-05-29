@@ -49,6 +49,22 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>총 전공 취득 학점</th>
+                                    <th>전공 평점 산출 학점</th>
+                                    <th>총 전공 평점 평균</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ fake_grade_sum }}</td>
+                                    <td>{{ grade_sum }}</td>
+                                    <td>{{ avgGrade }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <!-- /.table-responsive -->
                     </div>
