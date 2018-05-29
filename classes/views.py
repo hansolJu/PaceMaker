@@ -32,40 +32,40 @@ class majorDV(LoginRequiredMixin, TemplateView):
         #Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
         try:
             context['subjectName'] = Course.objects.get(id = context['pk'])
-        except Course.DoesNotExist:
+        except :
             context['subjectName'] = None
         try:
-            context['subjectDescription'] = Subject_desription.objects.get(course=context['pk'])
-        except Subject_desription:
-            context['subjectDescription'] = None
+            context['subjectDescriptions'] = Subject_desription.objects.filter(course=context['pk'])
+        except :
+            context['subjectDescriptions'] = None
         try:
-            context['coreCompetence'] = Core_Competence.objects.get(id = context['pk'])
-        except Core_Competence.DoesNotExist:
-            context['coreCompetence'] = None
+            context['coreCompetences'] = Core_Competence.objects.filter(id = context['pk'])
+        except :
+            context['coreCompetences'] = None
         try:
-            context['learningObjectives'] = Learning_Objectives.objects.get(id=context['pk'])
-        except Learning_Objectives:
+            context['learningObjectives'] = Learning_Objectives.objects.filter(id=context['pk'])
+        except :
             context['learningObjectives'] = None
         try:
-            context['lectureMethod'] = Lecture_method.objects.get(id=context['pk'])
-        except Lecture_method:
-            context['lectureMethod'] = None
+            context['lectureMethods'] = Lecture_method.objects.filter(id=context['pk'])
+        except :
+            context['lectureMethods'] = None
         try:
-            context['assignment'] = Assignment.objects.get(id=context['pk'])
-        except Assignment.DoesNotExist:
-            context['assignment'] = None
+            context['assignments'] = Assignment.objects.filter(id=context['pk'])
+        except :
+            context['assignments'] = None
         try:
-            context['schoolCompositionRatio'] = School_composition_ratio.objects.get(id=context['pk'])
-        except School_composition_ratio.DoesNotExist:
-            context['schoolCompositionRatio']
+            context['schoolCompositionRatioes'] = School_composition_ratio.objects.filter(id=context['pk'])
+        except :
+            context['schoolCompositionRatioes'] = None
         try:
-            context['weeklyCourseContents'] = Weekly_course_contents.objects.get(id=context['pk'])
-        except Weekly_course_contents.DoesNotExist:
+            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
+        except :
             context['weeklyCourseContents'] = None
         try:
-            context['book'] = Book.objects.get(id=context['pk'])
-        except Book.DoesNotExist:
-            context['book'] = None
+            context['books'] = Book.objects.filter(id=context['pk'])
+        except :
+            context['books'] = None
         return context
 
 class recommand(LoginRequiredMixin, View):
