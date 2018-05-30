@@ -552,12 +552,16 @@
         <!-- /.row -->
     </div>
     <!-- /#page-wrapper -->
+    <script>
+    var Scoure = [4,3.0,2,3];
+    </script>
+
 
     <script>
         // Our labels along the x-axis
         var item = ['전공평점','교양평점','인간미','아몰랑'];
         // For drawing the lines
-        var Scoure = [4,3.0,2,3];
+
 
         var ctx = document.getElementById("myChart");
         var myChart = new Chart(ctx, {
@@ -592,6 +596,7 @@
             }
         });
     </script>
+
 
 {% endblock content %}
 
