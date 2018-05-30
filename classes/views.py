@@ -1,6 +1,8 @@
 from django.shortcuts import render
-from dataParser.models import StudentInfo, Course, StudentGrade
-from django.views.generic import ListView, DetailView
+from dataParser.models import (StudentInfo, Course, StudentGrade, Subject_desription,
+                               Core_Competence, Learning_Objectives, Lecture_method,
+                               Assignment, School_composition_ratio, Weekly_course_contents, Book)
+from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 import operator
@@ -18,9 +20,53 @@ class majorLV(LoginRequiredMixin, ListView):
         return Course.objects.filter(year=datetime.today().year)
 
 
-class majorDV(LoginRequiredMixin, DetailView):
-    model = Course
+class majorDV(LoginRequiredMixin, TemplateView):
+    template_name = 'classes/majorDetail.html'
 
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(majorDV, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+
+        #Subject_desription, Core_Competence, Learning_Objectives,
+        #Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
+        try:
+            context['subjectName'] = Course.objects.get(id = context['pk'])
+        except :
+            context['subjectName'] = None
+        try:
+            context['subjectDescriptions'] = Subject_desription.objects.filter(course=context['pk'])
+        except :
+            context['subjectDescriptions'] = None
+        try:
+            context['coreCompetences'] = Core_Competence.objects.filter(id = context['pk'])
+        except :
+            context['coreCompetences'] = None
+        try:
+            context['learningObjectives'] = Learning_Objectives.objects.filter(id=context['pk'])
+        except :
+            context['learningObjectives'] = None
+        try:
+            context['lectureMethods'] = Lecture_method.objects.filter(id=context['pk'])
+        except :
+            context['lectureMethods'] = None
+        try:
+            context['assignments'] = Assignment.objects.filter(id=context['pk'])
+        except :
+            context['assignments'] = None
+        try:
+            context['schoolCompositionRatioes'] = School_composition_ratio.objects.filter(id=context['pk'])
+        except :
+            context['schoolCompositionRatioes'] = None
+        try:
+            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
+        except :
+            context['weeklyCourseContents'] = None
+        try:
+            context['books'] = Book.objects.filter(id=context['pk'])
+        except :
+            context['books'] = None
+        return context
 
 class recommand(LoginRequiredMixin, View):
     """

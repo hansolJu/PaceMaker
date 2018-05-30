@@ -154,9 +154,9 @@ class StudentParser(KutisParser):
                 # 교과목명
                 subject=table_data[4],
                 # 학점
-                score=table_data[5],
+                score=int(table_data[5]),
                 # 설계학점
-                grade_design=table_data[6],
+                grade_design=(table_data[6]),
                 # 등급
                 grade=table_data[7],
                 # 유효구분

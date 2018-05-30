@@ -129,7 +129,7 @@ class Course(models.Model):
     lectureRoom = models.CharField(max_length=100, blank=True, null=True)
 
     # class Meta:
-    #     unique_together = ('year', 'semester', 'subjectCode')
+    #     unique_together = ('year', 'semester', 'subjectCode')z
 
     def __str__(self):
         return self.subjectName
@@ -154,6 +154,7 @@ class Core_Competence(models.Model):
     communication = models.CharField(max_length=5)
     understanding_of_influence = models.CharField(max_length=5)
     responsibility = models.CharField(max_length=5)
+    self_led = models.CharField(max_length=5)
 
 
 # table[3] 교과목 학습목표

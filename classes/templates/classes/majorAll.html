@@ -40,7 +40,7 @@
                                     {% elif subject.semester == '20' %}
                                         <td>2</td>
                                     {% endif %}
-                                    <td><a href="{{ subject.get_absolute_url }}">{{ subject.subjectName }}</a></td>
+                                    <td><a href="{% url 'classes:major_detail' subject.id %}">{{ subject.subjectName }}</a></td>
                                     <td>{{ subject.subjectCode }}</td>
                                     <td>{{ subject.grade }}</td>
                                     <td>{{ subject.eisu }}</td>

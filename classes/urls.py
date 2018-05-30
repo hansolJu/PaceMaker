@@ -4,5 +4,5 @@ from .views import *
 app_name='classes'
 urlpatterns = [
     path('list/', majorLV.as_view(), name= 'major_list'),
-    #re_path(r'^major/(?P<slug>[-\w]+)/$', majorDV.as_view(), name='major_detail'),
+    re_path(r'^(?P<pk>\d+)/$', majorDV.as_view(), name='major_detail'),
 ]

@@ -42,9 +42,6 @@
                                         <td>{{ grade.subject_code }}</td>
                                         <td>{{ grade.subject }}</td>
                                         <td>{{ grade.score }}</td>
-                                        {% with total_score=0 %}
-                                            {{ total_score|add:grade.score }}
-                                        {% endwith %}
                                         <td>{{ grade.grade_design }}</td>
                                         <td>{{ grade.grade }}</td>
                                         <td>{{ grade.valid }}</td>
@@ -55,12 +52,16 @@
                             <table class="table table-bordered table-hover table-striped">
                                 <thead>
                                 <tr>
-                                    <th>전체 이수 학점</th>
+                                    <th>총 취득 학점</th>
+                                    <th>평점 산출 학점</th>
+                                    <th>총 평점 평균</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
-                                    <td>{{ total_score }}</td>
+                                    <td>{{ fake_grade_sum }}</td>
+                                    <td>{{ grade_sum }}</td>
+                                    <td>{{ avgGrade }}</td>
                                 </tr>
                                 </tbody>
                             </table>
