@@ -21,7 +21,7 @@
                                 <table class="table table-bordered table-hover table-striped">
                                     <tr>
                                         <th>교과목해설</th>
-                                        <td>{{ subjectDescription.description }}</td>
+                                        <td>{% for subjectDescription in subjectDescriptions %}{{ subjectDescription.description }} {% endfor %}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -40,44 +40,123 @@
                                         <th>책임의식</th>
                                         <th>자기주도</th>
                                     </tr>
+                                    {% for coreCompetence in coreCompetences %}
+                                        <tr>
+                                            <td>{{ coreCompetence.Knowledge_application }}</td>
+                                            <td>{{ coreCompetence.verification_ability }}</td>
+                                            <td>{{ coreCompetence.problem_solving }}</td>
+                                            <td>{{ coreCompetence.tool_utilization }}</td>
+                                            <td>{{ coreCompetence.design_ability }}</td>
+                                            <td>{{ coreCompetence.teamwork_skill }}</td>
+                                            <td>{{ coreCompetence.communication }}</td>
+                                            <td>{{ coreCompetence.understanding_of_influence }}</td>
+                                            <td>{{ coreCompetence.responsibility }}</td>
+                                            <td>{{ coreCompetence.self_led }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <li><h4>교과목 학습목표 및 평가방법</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
                                     <tr>
-                                        <td>{{ coreCompetence.Knowledge_application }}</td>
-                                        <td>{{ coreCompetence.verification_ability }}</td>
-                                        <td>{{ coreCompetence.problem_solving }}</td>
-                                        <td>{{ coreCompetence.tool_utilization }}</td>
-                                        <td>{{ coreCompetence.design_ability }}</td>
-                                        <td>{{ coreCompetence.teamwork_skill }}</td>
-                                        <td>{{ coreCompetence.communication }}</td>
-                                        <td>{{ coreCompetence.understanding_of_influence }}</td>
-                                        <td>{{ coreCompetence.responsibility }}</td>
-                                        <td>{{ coreCompetence }}</td>
+                                        <th>핵심역량</th>
+                                        <th>세부핵심역량</th>
+                                        <th>반영률</th>
+                                        <th>학습목표</th>
+                                        <th>수행준거</th>
+                                        <th>성취목표</th>
+                                        <th>평가방법</th>
                                     </tr>
+                                    {% for learningObjective in learningObjectives %}
+                                        <tr>
+                                            <td>{{ learningObjective.Core_competencies }}</td>
+                                            <td>{{ learningObjective.detailed_core_competencies }}</td>
+                                            <td>{{ learningObjective.reflectance }}</td>
+                                            <td>{{ learningObjective.learning_objectives }}</td>
+                                            <td>{{ learningObjective.performance_criteria }}</td>
+                                            <td>{{ learningObjective.achievement_goals }}</td>
+                                            <td>{{ learningObjective.evaluation_methods }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <li><h4>강의방법</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>강의형태</th>
+                                        <td>{% for lectureMethod in lectureMethods %}{{ lectureMethod.Lecture_type }} {% endfor %}</td>
+                                        <th>수업방식</th>
+                                        <td>{% for lectureMethod in lectureMethods %}{{ lectureMethod.teaching_method }} {% endfor %}</td>
+                                        <th>교육용기자재</th>
+                                        <td>{% for lectureMethod in lectureMethods %}{{ lectureMethod.educational_equipment }} {% endfor %}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <li><h4>과제물</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>과제물</th>
+                                        <td>{% for assignment in assignments %}{{ assignment.Assignment }} {% endfor %}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                            <li><h4>성적구성비율</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    {% for schoolCompositionRatio in schoolCompositionRatios %}
+                                        <tr>
+                                            <td>중간시험 {{ schoolCompositionRatio.Midterm_exam }},    기말시험 {{ schoolCompositionRatio.final_exam }},    출석 {{ schoolCompositionRatio.attendance }},    과제물 및 기타 {{ schoolCompositionRatio.assignments_and_others }},    [성적평가구분 : {{ schoolCompositionRatio.grading_division }}]</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <li><h4>주별 강좌내용</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>주</th>
+                                        <th>교수내용</th>
+                                        <th>방법</th>
+                                        <th>관련자료</th>
+                                        <th>과제물</th>
+                                    </tr>
+                                    {% for weeklyCourseContent in weeklyCourseContents %}
+                                        <tr>
+                                            <td>{{ weeklyCourseContent.week }}</td>
+                                            <td>{{ weeklyCourseContent.contents }}</td>
+                                            <td>{{ weeklyCourseContent.methods }}</td>
+                                            <td>{{ weeklyCourseContent.related_materials }}</td>
+                                            <td>{{ weeklyCourseContent.assignments }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <li><h4>교재</h4></li>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>도서명</th>
+                                        <th>저자</th>
+                                        <th>출판사</th>
+                                        <th>출판년도</th>
+                                    </tr>
+                                    {% for book in books %}
+                                        <tr>
+                                            <td>{{ book.title }}</td>
+                                            <td>{{ book.author }}</td>
+                                            <td>{{ book.publisher }}</td>
+                                            <td>{{ book.year_of_publication }}</td>
+                                        </tr>
+                                    {% endfor %}
                                 </table>
                             </div>
                         </ul>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-{% endblock %}
-{% block content %}
-    <div id="content">
-        <p class="other_posts">
-            {% if object.get_previous_by_modify_date %}
-                <a href="{{ object.get_previous_post.get_absolute_url }}" title="View previous subject"> &laquo;--{{ object.get_previous_post }}</a>
-            {% endif %}
-
-            {% if object.get_next_by_modify_date %}
-                | <a href="{{ object.get_next_post.get_absolute_url }}" title="View next subject">{{ object.get_next_post }}--&raquo;</a>
-            {% endif %}
-        </p>
-
-        <p>{{ object.title }}</p> <!-- 추가해야함 -->
-        <br />
-
-        <div class="body">
-            <!-- 추가해야함 -->
         </div>
     </div>
 {% endblock %}
