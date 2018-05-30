@@ -28,47 +28,49 @@ class majorDV(LoginRequiredMixin, TemplateView):
         context = super(majorDV, self).get_context_data(**kwargs)
         # Add in a QuerySet of all the books
 
-        #Subject_desription, Core_Competence, Learning_Objectives,
-        #Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
+        # Subject_desription, Core_Competence, Learning_Objectives,
+        # Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
         try:
-            context['subjectName'] = Course.objects.get(id = context['pk'])
-        except :
+            context['subjectName'] = Course.objects.get(id=context['pk'])
+        except:
             context['subjectName'] = None
         try:
             context['subjectDescriptions'] = Subject_desription.objects.filter(course=context['pk'])
-        except :
+        except:
             context['subjectDescriptions'] = None
         try:
-            context['coreCompetences'] = Core_Competence.objects.filter(id = context['pk'])
-        except :
+            context['coreCompetences'] = Core_Competence.objects.filter(id=context['pk'])
+        except:
             context['coreCompetences'] = None
         try:
             context['learningObjectives'] = Learning_Objectives.objects.filter(id=context['pk'])
-        except :
+        except:
             context['learningObjectives'] = None
         try:
             context['lectureMethods'] = Lecture_method.objects.filter(id=context['pk'])
-        except :
+        except:
             context['lectureMethods'] = None
         try:
             context['assignments'] = Assignment.objects.filter(id=context['pk'])
-        except :
+        except:
             context['assignments'] = None
         try:
             context['schoolCompositionRatioes'] = School_composition_ratio.objects.filter(id=context['pk'])
-        except :
+        except:
             context['schoolCompositionRatioes'] = None
         try:
             context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
-        except :
+        except:
             context['weeklyCourseContents'] = None
         try:
             context['books'] = Book.objects.filter(id=context['pk'])
-        except :
+        except:
             context['books'] = None
         return context
 
-class recommand(LoginRequiredMixin, View):
+
+class RecommandView(LoginRequiredMixin, TemplateView):
+    template_name = "classes/recommand.html"
     """
     1. 내가 들을 수 있는 아직 듣지 않은 전공 수업들 보여줌
     2. 제일 잘 나가는 타 학생의 전공 수업들을 보여줌
@@ -79,12 +81,25 @@ class recommand(LoginRequiredMixin, View):
     notTakenCoursesPKList = []
     topStudentCourses = []
     retakeCoursesPKList = []
+    specialCoursesPKList = []
 
-    def get(self, request):
-        student = StudentInfo.objects.get(hukbun=request.user.hukbun)
-        takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
+    def notTakenCourses(self):
+        return Course.objects.filter(pk__in=self.notTakenCoursesPKList)
+    def retakeCourses(self):
+        return Course.objects.filter(pk__in=self.retakeCoursesPKList)
+    def specialCourses(self):
+        return Course.objects.filter(pk__in=self.specialCoursesPKList)
 
-        self.getCoursesPKList()
+
+    def get_context_data(self, **kwargs):
+        context = super(RecommandView, self).get_context_data(**kwargs)
+        print(context)
+        # student = StudentInfo.objects.get(hukbun=request.user.hukbun)
+        # takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
+        #
+        # self.getCoursesPKList(student, takenCoursesGrades)
+        # self.getRetakeCourses(student, takenCoursesGrades)
+        # self.getSpecialCase() #이건 미들웨어로 가야됨
 
     def getSpecialCase(self):  # 자신의 학년과 맞지 않게 다른 학년의 수업을 들은 경우를 보여줌
         """
@@ -92,7 +107,6 @@ class recommand(LoginRequiredMixin, View):
         filter로 학생의 모든 grade정보를 가져와서 yearNsemester를 중복제거한 리스트로 보자. 이의 개수 하나당 학기 하나 -> 들었을 때 학년을 알 수 있다.
         얻어진 학년과 studentGrade에서 year,semester,subject_code를 이용해서 얻어진 course의 학년과 비교해서 다를 경우
             과목, 들었을 때의 학년 정보를 딕셔너리화해서 저장하자
-        :return:
         """
         allStudents = StudentInfo.objects.all()
         for student in allStudents:
@@ -107,17 +121,17 @@ class recommand(LoginRequiredMixin, View):
                         grade.yearNsemester)  # 해당 과목의 학기가 semesterList에서 검색해 index를 반환한다 => 해당 과목이 몇학기에 들은 과목인가 검사
                     course = Course.objects.get(grade.yearNsemester[:4], grade.yearNsemester[-3], grade.subject_code)
                     courseGrade = course.grade
+                    if (semester + 1) / 2 != courseGrade:  # 추천 학년대로 과목을 안 들었을 경우
+                        self.specialCoursesPKList.append(course.id)
                 except:
                     pass
-                if (semester+1)/2 != courseGrade: #추천 학년대로 과목을 안 들었을 경우
-                    self.retakeCourses.append(course.id)
 
     def getRetakeCourses(self, student, takenCoursesGrades):
         takenCoursesScoresDic = {}
         for takenCourseGrade in takenCoursesGrades:  # 딕셔너리에 과목코드:(int)점수 저장
             takenCoursesScoresDic[takenCourseGrade.subject_code] = self.getIntScore(takenCourseGrade.grade)
-        takenCoursesScoresDic = sorted(takenCoursesScoresDic.items(), key=operator.itemgetter(1))  # 오름차순 정렬
-        self.retakeCourses = takenCoursesScoresDic.keys()
+        takenCoursesScoresDic = sorted(takenCoursesScoresDic)#sorted(takenCoursesScoresDic.items(), key=operator.itemgetter(1))  # 오름차순 정렬
+        self.retakeCourses = takenCoursesScoresDic
 
     def getTopStudentCourses(self):
         # 지훈이가 하길 기다리자
@@ -127,7 +141,7 @@ class recommand(LoginRequiredMixin, View):
         for grade in takenCoursesGrades:
             try:
                 self.takenCoursesPKList.append(
-                    Course.objects.get(year=grade.year, semester=grade.semester, subjectCode=grade.subject_code))
+                    Course.objects.get(year=grade.yearNsemester[:4], semester=grade.yearNsemester[:-3], subjectCode=grade.subject_code))
             except Course.DoesNotExist:
                 continue
         self.takenCoursesPKList = list(set(self.takenCoursesPKList))  # 들은 수업들 구함
