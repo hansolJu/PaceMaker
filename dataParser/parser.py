@@ -58,7 +58,6 @@ class KutisParser(object):
 
 class StudentParser(KutisParser):
     # print("StudentParser 객체 생성")
-
     @staticmethod
     def save_info(parsed_data_list):
         '''학생정보를 데이터베이스에 저장
