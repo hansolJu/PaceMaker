@@ -17,7 +17,7 @@ class majorLV(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        return Course.objects.filter(year=datetime.today().year)
+        return Course.objects.filter(year=datetime.today().year).order_by('grade', 'subjectName')
 
 
 class majorDV(LoginRequiredMixin, TemplateView):
@@ -55,9 +55,9 @@ class majorDV(LoginRequiredMixin, TemplateView):
         except:
             context['assignments'] = None
         try:
-            context['schoolCompositionRatioes'] = School_composition_ratio.objects.filter(id=context['pk'])
+            context['schoolCompositionRatios'] = School_composition_ratio.objects.filter(id=context['pk'])
         except:
-            context['schoolCompositionRatioes'] = None
+            context['schoolCompositionRatios'] = None
         try:
             context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
         except:
@@ -83,23 +83,26 @@ class RecommandView(LoginRequiredMixin, TemplateView):
     retakeCoursesPKList = []
     specialCoursesPKList = []
 
-    def notTakenCourses(self):
-        return Course.objects.filter(pk__in=self.notTakenCoursesPKList)
-    def retakeCourses(self):
-        return Course.objects.filter(pk__in=self.retakeCoursesPKList)
-    def specialCourses(self):
-        return Course.objects.filter(pk__in=self.specialCoursesPKList)
+    # def notTakenCourses(self):
+    #     #return Course.objects.filter(pk__in=self.notTakenCoursesPKList)
+    # def retakeCourses(self):
+    #     return Course.objects.filter(pk__in=self.retakeCoursesPKList)
+    # def specialCourses(self):
+    #     return Course.objects.filter(pk__in=self.specialCoursesPKList)
 
 
     def get_context_data(self, **kwargs):
         context = super(RecommandView, self).get_context_data(**kwargs)
-        print(context)
-        # student = StudentInfo.objects.get(hukbun=request.user.hukbun)
-        # takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
-        #
-        # self.getCoursesPKList(student, takenCoursesGrades)
-        # self.getRetakeCourses(student, takenCoursesGrades)
-        # self.getSpecialCase() #이건 미들웨어로 가야됨
+        student = StudentInfo.objects.get(hukbun=self.request.user.hukbun)
+        takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
+        self.getCoursesPKList(student, takenCoursesGrades)
+        self.getRetakeCourses(student, takenCoursesGrades)
+        self.getSpecialCase() #이건 미들웨어로 가야됨
+        try:
+            context['notTakenCourses'] = Course.objects.filter(pk__in=self.notTakenCoursesPKList, year=datetime.today().year)
+        except:
+            context['notTakenCourses'] = None
+        return context
 
     def getSpecialCase(self):  # 자신의 학년과 맞지 않게 다른 학년의 수업을 들은 경우를 보여줌
         """
@@ -141,11 +144,10 @@ class RecommandView(LoginRequiredMixin, TemplateView):
         for grade in takenCoursesGrades:
             try:
                 self.takenCoursesPKList.append(
-                    Course.objects.get(year=grade.yearNsemester[:4], semester=grade.yearNsemester[:-3], subjectCode=grade.subject_code))
+                    Course.objects.filter(year=grade.yearNsemester[:4], semester=grade.yearNsemester[:-3], subjectName=grade.subject))
             except Course.DoesNotExist:
                 continue
         self.takenCoursesPKList = list(set(self.takenCoursesPKList))  # 들은 수업들 구함
-
         allCoursesPKList = []
         for course in Course.objects.all():
             allCoursesPKList.append(course.id)

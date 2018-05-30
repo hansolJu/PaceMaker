@@ -23,7 +23,6 @@
                                         <th>년도</th>
                                         <th>학기</th>
                                         <th>과목명</th>
-                                        <th>과목코드</th>
                                         <th>학년</th>
                                         <th>이수구분</th>
                                         <th>학점</th>
@@ -40,7 +39,6 @@
                                             <td>2</td>
                                         {% endif %}
                                         <td><a href="{% url 'classes:major_detail' subject.id %}">{{ subject.subjectName }}</a></td>
-                                        <td>{{ subject.subjectCode }}</td>
                                         <td>{{ subject.grade }}</td>
                                         <td>{{ subject.eisu }}</td>
                                         <td>{{ subject.score }}</td>
