@@ -25,7 +25,7 @@
                                     </tr>
                                 </table>
                             </div>
-                            <li><h4>세부핵심역량(학습성과)과의 관계</h4></li> 
+                            <li><h4>세부핵심역량(학습성과)과의 관계</h4></li>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-striped">
                                     <tr>
@@ -106,7 +106,7 @@
                             <li><h4>성적구성비율</h4></li>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover table-striped">
-                                    {% for schoolCompositionRatio in schoolCompositionRatioes %}
+                                    {% for schoolCompositionRatio in schoolCompositionRatios %}
                                         <tr>
                                             <td>중간시험 {{ schoolCompositionRatio.Midterm_exam }},    기말시험 {{ schoolCompositionRatio.final_exam }},    출석 {{ schoolCompositionRatio.attendance }},    과제물 및 기타 {{ schoolCompositionRatio.assignments_and_others }},    [성적평가구분 : {{ schoolCompositionRatio.grading_division }}]</td>
                                         </tr>

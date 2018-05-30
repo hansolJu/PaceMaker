@@ -285,7 +285,7 @@
                             <a href="{% url 'classes:major_list' %}">세부전공내역</a>
                         </li>
                         <li>
-                            <a href="morris.html">수강신청추천</a>
+                            <a href="{% url 'classes:recommand' %}">수강신청추천</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -294,13 +294,16 @@
                     <a href="index.html"><i class="fa fa-table fa-fw"></i> 성적<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="{% url 'grades:semester'%}">학기 성적</a>
+                            <a href="{% url 'grades:semester'%}">전체 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:major' %}">전공 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:ge' %}">교양 성적</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'grades:msc' %}">MSC 성적</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
