@@ -3,7 +3,7 @@
 {% block title %}
     home.html
 {% endblock title%}
-
+{% load static %}
 {% load staticfiles %}
 {% block extrastyle %}
 
@@ -49,6 +49,24 @@
                                 {% endfor %}
                                 </tbody>
                             </table>
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>총 취득 학점</th>
+                                    <th>평점 산출 학점</th>
+                                    <th>총 평점 평균</th>
+                                    <th>총 설계 학점</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ fake_grade_sum }}</td>
+                                    <td>{{ grade_sum }}</td>
+                                    <td>{{ avgGrade }}</td>
+                                    <td>{{ design_grade_sum }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
                         </div>
                         <!-- /.table-responsive -->
                     </div>
@@ -66,3 +84,6 @@
     </div>
 {% endblock footer%}
 
+{% comment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>{% endcomment %}

@@ -5,9 +5,11 @@ from .views import *
 app_name = "grades"
 urlpatterns = [
     #path('', GradeLV.as_view(), name='index'),
-    path('semester_grade', GradeLV.as_view(), name='semester'),
+    path('semester_grade/', GradeLV.as_view(), name='semester'),
     path('major_grade/', MajorGradeLV.as_view(), name='major'),
     path('ge_grade/', GeGradeLV.as_view(), name='ge'),
+    path('msc_grade/',MscGradeLV.as_view(), name='msc'),
+
     # path('post/<slug:slug>', PostDV.as_view(), name='post_detail'),
     # path('archive/', PostAV.as_view(), name='post_archive'),
     # path('<int:year>', PostAV.as_view(), name='post_year_archive'),

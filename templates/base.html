@@ -9,7 +9,6 @@
 
     <title>{% block title %}Django Web Programming{% endblock %}</title>
     {% load staticfiles %}
-
     <!-- Bootstrap Core CSS -->
     <link href="{% static "asset/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
 
@@ -24,6 +23,8 @@
 
     <!-- Custom Fonts -->
     <link href="{% static "asset/vendor/font-awesome/css/font-awesome.min.css"%}" rel="stylesheet" type="text/css">
+    <!-- chart.js -->
+    <script src="{% static "asset/vendor/chart/Chart.js" %}"></script>
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -46,7 +47,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
         </button>
-        <a class="navbar-brand" href="{% url "index" %}">Pace MAKER v0.1</a>
+        <a class="navbar-brand" href="{% url "index" %}">Pace Maker v0.1</a>
     </div>
     <!-- /.navbar-header -->
 
@@ -275,7 +276,7 @@
                     <!-- /input-group -->
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+                    <a href={% url "index" %}><i class="fa fa-dashboard fa-fw"></i> 메인 페이지</a>
                 </li>
                 <li>
                     <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 수강정보<span class="fa arrow"></span></a>
@@ -284,7 +285,7 @@
                             <a href="{% url 'classes:major_list' %}">세부전공내역</a>
                         </li>
                         <li>
-                            <a href="morris.html">수강신청추천</a>
+                            <a href="{% url 'classes:recommand' %}">수강신청추천</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -293,13 +294,49 @@
                     <a href="index.html"><i class="fa fa-table fa-fw"></i> 성적<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="{% url 'grades:semester' %}">학기 성적</a>
+                            <a href="{% url 'grades:semester'%}">전체 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:major' %}">전공 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:ge' %}">교양 성적</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'grades:msc' %}">MSC 성적</a>
+                        </li>
+                    </ul>
+                    <!-- /.nav-second-level -->
+                </li>
+                <li>
+                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> Ranking <span class="fa arrow"></span></a>
+                    <ul class="nav nav-second-level">
+                        <li>
+                            <a href="#">1학년 순위</a>
+                        </li>
+                        <li>
+                            <a href="#">2학년 순위</a>
+                        </li>
+                        <li>
+                            <a href="#">3학년 순위</a>
+                        </li>
+                        <li>
+                            <a href="#">4학년 순위<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                                <li>
+                                    <a href="#">Third Level Item</a>
+                                </li>
+                            </ul>
+                            <!-- /.nav-third-level -->
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -317,9 +354,9 @@
                     <!-- /.nav-second-level -->
                 </li>
 
-{#                <li>#}
-{#                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>#}
-{#                </li>#}
+                {#                <li>#}
+                {#                    <a href="forms.html"><i class="fa fa-edit fa-fw"></i> Forms</a>#}
+                {#                </li>#}
                 <li>
                     <a href="#"><i class="fa fa-wrench fa-fw"></i> UI Elements<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -345,43 +382,19 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-sitemap fa-fw"></i> Multi-Level Dropdown<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-files-o fa-fw"></i> 바로가기<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="#">Second Level Item</a>
+                            <a href="http://cs.kyonggi.ac.kr/Index">CS page</a>
                         </li>
                         <li>
-                            <a href="#">Second Level Item</a>
+                            <a href="http://kutis.kyonggi.ac.kr/webkutis/">kutis page</a>
                         </li>
                         <li>
-                            <a href="#">Third Level <span class="fa arrow"></span></a>
-                            <ul class="nav nav-third-level">
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                                <li>
-                                    <a href="#">Third Level Item</a>
-                                </li>
-                            </ul>
-                            <!-- /.nav-third-level -->
-                        </li>
-                    </ul>
-                    <!-- /.nav-second-level -->
-                </li>
-                <li>
-                    <a href="#"><i class="fa fa-files-o fa-fw"></i> Sample Pages<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level">
-                        <li>
-                            <a href="blank.html">Blank Page</a>
+                            <a href="http://lms.kyonggi.ac.kr/">LMS page</a>
                         </li>
                         <li>
-                            <a href="login.html">Login Page</a>
+                            <a href="http://kutis.kyonggi.ac.kr:8080/sugangLink.html">수강신청 page</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -412,6 +425,14 @@
     <script src="{% static "asset/vendor/raphael/raphael.min.js"%}"></script>
     <script src="{% static "asset/vendor/morrisjs/morris.min.js"%}"></script>
     <script src="{% static "asset/data/morris-data.js"%}"></script>
+
+    <!-- Chart.js JavaScript -->
+    <script src="{% static "asset/vendor/chart/Chart.bundle.js" %}"></script>
+    <script src="{% static "asset/vendor/chart/Chart.bundle.min.js" %}"></script>
+
+    <script src="{% static "asset/vendor/chart/Chart.min.js" %}"></script>
+{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>#}
+
 
     <!-- Custom Theme JavaScript -->
     <script src="{% static "asset/dist/js/sb-admin-2.js"%}"></script>
