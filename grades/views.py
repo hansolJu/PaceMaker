@@ -37,7 +37,6 @@ class GradeLV(LoginRequiredMixin,ListView):
     model = StudentGrade
     template_name = 'grades/grades_list.html'
     context_object_name = 'grades_list'
-
     def get_score_sum(self):
         s = self.request.user.hukbun
         sum = 0
