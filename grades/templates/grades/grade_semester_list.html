@@ -1,11 +1,95 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Grade Semester List</title>
-</head>
-<body>
-    <h1>학기별 성적</h1>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% block title %}
+    home.html
+{% endblock title%}
+{% load static %}
+
+{% load index %}
+{{ List|index:x }}
+
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">학기별 성적</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="table-responsive">
+                            {% for semester in semestergradelist %}
+                                <h4 style="text-align : left">{{ semesterlist|index:forloop.counter0 }}</h4>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>이수구분</th>
+                                        <th>인증구분</th>
+                                        <th>년도학기</th>
+                                        <th>학수코드</th>
+                                        <th>교과목명</th>
+                                        <th>학점</th>
+                                        <th>설계학점</th>
+                                        <th>등급</th>
+                                        <th>유효구분</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for gradelist in semester %}
+                                        <tr>
+                                            <td>{{ gradelist.eisu }}</td>
+                                            <td>{{ gradelist.certification }}</td>
+                                            <td>{{ gradelist.yearNsemester }}</td>
+                                            <td>{{ gradelist.subject_code }}</td>
+                                            <td>{{ gradelist.subject }}</td>
+                                            <td>{{ gradelist.score }}</td>
+                                            <td>{{ gradelist.grade_design }}</td>
+                                            <td>{{ gradelist.grade }}</td>
+                                            <td>{{ gradelist.valid }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>취득 학점</th>
+                                        <th>평점 산출 학점</th>
+                                        <th>평점 평균</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ total_sumlist|index:forloop.counter0 }}</td>
+                                        <td>{{ sumlist|index:forloop.counter0 }}</td>
+                                        <td>{{ avglist|index:forloop.counter0|floatformat:2 }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
+                            {% endfor %}
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+{% endblock content %}
+
+{% block footer %}
+    <div id="footer">
+        &copy; Hansol Ju 2018
+    </div>
+{% endblock footer%}
+
+{% comment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>{% endcomment %}

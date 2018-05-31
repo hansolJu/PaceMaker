@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from community.models import Post
+from community.models import PostIF,PostOB
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'modify_date')
@@ -8,5 +8,6 @@ class PostAdmin(admin.ModelAdmin):
     search_fields =  ('title', 'content')
     prepopulated_fields = {'slug': ('title',)}
 
-admin.site.register(Post, PostAdmin)
+admin.site.register(PostIF, PostAdmin)
+admin.site.register(PostOB, PostAdmin)
 # Register your models here.

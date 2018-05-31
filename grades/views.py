@@ -4,10 +4,6 @@ from django.views.generic import *
 from dataParser.models import *
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import  get_object_or_404
-from django.db.models import Sum
-import requests
-from dataParser import parser
 # Create your views here.
 
 def getIntScore(self, score):
@@ -83,8 +79,6 @@ class GradeLV(LoginRequiredMixin,ListView):
             sum = sum + int(i)
 
         return sum
-
-
 
 
     def get_context_data(self,**kwargs):
@@ -184,7 +178,7 @@ class GeGradeLV(LoginRequiredMixin,ListView):
 
     def get_fake_grade_sum(self):
         s = self.request.user.hukbun
-        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회')).values_list('score', flat=True)
+        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회')|Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') | Q(eisu='문예') | Q(eisu='언문')).values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
             sum = sum + int(i)
@@ -249,3 +243,35 @@ class MscGradeLV(LoginRequiredMixin,ListView):
         context['avgGrade'] = self.get_avgGrade()
         context['fake_grade_sum'] = self.get_fake_grade_sum()
         return context
+
+
+class SemesterGradeLV(LoginRequiredMixin,ListView):
+    model = StudentGrade
+    template_name = 'grades/grade_semester_list.html'
+    context_object_name = 'semestergradelist'
+
+    def get_semester_list(self):
+        s = self.request.user.hukbun
+        semesterlist = self.get_queryset()
+        semestergradelist = []
+        for i in range(0, len(semesterlist)):
+            semestergradelist.append(StudentGrade.objects.filter(hukbun=s).filter(yearNsemester=semesterlist[i]).order_by('yearNsemester'))
+
+        print(semestergradelist)
+        return semestergradelist
+
+    def get_queryset(self):
+        s = self.request.user.hukbun
+        semesterlist = StudentGrade.objects.filter(hukbun=s).values_list('yearNsemester', flat=True).distinct().order_by('yearNsemester')
+        print(semesterlist)
+        return semesterlist
+        #semesterlist = StudentGrade.objects.filter(hukbun=s).values_list('yearNsemester', flat=True)
+        #print(semesterlist)
+        #return semesterlist
+
+    def get_context_data(self,**kwargs):
+        context = super(SemesterGradeLV, self).get_context_data(**kwargs)
+        context['semesterlist'] = self.get_queryset()
+        context['semestergradelist'] = self.get_semester_list()
+        return context
+

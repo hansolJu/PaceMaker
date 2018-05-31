@@ -157,7 +157,7 @@ class StudentParser(KutisParser):
                 # 설계학점
                 grade_design=(table_data[6]),
                 # 등급
-                grade=table_data[7],
+                grade=table_data[7].strip(),
                 # 유효구분
                 valid=table_data[8]
             )

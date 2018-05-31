@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+<!-- 별도로 html태그가 없으면 장고는 body영역으로 간주함-->
+{% load static %}
+{% block title %}Information_detail.html{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            {#            <div class="col-lg-12">#}
+            {#                <i><h1 class="page-header">정보 교류 </h1></i>#}
+            {#            </div>#}
+
+            <div class="panel heading">
+                <h1 align="center" class="post-title">{{ object.pk }}.{{ object.title }}</h1>
+                <div align="right">
+                    <span class="post-date">{{ object.modify_date|date:"Y.m.j. H:m" }}</span>
+                    <a href="{{ site.url }}{{ page.url }}#disqus_thread" data-disqus-identifier="{{ page.id }}">댓글 보기</a>
+                    <span  class="read">  조회수 {{ post.hits }}</span>
+                </div>
+            </div>
+
+            <div class="panel body">
+                <p align="right">
+                    {% if postif.file %}
+                        <a id="id_uploaded_file" href="" download>{{ PostIF.file.name }}</a>
+                        파일 첨부:<a href="{{ postif.file.url }}" download>{{ postif.file.name }}</a>
+                    {% endif %}
+                </p>
+                <br/><br/><br/>
+                <p>{{ object.content }}</p>
+                <br/><br/><br/>
+
+                {% if postif.file %}
+                    <img src="{{ postif.file.url }}" alt="">
+                    <br/>
+                {% endif %}
+
+                <br/><br/><br/>
+
+                <div><a class="btn btn-default pull-right"href="{% url 'community:Info_delete' object.id %}">Delete</a>
+                    <a class="btn btn-default pull-right" href="{% url 'community:Info_update' object.id %}">Update</a>
+                    <a class="btn btn-default pull-left" href="{% url 'community:Info_list' %}" >목록</a></div>
+
+                <br/>
+                <br/>
+                <p class="other_posts">
+                <h5 >{% if object.get_previous_by_modify_date %}
+                    <a class="pull-left" href="{{ object.get_previous_post.get_absolute_url }}"
+                       title="이전 게시물"> &laquo; Previous </a>
+                {% endif %}
+                    {#                    {{ object.get_previous_post }} {{ object.get_next_post }}#}
+                    {% if object.get_next_by_modify_date %}
+                        <a class="pull-right" href="{{ object.get_next_post.get_absolute_url }}" title="다음 게시물">  Next &raquo;</a>
+                    {% endif %}</h5>
+                </p>
+            </div>
+
+            <div class="panel modal-footer">
+                <br/>
+                <div>
+                    {% load disqus_tags %}
+                    {% disqus_show_comments %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+    {#    path: {{ post.file.path }}#}
+    {#    url:  {{ post.file.url }}#}
+
+    <script id="dsq-count-scr" src="//paker.disqus.com/count.js" async></script>
+    <br/>
+
+{% endblock %}
+
+
+
+
