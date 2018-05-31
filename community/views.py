@@ -157,7 +157,7 @@ class OBSearchFormView(OldbookLV,FormView):
 class PostCreateView(LoginRequiredMixin, CreateView):
     model = PostIF
 
-    fields = ['title',  'description', 'content','hits', 'tag',  'file']
+    fields = ['title',  'description', 'content', 'tag',  'file']
     initial = {'slug': 'auto-filling-do-not-input'}
     # slug 필드를 처리하는 또 다른 방법은 fields속성에서 제외해 폼에 나타나지 않도록 하는 방법입니다. \
     # 폼에는 보이지 않지만, Post 모델의 save()함수에 의해 테리블의 레코드에는 자동으로 채워집니다.
@@ -171,7 +171,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class OBPostCreateView(LoginRequiredMixin, CreateView):
     model = PostOB
 
-    fields = ['title',  'description', 'content','hits', 'tag',  'file']
+    fields = ['title',  'description', 'content', 'tag',  'file']
     initial = {'slug': 'auto-filling-do-not-input'}
     # slug 필드를 처리하는 또 다른 방법은 fields속성에서 제외해 폼에 나타나지 않도록 하는 방법입니다. \
     # 폼에는 보이지 않지만, Post 모델의 save()함수에 의해 테리블의 레코드에는 자동으로 채워집니다.

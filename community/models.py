@@ -15,7 +15,7 @@ class PostIF(models.Model):
     modify_date = models.DateTimeField('수정 날짜', auto_now=True)
     owner = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
     file = models.FileField('파일',blank=True, upload_to='documents/%Y/%m/%d')
-    hits = models.IntegerField('조회수',  blank=True)
+    hits = models.IntegerField('조회수', default=0)
 #tagField는 CharField를 상속받아서 디폴트로 amx_length=255,Blank=True로 정의하고 있어서 따로 내용을 안채워도됨
 
 
@@ -53,7 +53,7 @@ class PostOB(models.Model):
     modify_date = models.DateTimeField('수정 날짜', auto_now=True)
     owner = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
     file = models.FileField('파일',blank=True, upload_to='documents/%Y/%m/%d')
-    hits = models.IntegerField('조회수',  blank=True)
+    hits = models.IntegerField('조회수', default=0)
 #tagField는 CharField를 상속받아서 디폴트로 amx_length=255,Blank=True로 정의하고 있어서 따로 내용을 안채워도됨
 
 

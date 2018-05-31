@@ -42,7 +42,7 @@
                     <td width=300><p align="center">
                         <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
                     </p></td>
-                    <td width=115><p align="center">{{ item.modify_date|date:"Y / n / d" }}</p></td>
+                    <td width=115><p align="center">{{ item.modify_date|date:"Y / m / d" }}</p></td>
                     <td width=100><p align="center">{{ item.hits }}</p></td>
                 </tr>
             {% endfor %}
