@@ -4,6 +4,10 @@
     home.html
 {% endblock title%}
 {% load static %}
+
+{% load index %}
+{{ List|index:x }}
+
 {% load staticfiles %}
 {% block extrastyle %}
 
@@ -20,7 +24,7 @@
                     <div class="col-lg-8">
                         <div class="table-responsive">
                             {% for semester in semestergradelist %}
-                                <h3>{{ semesterlist }}</h3>
+                                <h4 style="text-align : left">{{ semesterlist|index:forloop.counter0 }}</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
@@ -51,6 +55,23 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <thead>
+                                    <tr>
+                                        <th>취득 학점</th>
+                                        <th>평점 산출 학점</th>
+                                        <th>평점 평균</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <td>{{ total_sumlist|index:forloop.counter0 }}</td>
+                                        <td>{{ sumlist|index:forloop.counter0 }}</td>
+                                        <td>{{ avglist|index:forloop.counter0|floatformat:2 }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <hr>
                             {% endfor %}
                         </div>
                         <!-- /.table-responsive -->
