@@ -1,3 +1,4 @@
+from compositefk.fields import CompositeForeignKey
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractUser
 from django.contrib.auth.hashers import make_password
@@ -75,6 +76,9 @@ class StudentGrade(models.Model):
     grade = models.CharField(max_length=50, blank=True, null=True)
     # 유효구분
     valid = models.CharField(max_length=50, blank=True, null=True)
+
+    def __str__(self):
+        return self.subject
 
 
 class StudentHopeCareers(models.Model):
