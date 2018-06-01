@@ -21,10 +21,10 @@ from django.conf.urls.static import static
 from PaceMaker.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('accounts.urls')),
-    path("classes/",include('classes.urls')),
-    path('index/', HomeView.as_view(), name='index'),
-    path('grades/', include('grades.urls')),
-    path('community/',include('community.urls')),
-]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
+                  path('admin/', admin.site.urls),
+                  path('index/', HomeView.as_view(), name='index'),
+                  path('',include('accounts.urls')),
+                  path("classes/",include('classes.urls')),
+                  path('grades/', include('grades.urls')),
+                  path('community/',include('community.urls')),
+              ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
