@@ -9,6 +9,7 @@
 
     <title>{% block title %}Django Web Programming{% endblock %}</title>
     {% load staticfiles %}
+    {% block css %} {% endblock css %}
     <!-- Bootstrap Core CSS -->
     <link href="{% static "asset/vendor/bootstrap/css/bootstrap.min.css" %}" rel="stylesheet">
 
@@ -279,7 +280,7 @@
                     <a href={% url "index" %}><i class="fa fa-dashboard fa-fw"></i> 메인 페이지</a>
                 </li>
                 <li>
-                    <a href="#"><i class="fa fa-bar-chart-o fa-fw"></i> 수강정보<span class="fa arrow"></span></a>
+                    <a href="#"><i class="fa fa-table fa-fw"></i> 수강정보<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
                             <a href="{% url 'classes:major_list' %}">세부전공내역</a>
@@ -305,16 +306,22 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
-                    <a href="index.html"><i class="fa fa-table fa-fw"></i> 성적<span class="fa arrow"></span></a>
+                    <a href="index.html"><i class="fa fa-bar-chart-o fa-fw"></i> 성적<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="{% url 'grades:semester'%}">전체 성적</a>
+                            <a href="{% url 'grades:total'%}">전체 성적</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'grades:semester'%}">학기별 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:major' %}">전공 성적</a>
                         </li>
                         <li>
                             <a href="{% url 'grades:ge' %}">교양 성적</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'grades:msc' %}">MSC 성적</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -353,13 +360,16 @@
                     <!-- /.nav-second-level -->
                 </li>
                 <li>
+                    <a href="{% url 'graduate:graduate_confirm' %}"><i class="fa fa-check"></i> 졸업 학점 확인<span class="fa arrow"></span></a>
+                </li>
+                <li>
                     <a href="#"><i class="fa fa-edit fa-fw"></i> 커뮤니티<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
                         <li>
-                            <a href="{% url 'community:post_list' %}">중고 장터</a>
+                            <a href="{% url 'community:ob_list' %}">중고 장터</a>
                         </li>
                         <li>
-                            <a href="{% url 'community:post_list' %}">정보 교류</a>
+                            <a href="{% url 'community:Info_list' %}">정보 교류</a>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->
@@ -442,7 +452,7 @@
     <script src="{% static "asset/vendor/chart/Chart.bundle.min.js" %}"></script>
 
     <script src="{% static "asset/vendor/chart/Chart.min.js" %}"></script>
-{#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>#}
+    {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>#}
 
 
     <!-- Custom Theme JavaScript -->

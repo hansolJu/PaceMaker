@@ -15,14 +15,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 
 from PaceMaker.views import *
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path("",include('accounts.urls')),
-    path("classes/",include('classes.urls')),
-    path('index/', HomeView.as_view(), name='index'),
-    path('grades/', include('grades.urls')),
-    path('',include('community.urls')),
-]
+                  path('admin/', admin.site.urls),
+                  path('index/', HomeView.as_view(), name='index'),
+                  path('',include('accounts.urls')),
+                  path("classes/",include('classes.urls')),
+                  path('grades/', include('grades.urls')),
+                  path('community/', include('community.urls')),
+                  path('graduate/', include('graduate.urls')),
+                  path('course/', include('completion_diagram.urls'))
+              ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

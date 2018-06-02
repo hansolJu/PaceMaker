@@ -214,3 +214,9 @@ grades/__pycache__/
 community/migrations/
 /dataParser/migrations/
 /community/migrations/
+/completion_diagram/migrations/
+.idea/dataSources.xml
+.idea/dataSources/
+.idea/inspectionProfiles/
+grades/templatetags/__pycache__/
+templates/road_example.html

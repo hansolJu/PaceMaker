@@ -58,7 +58,6 @@ class KutisParser(object):
 
 class StudentParser(KutisParser):
     # print("StudentParser 객체 생성")
-
     @staticmethod
     def save_info(parsed_data_list):
         '''학생정보를 데이터베이스에 저장
@@ -66,47 +65,47 @@ class StudentParser(KutisParser):
         '''
         for table_data in parsed_data_list:
             info_object = StudentInfo(
-                hukbun=table_data[1],
+                hukbun=table_data[1].strip(),
                 # 성명 2
-                username=table_data[2],
+                username=table_data[2].strip(),
                 # 주민등록번호 3
-                jumin=table_data[3],
+                jumin=table_data[3].strip(),
                 # 한자성명 4
                 # name_Hanja=infos[4],
                 # 영문성명 5
                 # name_English=infos[5] ,
                 # 과정구분
-                course=table_data[6],
+                course=table_data[6].strip(),
                 # 캠퍼스구분
                 # campus=infos[7] ,
                 # 주야구분
                 # dayNight=infos[8] ,
                 # 학적구분 9
-                state=table_data[9],
+                state=table_data[9].strip(),
                 # 학적변동 10
-                variance=table_data[10],
+                variance=table_data[10].strip(),
                 # 졸업학점
-                graduationCredit=table_data[11],
+                graduationCredit=table_data[11].strip(),
                 # 전공
-                major=table_data[12],
+                major=table_data[12].strip(),
                 # 지도교수
-                advisor=table_data[13],
+                advisor=table_data[13].strip(),
                 # 학생구분 14
                 # 산업체여부 15
                 # 학점교류구분 16
                 # 병역구분 17
                 # 현 학년학기 18
-                currentGrade=table_data[18],
+                currentGrade=table_data[18].strip(),
                 # 이수학기 / 편입인정학기
-                compleSemester=table_data[19],
+                compleSemester=table_data[19].strip(),
                 # 조기졸업대상여부 20
-                earlyGraduation=table_data[20],
+                earlyGraduation=table_data[20].strip(),
                 # 특기자구분 21
                 # 입학구분22
                 # 입학일자23
-                admission=table_data[23],
+                admission=table_data[23].strip(),
                 # 인증구분 24
-                enginCertification=table_data[24],
+                enginCertification=table_data[24].strip(),
                 # 본인인증 25
                 # 본적지주소 26
                 # 거주지주소 27
@@ -144,23 +143,23 @@ class StudentParser(KutisParser):
             grade_object = StudentGrade(
                 hukbun_id=hukbun,
                 # 이수구분
-                eisu=table_data[0],
+                eisu=table_data[0].strip(),
                 # 인증구분
-                certification=table_data[1],
+                certification=table_data[1].strip(),
                 # 년도학기
-                yearNsemester=table_data[2],
+                yearNsemester=table_data[2].strip(),
                 # 학수코드
-                subject_code=table_data[3],
+                subject_code=table_data[3].strip(),
                 # 교과목명
-                subject=table_data[4],
+                subject=table_data[4].strip(),
                 # 학점
-                score=int(table_data[5]),
+                score=table_data[5].strip(),
                 # 설계학점
-                grade_design=(table_data[6]),
-                # 등급
-                grade=table_data[7],
+                grade_design=table_data[6].strip(),
+                # 받은 학점 ex> A+
+                grade=table_data[7].strip(),
                 # 유효구분
-                valid=table_data[8]
+                valid=table_data[8].strip()
             )
             grade_object.save()
 
@@ -327,23 +326,23 @@ class ServerParser(KutisParser):
                 # 학기
                 semester=semester,
                 # 과목번호
-                subjectCode=table_data[0],
+                subjectCode=table_data[0].strip(),
                 # 과목이름
-                subjectName=table_data[1],
+                subjectName=table_data[1].strip(),
                 # 추천학년(학교에서)
-                grade=table_data[2],
+                grade=table_data[2].strip(),
                 # 이수구분
-                eisu=table_data[3],
+                eisu=table_data[3].strip(),
                 # 학점
-                score=table_data[4],
+                score=table_data[4].strip(),
                 # 담당교수
-                professor=table_data[5],
+                professor=table_data[5].strip(),
                 # 비고
-                remarks=table_data[6],
+                remarks=table_data[6].strip(),
                 # 교시
-                time=table_data[7],
+                time=table_data[7].strip(),
                 # 강의실
-                lectureRoom=table_data[8]
+                lectureRoom=table_data[8].strip()
             )
             course_object.save()
 
@@ -352,22 +351,22 @@ class ServerParser(KutisParser):
         # table[0] 교과목 해설
         desription_object = Subject_desription(
             course_id=course_id,
-            desription=parsed_data_list[0]
+            desription=parsed_data_list[0].strip()
         )
         desription_object.save()
         # table[1] 새부핵심역량 과의 관계
         Competence_object = Core_Competence(
             course_id = course_id,
             # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
-            Knowledge_application=parsed_data_list[1][0],
-            verification_ability=parsed_data_list[1][1],
-            problem_solving=parsed_data_list[1][2],
-            tool_utilization=parsed_data_list[1][3],
-            design_ability=parsed_data_list[1][4],
-            teamwork_skill=parsed_data_list[1][5],
-            communication=parsed_data_list[1][6],
-            understanding_of_influence=parsed_data_list[1][7],
-            responsibility=parsed_data_list[1][8]
+            Knowledge_application=parsed_data_list[1][0].strip(),
+            verification_ability=parsed_data_list[1][1].strip(),
+            problem_solving=parsed_data_list[1][2].strip(),
+            tool_utilization=parsed_data_list[1][3].strip(),
+            design_ability=parsed_data_list[1][4].strip(),
+            teamwork_skill=parsed_data_list[1][5].strip(),
+            communication=parsed_data_list[1][6].strip(),
+            understanding_of_influence=parsed_data_list[1][7].strip(),
+            responsibility=parsed_data_list[1][8].strip()
 
         )
         Competence_object.save()
@@ -375,38 +374,38 @@ class ServerParser(KutisParser):
         for i in parsed_data_list[2]:
             Learning_object = Learning_Objectives(
                 course_id=course_id,
-                Core_competencies=i[0],
-                detailed_core_competencies=i[1],
-                reflectance=i[2],
-                learning_objectives=i[3],
-                performance_criteria=i[4],
-                achievement_goals=i[5],
-                evaluation_methods=i[6],
+                Core_competencies=i[0].strip(),
+                detailed_core_competencies=i[1].strip(),
+                reflectance=i[2].strip(),
+                learning_objectives=i[3].strip(),
+                performance_criteria=i[4].strip(),
+                achievement_goals=i[5].strip(),
+                evaluation_methods=i[6].strip(),
             )
             Learning_object.save()
         # table[3] 강의방법
         Lecture_object = Lecture_method(
             course_id=course_id,
             # [강의형태, 수업방식, 교육용기자재]
-            Lecture_type=parsed_data_list[3][0],
-            teaching_method=parsed_data_list[3][1],
-            educational_equipment=parsed_data_list[3][2]
+            Lecture_type=parsed_data_list[3][0].strip(),
+            teaching_method=parsed_data_list[3][1].strip(),
+            educational_equipment=parsed_data_list[3][2].strip()
         )
         Lecture_object.save()
         # table[4] 과제물
         Assignment_object = Assignment(
             course_id=course_id,
-            Assignment=parsed_data_list[4]
+            Assignment=parsed_data_list[4].strip()
         )
         Assignment_object.save()
         # table[5] 성적 구성비율
         ratio_object = School_composition_ratio(
             course_id=course_id,
-            Midterm_exam=parsed_data_list[5][0],
-            final_exam=parsed_data_list[5][1],
-            attendance=parsed_data_list[5][2],
-            assignments_and_others=parsed_data_list[5][3],
-            grading_division=parsed_data_list[5][4]
+            Midterm_exam=parsed_data_list[5][0].strip(),
+            final_exam=parsed_data_list[5][1].strip(),
+            attendance=parsed_data_list[5][2].strip(),
+            assignments_and_others=parsed_data_list[5][3].strip(),
+            grading_division=parsed_data_list[5][4].strip()
         )
         ratio_object.save()
         # table[6] 주별 강좌내용
@@ -414,20 +413,20 @@ class ServerParser(KutisParser):
             Weekly_object = Weekly_course_contents(
                 course_id=course_id,
 
-                week=i[0],
-                contents=i[1],
-                methods=i[2],
-                related_materials=i[3],
-                assignments=i[4]
+                week=i[0].strip(),
+                contents=i[1].strip(),
+                methods=i[2].strip(),
+                related_materials=i[3].strip(),
+                assignments=i[4].strip()
             )
             Weekly_object.save()
         # table[7] 책
         Book_object = Book(
             course_id=course_id,
-            title=parsed_data_list[7][0],
-            author=parsed_data_list[7][1],
-            publisher=parsed_data_list[7][2],
-            year_of_publication=parsed_data_list[7][3],
+            title=parsed_data_list[7][0].strip(),
+            author=parsed_data_list[7][1].strip(),
+            publisher=parsed_data_list[7][2].strip(),
+            year_of_publication=parsed_data_list[7][3].strip(),
         )
         Book_object.save()
 
@@ -502,6 +501,7 @@ class ServerParser(KutisParser):
                         tmp = self.remove_line_feed(tmp)
                         tmp = tmp.replace('       보기', "")
                         tmp = tmp.replace('보기', "")
+                        tmp = tmp.replace('공학인증', "")
                         parsed_table_data.append(tmp)
                     # resultTd에 아무정보 없으면 저장X(Th 단 걸러내기)
                     if parsed_table_data:

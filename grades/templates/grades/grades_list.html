@@ -22,6 +22,7 @@
                             <table class="table table-bordered table-hover table-striped">
                                 <thead>
                                 <tr>
+                                    <th>번호</th>
                                     <th>이수구분</th>
                                     <th>인증구분</th>
                                     <th>년도학기</th>
@@ -36,6 +37,7 @@
                                 <tbody>
                                 {% for grade in grades_list %}
                                     <tr>
+                                        <td>{{ forloop.counter }}</td>
                                         <td>{{ grade.eisu }}</td>
                                         <td>{{ grade.certification }}</td>
                                         <td>{{ grade.yearNsemester }}</td>
@@ -55,13 +57,15 @@
                                     <th>총 취득 학점</th>
                                     <th>평점 산출 학점</th>
                                     <th>총 평점 평균</th>
+                                    <th>총 설계 학점</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr>
                                     <td>{{ fake_grade_sum }}</td>
                                     <td>{{ grade_sum }}</td>
-                                    <td>{{ avgGrade }}</td>
+                                    <td>{{ avgGrade|floatformat:2 }}</td>
+                                    <td>{{ design_grade_sum }}</td>
                                 </tr>
                                 </tbody>
                             </table>

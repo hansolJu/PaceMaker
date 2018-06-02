@@ -39,10 +39,17 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',    # custom auth
     'community.apps.CommunityConfig',  #커뮤니티 게시판
     'tagging.apps.TaggingConfig',      #게시판 태그
-    'grades.apps.GradesConfig',
+    'widget_tweaks',                     #게시판 form 관련설치
+    'disqus',
+    'django.contrib.sites',
+    'grades.apps.GradesConfig',         # 성적
     'classes.apps.ClassesConfig',
+    'graduate.apps.GraduateConfig',     # 졸업
+
 
 ]
+DISQUS_WEBSITE_SHORTNAME = 'paker'
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -132,3 +139,7 @@ LOGIN_URL = "/"
 
 #SESSION_COOKIE_AGE = 1800 #세션 만기 시간(초단위)
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True  #브라우저가 닫히면 세션 종료
+
+"""게시판 파일 업로드"""
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

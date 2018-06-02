@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %} {# css파일을 쓰려면 무조건 써줘야함 ! setting.py에서도 경로 설정 해줘야함 #}
+{% block title %}커뮤니티 리스트{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <i><h1 class="page-header">중고 서적 </h1></i>
+                <h4 align="right">총 게시물 수: {{ totalCnt }}</h4>
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+
+        <h5 align="right"><td>현재 게시물수 :{{ object_list.count }}</td></h5>
+
+        {% if object_list %}
+        <div align="right" id = "search_form">
+            <div class="input-group">
+                <form action="" method="post" id = "search-form">{% csrf_token %}
+                    <div class="col-xs-15">
+                        {{ form.as_table }}
+                        <button class="btn btn-primary" id="search_submit" name = "search_submit" type="submit" value = "submit" ><span class="glyphicon glyphicon-search"></span></button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <table class="table table-hover">
+            <tr>
+                <th ><p align="center">번호</p></th>
+                <th ><p align="center">작성자</p></th>
+                <th ><p align="center">제목</p></th>
+                <th ><p align="center">등록일(수정일)</p></th>
+                <th ><p align="center">조회수</p></th>
+            </tr>
+
+            {% for item in object_list %}
+                <tr>
+                    <td width=30><p align="center">{{ item.pk }}</p></td>
+                    <td width=60><p align="center">{{ item.owner.username }} ({{ item.owner.hukbun }})</p></td>
+                    <td width=300><p align="center">
+                        <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                    </p></td>
+                    <td width=115><p align="center">{{ item.modify_date|date:"Y / m / d" }}</p></td>
+                    <td width=100><p align="center">{{ item.hits }}</p></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        {% else %}
+            <i><q><h1 align="center"><span>게시글이 없네용~</span></h1></q></i>
+        {% endif %}
+
+        <hr/>
+        <a class="btn btn-default pull-right" OnClick="location.href='{% url 'community:ob_add' %}'">글쓰기</a>
+
+        {# <input type=button value="글쓰기"  OnClick="location.href='{% url 'cm:add' %}'"> #}
+
+        {#--페이징--#}
+        <div align="center">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-end">
+                    {% if page_obj.has_previous %}
+                        <li class="page-link"><a href="?page={{ page_obj.previous_page_number }}"><span>이전</span></a></li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="#"><span>이전</span></a>
+                        </li>
+                    {% endif %}
+
+                    {% for page in page_range %}  {#페이징 숫자 범위를 5개로 하기위해서 view에서 만들어서 넘겨준것, paginator.page_range는 장고에서 기본 제공#}
+                        <li class="page-item" {% if page == page_obj.number %}></li>
+                            <li class="page-item active"{% endif %}>
+                            <a href="?page={{ page }}">{{ page }}</a></li>
+                    {% endfor %}
+
+                    {% if page_obj.has_next %}
+                        <li class="page-link"><a href="?page={{ page_obj.next_page_number }}"><span>다음</span></a></li>
+                    {% else %}
+                        <li class="page-item disabled">
+                            <a href="#"><span>다음</span></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    <br/>
+
+    </div>
+
+
+{% endblock %}
+
+
+
+{# <li {% if not page_obj.has_next %}class="disabled"{% endif %}>  #}

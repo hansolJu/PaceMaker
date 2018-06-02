@@ -2,7 +2,7 @@
 {% load static %} {# css파일을 쓰려면 무조건 써줘야함 ! setting.py에서도 경로 설정 해줘야함 #}
 {% load widget_tweaks %}
 
-{% block title %}커뮤니티 리스트{% endblock %}
+{% block title %}정보 공유 글쓰기{% endblock %}
 
 {% block content %}
     <div id="page-wrapper">
@@ -13,9 +13,9 @@
         <!-- /.col-lg-12 -->
     </div>
 
-    <h3 align="center">Blog Create/Update - {{ user.name }}</h3>
+    <h3 align="center">Blog Create/Update - {{ user.username }}</h3>
 
-    <form action="." method="post">{% csrf_token %}
+    <form action="." method="post" enctype="multipart/form-data">{% csrf_token %}
 
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
@@ -39,6 +39,8 @@
 
         <script type="text/javascript">document.getElementById('id_title').focus();</script>
     </form>
+
+
 {% endblock %}
 {#        {% if form.errors %}#}
 {#            <p class="errornote">Wrong! Please correct the error(s) below.</p>#}

@@ -76,6 +76,9 @@ class StudentGrade(models.Model):
     # 유효구분
     valid = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        return self.subject
+
 
 class StudentHopeCareers(models.Model):
     "개인 신상정보 -- 학생취업신상정보"
