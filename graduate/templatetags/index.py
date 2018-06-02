@@ -7,6 +7,7 @@ register = template.Library()
 def to_int(value):
     return int(value)
 
+
 @register.filter
-def get_item(dictionary, key):
-    return dictionary.get(key)
+def subtract(value, arg):
+    return value - arg

@@ -27,71 +27,108 @@
                                     <td>졸업 기준</td>
                                     <td>필요 학점</td>
                                     <td>현재 학점</td>
+                                    <td>남은 학점</td>
                                 </tr>
                                 <tr>
-                                    <td>전체 학점</td>
+                                    <td><a href="{% url 'grades:total' %}">전체 학점</a></td>
                                     <td>136</td>
                                     {% with c=136 %}
-                                    {% if c|to_int > total_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ total_grade }}</td>
-                                    {% elif c|to_int <= total_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ total_grade }}</td> <!--전체 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > total_grade|to_int %}
+                                            <td >{{ total_grade }}</td>
+                                        {% elif c|to_int <= total_grade|to_int %}
+                                            <td >{{ total_grade }}</td> <!--전체 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= total_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:total_grade }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 <tr>
-                                    <td>전공 학점</td>
+                                    <td><a href="{% url 'grades:major' %}">전공 학점</a></td>
                                     <td>67</td>
                                     {% with c=67 %}
-                                    {% if c|to_int > major_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ major_grade }}</td>
-                                    {% elif c|to_int <= major_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ major_grade }}</td> <!--전공 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > major_grade|to_int %}
+                                            <td >{{ major_grade }}</td>
+                                        {% elif c|to_int <= major_grade|to_int %}
+                                            <td >{{ major_grade }}</td> <!--전공 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= major_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:major_grade }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 <tr>
-                                    <td>교양 학점</td>
+                                    <td><a href="{% url 'grades:ge' %}">교양 학점</a></td>
                                     <td>47</td>
                                     {% with c=47 %}
-                                    {% if c|to_int > ge_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ ge_grade }}</td>
-                                    {% elif c|to_int <= ge_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ ge_grade }}</td> <!--교양 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > ge_grade|to_int %}
+                                            <td >{{ ge_grade }}</td>
+                                        {% elif c|to_int <= ge_grade|to_int %}
+                                            <td >{{ ge_grade }}</td> <!--교양 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= ge_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:ge_grade }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 <tr>
-                                    <td>MSC 학점</td>
+                                    <td><a href="{% url 'grades:msc' %}">MSC 학점</a></td>
                                     <td>24</td>
                                     {% with c=24 %}
-                                    {% if c|to_int > msc_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ msc_grade }}</td>
-                                    {% elif c|to_int <= msc_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ msc_grade }}</td> <!--MSC 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > msc_grade|to_int %}
+                                            <td >{{ msc_grade }}</td>
+                                        {% elif c|to_int <= msc_grade|to_int %}
+                                            <td >{{ msc_grade }}</td> <!--MSC 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= msc_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:msc_grade }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 <tr>
                                     <td>설계 학점</td>
                                     <td>12</td>
                                     {% with c=12 %}
-                                    {% if c|to_int > design_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ design_grade }}</td>
-                                    {% elif c|to_int <= design_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ design_grade }}</td> <!--설계 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > design_grade|to_int %}
+                                            <td >{{ design_grade|floatformat:"0" }}</td>
+                                        {% elif c|to_int <= design_grade|to_int %}
+                                            <td >{{ design_grade|floatformat:"0" }}</td> <!--설계 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= design_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:design_grade|floatformat:"0" }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 <tr>
                                     <td>공학 인증 교양 학점</td>
                                     <td>9</td>
                                     {% with c=9 %}
-                                    {% if c|to_int > engineer_cer_ge_grade|to_int %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ engineer_cer_ge_grade }}</td>
-                                    {% elif c|to_int <= engineer_cer_ge_grade|to_int %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ engineer_cer_ge_grade }}</td> <!--공학 인증 교양 학점-->
-                                    {% endif %}
+                                        {% if c|to_int > engineer_cer_ge_grade|to_int %}
+                                            <td >{{ engineer_cer_ge_grade }}</td>
+                                        {% elif c|to_int <= engineer_cer_ge_grade|to_int %}
+                                            <td >{{ engineer_cer_ge_grade }}</td> <!--공학 인증 교양 학점-->
+                                        {% endif %}
+
+                                        {% if c|to_int <= engineer_cer_ge_grade %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                        {% else %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:engineer_cer_ge_grade }}</td>
+                                        {% endif %}
                                     {% endwith %}
                                 </tr>
                                 </tbody>
