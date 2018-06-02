@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'widget_tweaks',                     #게시판 form 관련설치
     'disqus',
     'django.contrib.sites',
-    'grades.apps.GradesConfig',
+    'grades.apps.GradesConfig',         # 성적
     'classes.apps.ClassesConfig',
+    'graduate.apps.GraduateConfig',     # 졸업
+
 
 ]
 DISQUS_WEBSITE_SHORTNAME = 'paker'

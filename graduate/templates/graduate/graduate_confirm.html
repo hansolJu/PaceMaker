@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+    home.html
+{% endblock title%}
+{% load static %}
+{% load staticfiles %}
+{% load index %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">졸업 학점 확인</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="table-responsive">
+                            <!--공학 인증 요건 확인 및 추가 필요-->
+                            <table class="table table-bordered table-hover table-striped">
+                                <tbody>
+                                <tr>
+                                    <td>졸업 기준</td>
+                                    <td>필요 학점</td>
+                                    <td>현재 학점</td>
+                                </tr>
+                                <tr>
+                                    <td>전체 학점</td>
+                                    <td>136</td>
+                                    {% with c=136 %}
+                                    {% if c|to_int > total_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ total_grade }}</td>
+                                    {% elif c|to_int <= total_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ total_grade }}</td> <!--전체 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                <tr>
+                                    <td>전공 학점</td>
+                                    <td>67</td>
+                                    {% with c=67 %}
+                                    {% if c|to_int > major_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ major_grade }}</td>
+                                    {% elif c|to_int <= major_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ major_grade }}</td> <!--전공 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                <tr>
+                                    <td>교양 학점</td>
+                                    <td>47</td>
+                                    {% with c=47 %}
+                                    {% if c|to_int > ge_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ ge_grade }}</td>
+                                    {% elif c|to_int <= ge_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ ge_grade }}</td> <!--교양 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                <tr>
+                                    <td>MSC 학점</td>
+                                    <td>24</td>
+                                    {% with c=24 %}
+                                    {% if c|to_int > msc_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ msc_grade }}</td>
+                                    {% elif c|to_int <= msc_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ msc_grade }}</td> <!--MSC 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                <tr>
+                                    <td>설계 학점</td>
+                                    <td>12</td>
+                                    {% with c=12 %}
+                                    {% if c|to_int > design_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ design_grade }}</td>
+                                    {% elif c|to_int <= design_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ design_grade }}</td> <!--설계 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                <tr>
+                                    <td>공학 인증 교양 학점</td>
+                                    <td>9</td>
+                                    {% with c=9 %}
+                                    {% if c|to_int > engineer_cer_ge_grade|to_int %}
+                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ engineer_cer_ge_grade }}</td>
+                                    {% elif c|to_int <= engineer_cer_ge_grade|to_int %}
+                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ engineer_cer_ge_grade }}</td> <!--공학 인증 교양 학점-->
+                                    {% endif %}
+                                    {% endwith %}
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- /.table-responsive -->
+                    </div>
+                </div>
+            </div>
+            <!-- /.panel-body -->
+        </div>
+    </div>
+    <!-- /#page-wrapper -->
+{% endblock content %}
+
+{% block footer %}
+    <div id="footer">
+        &copy; Hansol Ju 2018
+    </div>
+{% endblock footer%}
+
+{% comment %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script type="text/javascript" src="{% static "js/bootstrap.js" %}"></script>{% endcomment %}
