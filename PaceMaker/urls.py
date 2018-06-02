@@ -27,4 +27,5 @@ urlpatterns = [
                   path("classes/",include('classes.urls')),
                   path('grades/', include('grades.urls')),
                   path('community/',include('community.urls')),
+                  path('course/', include('completion_diagram.urls'))
               ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

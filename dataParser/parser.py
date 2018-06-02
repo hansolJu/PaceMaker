@@ -501,6 +501,7 @@ class ServerParser(KutisParser):
                         tmp = self.remove_line_feed(tmp)
                         tmp = tmp.replace('       보기', "")
                         tmp = tmp.replace('보기', "")
+                        tmp = tmp.replace('공학인증', "")
                         parsed_table_data.append(tmp)
                     # resultTd에 아무정보 없으면 저장X(Th 단 걸러내기)
                     if parsed_table_data:

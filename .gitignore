@@ -219,5 +219,4 @@ community/migrations/
 .idea/dataSources/
 .idea/inspectionProfiles/
 grades/templatetags/__pycache__/
-static/asset/rank/
 templates/road_example.html
