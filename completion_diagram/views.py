@@ -45,10 +45,9 @@ eisu_2012_list = [
     # 4-2 8
     ['컴퓨터과학특강', '컴파일러', '데이터베이스응용', '종합설계', '내장형시스템']
 ]
-msc_list = []
 
 
-class diagramBV(View):
+class DiagramBV(View):
     # 학번을 가져오는 함수
     def get_user_id(self):
         user_id = self.request.user.hukbun
@@ -129,14 +128,14 @@ class diagramBV(View):
             .filter(hukbun=s) \
             .filter(valid='유효') \
             .filter(subject=course_name) \
-            .values_list('score',flat=True)
+            .values_list('score', flat=True)
         for i in course_score:
             course_score = i
         print(course_score)
         return course_score
 
     # 과목명을 입력하면 그과목의 설계 학점을 리턴
-    def get_course_grade_design(self,course_name):
+    def get_course_grade_design(self, course_name):
         s = self.get_user_id()
         course_grade_design = StudentGrade.objects \
             .filter(hukbun=s) \
@@ -148,9 +147,55 @@ class diagramBV(View):
         print(course_grade_design)
         return course_grade_design
 
+    # 과목명을 입력하면 그과목의 이수구분을 리턴
+    # ex> 대학영어1--> 교양, 미분적분학1---> msc, C프로그래밍--> 전공
+    def get_course_eisu(self, course_name):
+        s = self.get_user_id()
+        course_eisu = StudentGrade.objects \
+            .filter(hukbun=s) \
+            .filter(valid='유효') \
+            .filter(subject=course_name) \
+            .values_list('eisu', flat=True)
+        for i in course_eisu:
+            course_eisu = i
+        print(course_eisu)
+        if course_eisu == '컴과' or course_eisu == '전필':
+            print("전공")
+            return "전공"
+        elif course_eisu == 'M자':
+            print("MSC")
+            return "MSC"
+        else:
+            print("교양")
+            return "교양"
+
+    # 보내야 할것:
+    # 내가 들은 과목을 과목당 (학점/설계학점)으로 묶음 ex> [대학영어1,3,0]
+    def set_course_taken_list(self):
+        result =[]
+        course_list = self.get_course_taken()
+        print(course_list)
+        for semester in course_list:
+            semester_tmp=[]
+            for subject in semester:
+                subject_tmp=[]
+                this_score = self.get_course_score(subject)
+                this_design = self.get_course_grade_design(subject)
+                subject_tmp.append(subject)
+                subject_tmp.append(this_score)
+                subject_tmp.append(this_design)
+                semester_tmp.append(subject_tmp)
+            result.append(semester_tmp)
+        print(result)
+        return result
+
+    # 이수체계도에서 들은 과목을 제거하고 남은 리스트 반납한 과목당 (학점/수업시간/설계학점)으로 묶음
+    def set_course_custom_eisu_list(self):
+        pass
+
     def make_diagram_data(self):
         result = [self.get_course_taken()]
         return result
 
     def get(self, request, *args, **kwargs):
-        return HttpResponse(self.custom_eisu())
+        return HttpResponse(self.set_course_taken_list())
