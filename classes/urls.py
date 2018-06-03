@@ -4,6 +4,8 @@ from .views import *
 app_name='classes'
 urlpatterns = [
     path('list/', majorLV.as_view(), name= 'major_list'),
-    path('recommand/', RecommandView.as_view(), name= 'recommand'),
     re_path(r'^(?P<pk>\d+)/$', majorDV.as_view(), name='major_detail'),
+
+    path('retake/', RetakeRecommandView.as_view(), name= 'retake'),
+    path('special/', SpecialCourseRecommandView.as_view(), name= 'special'),
 ]
