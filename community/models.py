@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class PostIF(models.Model):
     title =  models.CharField('제목', max_length=50)
     slug = models.SlugField('슬러그', unique=True, allow_unicode=True, help_text='one word for title alias.')
-    description = models.CharField('요약 설명', max_length=100, blank=True,
+    description = models.CharField('한줄 내용', max_length=100, blank=True,
                                    help_text='simple description text.')
     content = models.TextField('내용')
     tag = TagField('태그')
@@ -45,7 +45,7 @@ class PostIF(models.Model):
 class PostOB(models.Model):
     title =  models.CharField('제목', max_length=50)
     slug = models.SlugField('슬러그', unique=True, allow_unicode=True, help_text='one word for title alias.')
-    description = models.CharField('요약 설명', max_length=100, blank=True,
+    description = models.CharField('한줄 내용', max_length=100, blank=True,
                                    help_text='simple description text.')
     content = models.TextField('내용')
     tag = TagField('태그')

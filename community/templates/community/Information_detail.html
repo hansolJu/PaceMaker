@@ -11,7 +11,7 @@
             {#            </div>#}
 
             <div class="panel heading">
-                <h1 align="center" class="post-title">{{ object.pk }}.{{ object.title }}</h1>
+                <h1 align="center" class="post-title">{{ object.title }}</h1>
                 <div align="right">
                     <span class="post-date">{{ object.modify_date|date:"Y.m.j. H:m" }}</span>
                     <a href="{{ site.url }}{{ page.url }}#disqus_thread" data-disqus-identifier="{{ page.id }}">댓글 보기</a>
