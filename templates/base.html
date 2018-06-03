@@ -286,7 +286,21 @@
                             <a href="{% url 'classes:major_list' %}">세부전공내역</a>
                         </li>
                         <li>
-                            <a href="{% url 'classes:recommand' %}">수강신청추천</a>
+                            <a href="#">수강신청추천<span class="fa arrow"></span></a>
+                            <ul class="nav nav-third-level">
+                                <li>
+                                    <a href="{% url 'classes:retake' %}">재수강 추천</a>
+                                </li>
+                                <li>
+                                    <a href="#">타학생 전공</a>
+                                </li>
+                                <li>
+                                    <a href="{% url 'classes:special' %}">학년과 맞지 않는 전공 추천</a>
+                                </li>
+                                <li>
+                                    <a href="#">선수과목에 따른 전공 추천</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                     <!-- /.nav-second-level -->

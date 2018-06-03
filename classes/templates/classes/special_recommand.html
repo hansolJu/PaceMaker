@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}세부전공내역{% endblock %}
+
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">추천 학년과 맞지 않는 전공 추천</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover table-striped">
+                                <thead>
+                                <tr>
+                                    <th>과목명</th>
+                                    <th>학수코드</th>
+                                    <th>추천학년</th>
+                                    <th>타학생 수강학년</th>
+                                    <th>이수구분</th>
+                                    <th>학점</th>
+                                    <th>학생수</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for grade, course in specialCoursesDic.items %}
+                                    <td><a href="#">{{ grade.subject }}</a></td>
+                                    <td>{{ grade.subject_code }}</td>
+                                    {% for courseInfo in course %}
+                                        <td>{{ courseInfo }}</td>
+                                    {% endfor %}
+                                    <tr />
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
