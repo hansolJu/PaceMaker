@@ -41,6 +41,8 @@ class HomeView(LoginRequiredMixin,TemplateView):
         Q(grade='A+') | Q(grade='A') | Q(grade='B+') | Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(
             grade='D+') | Q(
             grade='D') | Q(grade='F')).values_list('grade', flat=True)
+
+
     def major_gradelist(self):
         s = self.request.user.hukbun
         return  StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(
@@ -48,9 +50,11 @@ class HomeView(LoginRequiredMixin,TemplateView):
         Q(grade='A+') | Q(grade='A') | Q(grade='B+') | Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(
             grade='D+') | Q(
             grade='D') | Q(grade='F')).values_list('grade', flat=True)
+
+
     def msc_gradelist(self):
         s = self.request.user.hukbun
-        return StudentGrade.objects.filter(hukbun=s).filter(eisu='M자').filter(
+        return StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자')|Q(eisu='수리')).filter(
         Q(grade='A+') | Q(grade='A') | Q(grade='B+') | Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(
             grade='D+') | Q(
             grade='D') | Q(grade='F')).values_list('grade', flat=True)
@@ -85,8 +89,8 @@ class HomeView(LoginRequiredMixin,TemplateView):
         print(result)
         return result
 
+
     def get_context_data(self, **kwargs):
-        self.s = self.request.user.hukbun
         context = super(HomeView, self).get_context_data(**kwargs)
         context['chart_data'] =  self.Make_chart_data()
         return context
