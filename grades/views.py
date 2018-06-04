@@ -41,7 +41,7 @@ class GradeLV(LoginRequiredMixin,ListView):
         scorelist = scorelist.exclude(grade__contains='P').values_list('score', flat=True)
         print(scorelist)
         for i in scorelist:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -71,7 +71,7 @@ class GradeLV(LoginRequiredMixin,ListView):
         fake_grade_sum = StudentGrade.objects.filter(hukbun=s).values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -80,7 +80,7 @@ class GradeLV(LoginRequiredMixin,ListView):
         design_gradelist = StudentGrade.objects.filter(hukbun=s).values_list('grade_design', flat=True)
         sum = 0.0
         for i in design_gradelist:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -105,7 +105,7 @@ class MajorGradeLV(LoginRequiredMixin,ListView):
         sum = 0
         scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(valid = '유효').values_list('score', flat=True)
         for i in scorelist:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -129,7 +129,7 @@ class MajorGradeLV(LoginRequiredMixin,ListView):
         fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -161,7 +161,7 @@ class GeGradeLV(LoginRequiredMixin,ListView):
         sum = 0
         scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회') |Q(eisu='과기')|Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') | Q(eisu='문예') | Q(eisu='언문')).filter(valid = '유효').values_list('score', flat=True)
         for i in scorelist:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -185,7 +185,7 @@ class GeGradeLV(LoginRequiredMixin,ListView):
         fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회') | Q(eisu='과기') | Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') | Q(eisu='문예') | Q(eisu='언문')).values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -212,7 +212,7 @@ class MscGradeLV(LoginRequiredMixin,ListView):
         sum = 0
         scorelist = StudentGrade.objects.filter(hukbun=s).filter(eisu='M자').values_list('score', flat=True)
         for i in scorelist:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -236,7 +236,7 @@ class MscGradeLV(LoginRequiredMixin,ListView):
         fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(eisu='M자').values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
-            sum = sum + int(i)
+            sum = sum + i
 
         return sum
 
@@ -282,7 +282,7 @@ class SemesterGradeLV(LoginRequiredMixin,ListView):
         sumlist = []
         for i in scorelist:
             for j in i:
-                sum = sum + int(j)
+                sum = sum + j
             sumlist.append(sum)
             sum = 0
 
@@ -326,7 +326,7 @@ class SemesterGradeLV(LoginRequiredMixin,ListView):
         total_sumlist = []
         for i in scorelist:
             for j in i:
-                sum = sum + int(j)
+                sum = sum + j
             total_sumlist.append(sum)
             sum = 0
 
@@ -346,7 +346,7 @@ class SemesterGradeLV(LoginRequiredMixin,ListView):
         design_sumlist = []
         for i in design_scorelist:
             for j in i:
-                sum = sum + int(j)
+                sum = sum + j
             design_sumlist.append(sum)
             sum = 0
 
