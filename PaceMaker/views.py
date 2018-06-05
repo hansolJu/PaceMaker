@@ -185,8 +185,24 @@ class HomeView(LoginRequiredMixin,TemplateView):
 
         return percent
 
+    def user_info(self):
+        s = self.request.user.hukbun
+        user_info = []
+        username = StudentInfo.objects.filter(hukbun=s).values_list('username', flat=True)[0]
+        currentSemester = StudentInfo.objects.filter(hukbun=s).values_list('currentGrade', flat=True)[0]
+        engineCertificate = StudentInfo.objects.filter(hukbun=s).values_list('enginCertification', flat=True)[0]
+
+        user_info.append(s)
+        user_info.append(username)
+        user_info.append(currentSemester)
+        user_info.append(engineCertificate)
+
+        return user_info
+
+
     def get_context_data(self, **kwargs):
         context = super(HomeView, self).get_context_data(**kwargs)
         context['chart_data'] =  self.Make_chart_data()
         context['percent'] = self.rank_statistic()
+        context['user_info'] = self.user_info()
         return context

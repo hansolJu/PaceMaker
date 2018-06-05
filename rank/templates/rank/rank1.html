@@ -32,16 +32,16 @@
                                 <tbody>
                                     {% for user in user_grade %}
                                         <tr>
-                                            {% if request.user.hukbun == user.0.hukbun %}
-                                                <td style="background-color:rgba( 160, 188, 183, 0.5);">{{ forloop.counter }}</td>
-                                                <td style="background-color:rgba( 160, 188, 183, 0.5 );">{{ user.0.username }}</td>
-                                                <td style="background-color:rgba( 160, 188, 183, 0.5 );">{{ user.1|floatformat:"2" }}</td>
-                                            {% else %}
-                                                <td>{{ forloop.counter }}</td>
-                                                <td>{{ user.0.username|re_name }}</td>
-                                                <td>{{ user.1|floatformat:"2" }}</td>
-                                            {% endif %}
-                                        </tr>
+                                        {% if request.user.hukbun == user.0.hukbun %}
+                                            <td style="background-color:rgba( 160, 188, 183, 0.5 );"><h5>{{ forloop.counter }}</h5></td>
+                                            <td style="background-color:rgba( 160, 188, 183, 0.5 );"><h5>{{ user.0.username }}</h5></td>
+                                            <td style="background-color:rgba( 160, 188, 183, 0.5 );"><h5>{{ user.1|floatformat:"2" }}</h5></td>
+                                        {% else %}
+                                            <td><h5>{{ forloop.counter }}</h5></td>
+                                            <td><h5>{{ user.0.username|re_name }}</h5></td>
+                                            <td><h5>{{ user.1|floatformat:"2" }}</h5></td>
+                                        {% endif %}
+                                    </tr>
                                     {% endfor %}
                                 {% else %}
                                     <tr>
