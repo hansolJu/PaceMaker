@@ -8,4 +8,6 @@ urlpatterns = [
 
     path('retake/', RetakeRecommandView.as_view(), name= 'retake'),
     path('special/', SpecialCourseRecommandView.as_view(), name= 'special'),
+    path('top/', TopStudentRecommandView.as_view(), name= 'top'),
+    path('pre/', preCourseRecommandView.as_view(), name= 'pre'),
 ]
