@@ -15,34 +15,60 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-lg-10">
-                        <ul>
-                            <div class="table-responsive">
-                                <li><h4>재수강 추천 과목</h4></li>
-                                <table class="table table-bordered table-hover table-striped">
-                                    <tr>
-                                        <th>년도 및 학기</th>
-                                        <th>과목명</th>
-                                        <th>이수구분</th>
-                                        <th>인증구분</th>
-                                        <th>학점</th>
-                                        <th>설계학점</th>
-                                        <th>점수</th>
-                                        <th>유효구분</th>
-                                    </tr>
-                                    {% for grade in retakeGrades %}
-                                        <td>{{ grade.yearNsemester }}</td>
-                                        <td><a href="#">{{ grade.subject }}</a></td>
-                                        <td>{{ grade.eisu }}</td>
-                                        <td>{{ grade.certification }}</td>
-                                        <td>{{ grade.score }}</td>
-                                        <td>{{ grade.grade_design }}</td>
-                                        <td>{{ grade.grade }}</td>
-                                        <td>{{ grade.valid }}</td>
-                                        <tr />
-                                    {% endfor %}
-                                </table>
-                            </div>
-                        </ul>
+                        <div class="table-responsive">
+                            <h4>재수강 추천 과목</h4>
+                            <table class="table table-bordered table-hover table-striped">
+                                <tr>
+                                    <th>년도 및 학기</th>
+                                    <th>과목명</th>
+                                    <th>이수구분</th>
+                                    <th>인증구분</th>
+                                    <th>학점</th>
+                                    <th>설계학점</th>
+                                    <th>점수</th>
+                                    <th>유효구분</th>
+                                </tr>
+                                {% for grade in retakeGrades %}
+                                    <td>{{ grade.yearNsemester }}</td>
+                                    <td><a href="#">{{ grade.subject }}</a></td>
+                                    <td>{{ grade.eisu }}</td>
+                                    <td>{{ grade.certification }}</td>
+                                    <td>{{ grade.score }}</td>
+                                    <td>{{ grade.grade_design }}</td>
+                                    <td>{{ grade.grade }}</td>
+                                    <td>{{ grade.valid }}</td>
+                                    <tr />
+                                {% endfor %}
+                            </table>
+                        </div>
+                        <br />
+                        <hr />
+
+                        <div>
+                            <script>
+                                var Scoure = {{retakeGradesCountList}};
+                            </script>
+
+                            <script>
+                                // Our labels along the x-axis
+                                var item = ['Red', 'Blue', 'Yellow']
+
+                                // For drawing the lines
+
+                                var ctx = document.getElementById("myChart");
+                                var myChart = new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: item,
+                                        datasets: [
+                                            {
+                                                data: [10,20,30]
+                                            }
+                                        ]
+                                    },
+                                });
+                            </script>
+                        </div>
                     </div>
                 </div>
             </div>
