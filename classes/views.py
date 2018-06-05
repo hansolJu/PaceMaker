@@ -185,17 +185,50 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
     2. 제일 잘 나가는 타 학생의 전공 수업들을 보여줌
     3. 재수강 추천 과목을 보여줌 (낮은 성적부터)
     """
-    topStudentCourses = []
 
     def get_context_data(self, **kwargs):
         context = super(RetakeRecommandView, self).get_context_data(**kwargs)
         student = StudentInfo.objects.get(hukbun=self.request.user.hukbun)
         takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
-        # self.getRetakeCourses(student, takenCoursesGrades)
-        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('yearNsemester',
-                                                                                              'subject')
+        # self.getRetakeCourses(student,dent) takenCoursesGrades)
+        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('yearNsemester', 'subject')
+        context['retakeGradesCountList'] = self.topRetakeCourses()
 
         return context
+
+    def topRetakeCourses(self):
+        allRetakeGrades = StudentGrade.objects.filter(valid='재수강무효').order_by('yearNsemester', 'subject')
+        allRetakeGradesNameList = allRetakeGrades.values_list('subject', flat=True).distinct()
+        retakeGradesNameCountDic = dict()
+
+        for retakeCourseName in allRetakeGradesNameList:
+            retakeGradesNameCountDic[retakeCourseName] = 0  # count
+        for retakeGrade in allRetakeGrades:
+            retakeGradesNameCountDic[retakeGrade.subject] += 1 #재수강인거 count해주자
+        retakeGradesCountList = sorted(retakeGradesNameCountDic.items(), key = operator.itemgetter(1))
+
+        return retakeGradesCountList
+
+
+    def disapprovalCourses(self, student):
+        studentGrade = int(student.currentGrade[0])
+        studentSemester = int(student.currentGrade[-3])
+        if studentGrade < 3:
+            return None
+        gradeYearNSemesters = StudentGrade.objects.filter(hukbun=student.hukbun).values_list('yearNsemester')
+        gradeYearNSemesters = sorted(list(set(gradeYearNSemesters)))
+        studentYearNSemesterLen = (studentGrade - 1) * 2 + studentSemester
+
+        resultQuerySetList = []
+        for semester in range(1, studentYearNSemesterLen-4):
+            resultQuerySetList.append(
+                StudentGrade.objects.filter(hukbun=student.hukbun, yearNsemester__in=gradeYearNSemesters[semester - 1]))
+
+        resultQuerySet = StudentGrade.objects.none()
+        for gradeQuerySet in resultQuerySetList:
+            resultQuerySet = resultQuerySet | gradeQuerySet
+
+        return resultQuerySet
 
     def getRetakeCourses(self, student, takenCoursesGrades):
         takenCoursesScoresDic = dict()
@@ -220,13 +253,10 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
                     resultGrades.difference(resultGrades.filter(subject=resultGrade.subject))
             except:
                 continue
-        canceledList = resultGrades.filter(valid='재수강무효').values_list('subject')
-        return resultGrades.difference(resultGrades.filter(valid='재수강무효')).difference(
-            resultGrades.filter(subject__in=canceledList))
+        canceledList = resultGrades.filter(Q(valid='재수강무효') | Q(grade='P')).values_list('subject')
 
-    def getTopStudentCourses(self):
-        # 지훈이가 하길 기다리자
-        pass
+        return resultGrades.difference(resultGrades.filter(valid='재수강무효')).difference(
+            resultGrades.filter(subject__in=canceledList)).difference(self.disapprovalCourses(student))
 
 class preCourseRecommandView(LoginRequiredMixin, TemplateView):
     template_name = "classes/pre_recommand.html"

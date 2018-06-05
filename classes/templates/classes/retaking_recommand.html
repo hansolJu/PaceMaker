@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-lg-10">
                         <div class="table-responsive">
-                            <li><h4>재수강 추천 과목</h4></li>
+                            <h4>재수강 추천 과목</h4>
                             <table class="table table-bordered table-hover table-striped">
                                 <tr>
                                     <th>년도 및 학기</th>
@@ -40,6 +40,34 @@
                                     <tr />
                                 {% endfor %}
                             </table>
+                        </div>
+                        <br />
+                        <hr />
+
+                        <div>
+                            <script>
+                                var Scoure = {{retakeGradesCountList}};
+                            </script>
+
+                            <script>
+                                // Our labels along the x-axis
+                                var item = ['Red', 'Blue', 'Yellow']
+
+                                // For drawing the lines
+
+                                var ctx = document.getElementById("myChart");
+                                var myChart = new Chart(ctx, {
+                                    type: 'pie',
+                                    data: {
+                                        labels: item,
+                                        datasets: [
+                                            {
+                                                data: [10,20,30]
+                                            }
+                                        ]
+                                    },
+                                });
+                            </script>
                         </div>
                     </div>
                 </div>
