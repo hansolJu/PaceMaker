@@ -54,6 +54,9 @@ class PostOB(models.Model):
     owner = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
     file = models.FileField('파일',blank=True, upload_to='documents/%Y/%m/%d')
     hits = models.IntegerField('조회수', default=0)
+    BUYSELL_CHOICES = (('사기','삽니다'),
+                       ('팔기','팝니다'),)
+    buysell = models.CharField('필수선택',max_length=10, choices=BUYSELL_CHOICES, default='Buy')
 #tagField는 CharField를 상속받아서 디폴트로 amx_length=255,Blank=True로 정의하고 있어서 따로 내용을 안채워도됨
 
 

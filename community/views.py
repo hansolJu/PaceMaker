@@ -47,7 +47,7 @@ class OldbookLV(ListView):
         sort = self.request.GET.get('sort','')
 
         if sort == 'mypost':
-            sortfilter = PostOB.objects.filter(user=self.request.user).order_by('modify_date')
+            sortfilter = PostOB.objects.filter(user=self.request.user).order_by('pk')
             return sortfilter
         elif sort == 'new':
             sortfilter = PostOB.objects.order_by('modify_date')
@@ -155,7 +155,6 @@ class OBSearchFormView(OldbookLV,FormView):
         schWord = '%s' %self.request.POST['search_word']
         post_oldbook_list = PostOB.objects.filter(Q(title__icontains=schWord)|Q(description__icontains=schWord)
                                         |Q(content__icontains=schWord)).distinct()
-
         context = {}
         context['form'] = form
         context['search_term'] = schWord
@@ -181,7 +180,7 @@ class PostCreateView(LoginRequiredMixin, CreateView):
 class OBPostCreateView(LoginRequiredMixin, CreateView):
     model = PostOB
 
-    fields = ['title',  'description', 'content',  'file']
+    fields = ['buysell', 'title',  'description', 'content', 'file']
     initial = {'slug': 'auto-filling-do-not-input'}
     # slug 필드를 처리하는 또 다른 방법은 fields속성에서 제외해 폼에 나타나지 않도록 하는 방법입니다. \
     # 폼에는 보이지 않지만, Post 모델의 save()함수에 의해 테리블의 레코드에는 자동으로 채워집니다.
@@ -208,6 +207,7 @@ class OBPostUpdateView(LoginRequiredMixin, UpdateView):
 
     def get_queryset(self):
         return PostOB.objects.filter(owner=self.request.user)
+
 
 
 class PostDeleteView(LoginRequiredMixin, DeleteView):
