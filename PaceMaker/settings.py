@@ -45,9 +45,10 @@ INSTALLED_APPS = [
     'grades.apps.GradesConfig',         # 성적
     'classes.apps.ClassesConfig',
     'graduate.apps.GraduateConfig',     # 졸업
-
-
+    'completion_diagram.apps.CompletionDiagramConfig',
+    'rank.apps.RankConfig',
 ]
+
 DISQUS_WEBSITE_SHORTNAME = 'paker'
 SITE_ID = 1
 

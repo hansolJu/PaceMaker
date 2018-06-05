@@ -11,3 +11,7 @@ def to_int(value):
 @register.filter
 def subtract(value, arg):
     return value - arg
+
+@register.filter
+def index(List, i):
+    return List[int(i)]

@@ -140,16 +140,77 @@
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
+                        {% if percent < 0.057 %}
                         <div class="user-grade-tier">
-                            <h1>Bronze</h1>
-                            <img src="../static/asset/rank/bronze.png" alt="Bronze">
+                            <h1>Challenge</h1>
+                            <img src="../static/asset/rank/challenger.png" alt="challenger">
                         </div>
                         <div class="user-grade-stat">
                             <i>|</i>
-                            <span>상위 80.1452%</span>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
                             <i>|</i>
                         </div>
-
+                        {% elif 0.057 < percent and percent < 0.143 %}
+                        <div class="user-grade-tier">
+                            <h1>Master</h1>
+                            <img src="../static/asset/rank/master.png" alt="Master">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% elif 0.143 < percent and percent < 0.235 %}
+                        <div class="user-grade-tier">
+                            <h1>Diamond</h1>
+                            <img src="../static/asset/rank/diamond.png" alt="Diamond">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% elif 0.235 < percent and percent < 0.366 %}
+                        <div class="user-grade-tier">
+                            <h1>Platinum</h1>
+                            <img src="../static/asset/rank/platinum.png" alt="platinum">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% elif 0.366 < percent and percent < 0.572 %}
+                        <div class="user-grade-tier">
+                            <h1>Gold</h1>
+                            <img src="../static/asset/rank/gold.png" alt="gold">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% elif 0.572 < percent and percent < 0.873 %}
+                        <div class="user-grade-tier">
+                            <h1>Silver</h1>
+                            <img src="../static/asset/rank/silver.png" alt="Silver">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% elif 0.873 < percent %}
+                        <div class="user-grade-tier">
+                            <h1>Unranked</h1>
+                            <img src="../static/asset/rank/Unranked.png" alt="Unranked">
+                        </div>
+                        <div class="user-grade-stat">
+                            <i>|</i>
+                            <span>상위 {% widthratio percent 1 100 %}%</span>
+                            <i>|</i>
+                        </div>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -158,29 +219,29 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-bar-chart-o fa-fw"></i> 성적분석표
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
-                                    Actions
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Action</a>
-                                    </li>
-                                    <li><a href="#">Another action</a>
-                                    </li>
-                                    <li><a href="#">Something else here</a>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Separated link</a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
+{#                        <div class="pull-right">#}
+{#                            <div class="btn-group">#}
+{#                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">#}
+{#                                    Actions#}
+{#                                    <span class="caret"></span>#}
+{#                                </button>#}
+{#                                <ul class="dropdown-menu pull-right" role="menu">#}
+{#                                    <li><a href="#">Action</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Another action</a>#}
+{#                                    </li>#}
+{#                                    <li><a href="#">Something else here</a>#}
+{#                                    </li>#}
+{#                                    <li class="divider"></li>#}
+{#                                    <li><a href="#">Separated link</a>#}
+{#                                    </li>#}
+{#                                </ul>#}
+{#                            </div>#}
+{#                        </div>#}
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
-                        <canvas id="myChart" width="440" height="440"></canvas>
+                        <canvas id="myChart" width="300" height="180"></canvas>
                     </div>
                     <!-- /.panel-body -->
                 </div>
