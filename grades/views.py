@@ -103,7 +103,7 @@ class MajorGradeLV(LoginRequiredMixin,ListView):
     def get_score_sum(self):
         s = self.request.user.hukbun
         sum = 0
-        scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(valid ='유효').values_list('score', flat=True)
+        scorelist = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(valid ='유효').exclude(grade__contains='F').values_list('score', flat=True)
         scorelist = scorelist.exclude(grade__contains='P')
         for i in scorelist:
             sum = sum + float(i)

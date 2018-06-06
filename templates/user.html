@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}
+    PaceMaker
+{% endblock title%}
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header"></h1>
+                {#                메인 페이지#}
+            </div>
+            <!-- /.col-lg-12 -->
+        </div>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-user fa-fw"></i> 학생정보
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <div class="user-who">
+                            <div class="user-thumb" style="float:left; padding:5px">
+                                <div class="user-thumb-img">
+                                    <img src="http://kutis.kyonggi.ac.kr/webkutis/TransferImageStream.do?hakbun={{ user_info.0 }}" alt="user face" width="100" height="140">
+                                </div>
+                                <div class="user-thumb-img-default">
+                                </div>
+                            </div>
+                            <div class="user-info" style="float:left; padding:10px">
+                                <h3>{{ user_info.1 }}</h3>
+                                <h5>학기 : {{ user_info.2 }}</h5>
+                                <h5>공학인증 : {{ user_info.3 }}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-tasks fa-fw"></i> 랭크통계
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        {% if percent < 0.057 %}
+                            <div style="float:left" padding="5px">
+                                <img src="../static/asset/rank/challenger.png" alt="challenger" style="float:right;width:42px;height:42px;">
+                            </div>
+                            <h1>Challenge</h1>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% elif 0.057 < percent and percent < 0.143 %}
+                            <div class="user-grade-tier">
+                                <img src="../static/asset/rank/master.png" alt="Master">
+                                <h1>Master</h1>
+                            </div>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% elif 0.143 < percent and percent < 0.235 %}
+                            <div class="user-grade-tier">
+                                <img src="../static/asset/rank/diamond.png" alt="Diamond">
+                                <h1>Diamond</h1>
+                            </div>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% elif 0.235 < percent and percent < 0.366 %}
+                            <div class="user-grade-tier">
+                                <img src="../static/asset/rank/platinum.png" alt="platinum">
+                                <h1>Platinum</h1>
+                            </div>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% elif 0.366 < percent and percent < 0.572 %}
+                            <div class="user-thumb" style="float:left; padding:20px">
+                                <div class="user-thumb-img">
+                                    <img src="../static/asset/rank/gold.png" alt="gold" width="140" height="170">
+                                </div>
+                                <div class="user-thumb-img-default">
+                                </div>
+                            </div>
+                            <div class="user-grade-tier" style="float:left; padding:10px">
+                                <h1>Gold</h1>
+                                <h4>상위 {% widthratio percent 1 100 %}%</h4>
+                            </div>
+                        {% elif 0.572 < percent and percent < 0.873 %}
+                            <div class="user-grade-tier">
+                                <img src="../static/asset/rank/silver.png" alt="Silver">
+                                <h1>Silver</h1>
+                            </div>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% elif 0.873 < percent and percent <= 1 %}
+                            <div class="user-grade-tier">
+                                <img src="../static/asset/rank/Unranked.png" alt="Unranked">
+                                <h1>Unranked</h1>
+                            </div>
+                            <div class="user-grade-stat">
+                                <i>|</i>
+                                <span>상위 {% widthratio percent 1 100 %}%</span>
+                                <i>|</i>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <!-- /.col-lg-4 -->
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> 성적분석표
+                    </div>
+                    <!-- /.panel-heading -->
+                    <div class="panel-body">
+                        <canvas id="myChart" width="300" height="180"></canvas>
+                    </div>
+                    <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> 성적분석표 - 학기별 변화
+                    </div>
+                    <!-- /.panel-body -->
+                    <div class="panel-body">
+                        <canvas id="mySemester" width="300" height="180"></canvas>
+                    </div>
+                    <script src="analyser.js"></script>
+                    <script>
+                        var ctx = document.getElementById('mySemester').getContext('2d');
+                        var mySemester = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                {#        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],#}
+                                labels: [{% for semester in semesterlist %} "{{ semester }}", {% endfor %}],
+                                datasets: [
+                                    {
+                                        label: '학기 평점',
+                                        {#            data: [12, 19, 3, 17, 6, 3, 7],#}
+                                        data: [{% for avg in avglist %} "{{ avg }}", {% endfor %}],
+                                        backgroundColor: 'rgba(223, 240, 216,1)',
+                                        borderColor: 'rgba(223,240,216,1)',
+                                    },
+                                    {
+                                        label: '전공 평점',
+                                        data: [{% for major_avg in major_avglist %} "{{ major_avg }}", {% endfor %}],
+                                        backgroundColor: 'rgb(217, 237, 247,1)',
+                                        borderColor: 'rgba(217, 237, 247,1)',
+                                    },
+                                    {
+                                        label: '교양 평점',
+                                        data: [{% for ge_avg in ge_avglist %} "{{ ge_avg }}",{% endfor %}],
+                                        backgroundColor: 'rgba(242,222,222,1)',
+                                        borderColor: 'rgba(242,222,222,1)',
+                                    },
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0,
+                                            max: 4.5,
+                                            beginAtZero:true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+                <!-- /.panel -->
+            </div>
+            <!-- /.col-lg-8 -->
+        </div>
+        <!-- /.row -->
+    </div>
+    <!-- /#page-wrapper -->
+    <script>
+        var Scoure = {{chart_data}};
+    </script>
+
+
+    <script>
+        // Our labels along the x-axis
+        var item = ['전공평점','교양평점','MSC평점','성장률'];
+        // For drawing the lines
+
+
+        var ctx = document.getElementById("myChart");
+        var myChart = new Chart(ctx, {
+            type: 'radar',
+
+            data: {
+                labels: item,
+                datasets: [
+                    {
+                        data: Scoure,
+                        label: "Source",
+                        borderColor: "#3e95cd",
+                        fill: false
+                    },
+                ]
+            },
+            options: {
+
+                scale: {
+
+                    ticks: {
+                        min: 0,
+                        max: 5,
+                        display: true,
+                        beginAtZero: true,
+                        userCallback: function(label, index, labels) {
+                            // when the floored value is the same as the value we have a whole number
+                            return label;
+                        },
+                    }
+                }
+            }
+        });
+    </script>
+
+
+{% endblock content %}
+
+{% block footer %}
+    <div id="footer">
+        &copy; Hansol Ju 2018
+    </div>
+{% endblock footer%}

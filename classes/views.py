@@ -1,13 +1,12 @@
 from django.shortcuts import render
-from dataParser.models import StudentInfo, Course, StudentGrade
+from dataParser.models import StudentInfo, Course, StudentGrade, Weekly_course_contents
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, TemplateView
 from datetime import datetime
 from django.db.models import Q
 from grades.views import getIntScore
 import operator
-from .models import *
-
+from .models import classCourse, necessaryCourse, promotedCourse
 
 def get_score_sum(hukbun):
     s = hukbun
@@ -42,6 +41,7 @@ class majorLV(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
+        print(Course.objects.filter(year=datetime.today().year).order_by('grade', 'subjectName'))
         return Course.objects.filter(year=datetime.today().year).order_by('grade', 'subjectName')
 
 
@@ -56,39 +56,63 @@ class majorDV(LoginRequiredMixin, TemplateView):
         # Subject_desription, Core_Competence, Learning_Objectives,
         # Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
         try:
-            context['subjectName'] = Course.objects.get(id=context['pk'])
+            context['subjectName'] = Course.objects.get(id=context['pk']).subjectName
         except:
             context['subjectName'] = None
         try:
-            context['subjectDescriptions'] = Subject_desription.objects.filter(course=context['pk'])
+            context['subjectDescriptions'] = Course.objects.get(id=context['pk']).desription
         except:
             context['subjectDescriptions'] = None
         try:
-            context['coreCompetences'] = Core_Competence.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Knowledge_application)
+            temp.append(Course.objects.get(id=context['pk']).verification_ability)
+            temp.append(Course.objects.get(id=context['pk']).problem_solving)
+            temp.append(Course.objects.get(id=context['pk']).tool_utilization)
+            temp.append(Course.objects.get(id=context['pk']).design_ability)
+            temp.append(Course.objects.get(id=context['pk']).teamwork_skill)
+            temp.append(Course.objects.get(id=context['pk']).communication)
+            temp.append(Course.objects.get(id=context['pk']).understanding_of_influence)
+            temp.append(Course.objects.get(id=context['pk']).responsibility)
+            temp.append(Course.objects.get(id=context['pk']).self_led)
+            context['coreCompetences'] = temp
         except:
             context['coreCompetences'] = None
         try:
-            context['learningObjectives'] = Learning_Objectives.objects.filter(id=context['pk'])
-        except:
-            context['learningObjectives'] = None
-        try:
-            context['lectureMethods'] = Lecture_method.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Lecture_type)
+            temp.append(Course.objects.get(id=context['pk']).teaching_method)
+            temp.append(Course.objects.get(id=context['pk']).educational_equipment)
+            context['lectureMethods'] = temp
         except:
             context['lectureMethods'] = None
         try:
-            context['assignments'] = Assignment.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Assignment)
+            context['assignments'] = temp
         except:
             context['assignments'] = None
         try:
-            context['schoolCompositionRatios'] = School_composition_ratio.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Midterm_exam)
+            temp.append(Course.objects.get(id=context['pk']).final_exam)
+            temp.append(Course.objects.get(id=context['pk']).attendance)
+            temp.append(Course.objects.get(id=context['pk']).assignments_and_others)
+            temp.append(Course.objects.get(id=context['pk']).grading_division)
+            context['schoolCompositionRatios'] = temp
         except:
             context['schoolCompositionRatios'] = None
         try:
-            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
+            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(course_id=context['pk'])
         except:
             context['weeklyCourseContents'] = None
         try:
-            context['books'] = Book.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).title)
+            temp.append(Course.objects.get(id=context['pk']).author)
+            temp.append(Course.objects.get(id=context['pk']).publisher)
+            temp.append(Course.objects.get(id=context['pk']).year_of_publication)
+            context['books'] = temp
         except:
             context['books'] = None
         return context
@@ -111,21 +135,25 @@ class SpecialCourseRecommandView(LoginRequiredMixin, TemplateView):
             studentGrades = StudentGrade.objects.filter(hukbun=student.hukbun)  # 학생의 grade 쿼리셋
             semesterList = studentGrades.values_list('yearNsemester', flat=True)  # 학생의 학기 list
             semesterList = sorted(list(set(semesterList)))  # 중복제거하여 정렬
+            retakeList = [] #재수강한 과목들 -> 이 과목은 무시하자
             for grade in studentGrades:  # 학생이 과목을 들었을 때 학년이 일치하는 지 확인한다.
+                if grade.valid == '재수강무효' or grade.valid == 'F학점일괄무효' or grade.subject in retakeList: #해당 과목이 재수강과목이라면 무시
+                    retakeList.append(grade.subject)
+                    continue
                 semester = semesterList.index(grade.yearNsemester)  # 해당 과목의 학기가 semesterList에서 검색해 index를 반환한다 => 해당 과목이 몇학기에 들은 과목인가 검사
-                courses = Course.objects.filter(subjectName=grade.subject)  # 해당 수업의 이름과 동일한 course 쿼리셋 가져오기
+                courses = Course.objects.filter(year__in=[datetime.today().year-1, datetime.today().year], subjectName=grade.subject)  # 해당 수업의 이름과 동일한 course 쿼리셋 가져오기
                 if courses.count() == 0:  # 만약 해당하는 수업이 없다면 걍 무시
                     continue
                 courseInfoes = []
-                course = courses.first()
-                courseGrade = courses.first().grade  # 수업을 대충 하나 가져와서 추천 학년을 저장
+                course = courses.last() #수업을 대충 하나 가져와서 추천 학년을 저장
+                courseGrade = course.grade  #해당 수업의 추천 학년 가져옴
                 if int(semester / 2) + 1 != int(courseGrade):  # 추천 학년대로 과목을 안 들었을 경우
                     courseInfoes.append(course.grade)  # 추천 학년
                     courseInfoes.append(int(semester / 2) + 1)  # 들었던 학년
                     courseInfoes.append(course.eisu)  # 이수
                     courseInfoes.append(course.score)  # 학점
                     specialCoursesDic[grade] = courseInfoes
-
+    
         # 이제 중복된 전공을 없애고 카운트하는게 필요
         grades = list(specialCoursesDic.keys())  # grade 객체 리스트
         gradesSubjectName = []
@@ -221,7 +249,7 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
         student = StudentInfo.objects.get(hukbun=self.request.user.hukbun)
         takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
         # self.getRetakeCourses(student,dent) takenCoursesGrades)
-        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('yearNsemester', 'subject')
+        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('-grade', 'yearNsemester', 'subject')
         context['retakeGradesCountList'] = self.topRetakeCourses()
 
         return context
@@ -266,7 +294,7 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
         canceledList = []
         for takenCourseGrade in takenCoursesGrades:  # 딕셔너리에 과목코드:(int)점수 저장
             try:
-                if getIntScore(takenCourseGrade.grade) <= 2.5:  # 2.5
+                if getIntScore(takenCourseGrade.grade) <= 3.0:  # 2.5
                     takenCoursesScoresDic[takenCourseGrade.subject] = getIntScore(takenCourseGrade.grade)
             except:
                 continue
