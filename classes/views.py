@@ -161,23 +161,62 @@ class TopStudentRecommandView(LoginRequiredMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(TopStudentRecommandView, self).get_context_data(**kwargs)
-        context['Top5Grades'] = self.getTop5Grades()
+        student = StudentInfo.objects.get(hukbun=self.request.user.hukbun)
+        top5Info = self.getTop5Grades(student)
+        scoreList = []
+        top5GradesList = []
+        for info in top5Info:
+            infoList = [info[0], info[1]]
+            scoreList.append(infoList)
+            top5GradesList.append(info[2])
+
+        context['Top5GradesList'] = top5GradesList
+        context['ScoreList'] = scoreList
+
+        dicList = []
+        for topGrade in  context['Top5GradesList']:
+            semesterList = topGrade.values_list('yearNsemester', flat=True)
+            semesterList = sorted(list(set(semesterList)))
+            semesterGradeDic = dict()
+            for semester in semesterList:
+                semesterCount = semesterList.index(semester) + 1
+                if (semesterCount % 2 == 1):  # 홀수라면
+                    grade = str(int((semesterCount + 1) / 2)) + "학년 1학기"
+                else:  # 짝수일 경우
+                    grade = str(int((semesterCount + 1) / 2)) + "학년 2학기"
+
+                semesterGradeDic[semester] = grade
+            dicList.append(semesterGradeDic)
+        context['dicList'] = dicList
 
         return context
 
-    def getTop5Grades(self):
-        allStudentHukbun = StudentGrade.objects.all().values_list('hukbun', flat=True) #모든 학생의 학번을 가져옴
-        allStudentScoreDic = dict() #모든 학생의 총점을 저장할 dic
-        for hukbun in allStudentHukbun: #각 학생의 총점 저장
-            allStudentScoreDic[hukbun] = 3#get_avgGrade(hukbun) 너무 느려ㅠ
-        sortedAllStudentScoreList = sorted(allStudentScoreDic.items(), key = operator.itemgetter(1), reverse=True) #value를 기준으로 내림차순 정렬
-        topStudentGradesScoreDic = dict()
-        valueDict = dict()
-        for topStudent in sortedAllStudentScoreList[:5]: #top 5학생의 [학번,총점]을 가져옴
-            valueDict[StudentGrade.objects.filter(hukbun=topStudent[0]).order_by('yearNsemester', 'subject')] = topStudent[1]
-            topStudentGradesScoreDic[topStudent[0]] = valueDict
+    def getTop5Grades(self, student):
+        gradeList = ['1학년 1학기','1학년 2학기','2학년 1학기','2학년 2학기','3학년 1학기','3학년 2학기','4학년 1학기','4학년 2학기']
+        try:
+            studentCurrentGradeList = gradeList[gradeList.index(student.currentGrade) + 1:]
+        except:
+            return None
+        upperGradeStudentHukbun = StudentInfo.objects.filter(currentGrade__in=studentCurrentGradeList).values_list('hukbun')
+        upperStudentGrades = StudentGrade.objects.filter(hukbun__in=upperGradeStudentHukbun).values_list('hukbun', flat=True)
 
-        return topStudentGradesScoreDic
+        upperStudentScoreDic = dict() #선배 학생의 총점을 저장할 dic
+        for hukbun in upperGradeStudentHukbun: #각 학생의 총점 저장
+            upperStudentScoreDic[hukbun] = get_avgGrade(hukbun)  # 학번 : 총점
+        sortedUpperStudentScoreList = sorted(upperStudentScoreDic.items(), key = operator.itemgetter(1), reverse=True) #value를 기준으로 내림차순 정렬
+        topStudentGradesScoreDic = dict()
+        resultList = []
+        rank = 1
+        for topStudent in sortedUpperStudentScoreList[:5]: #top 5학생의 [학번,총점]을 가져옴
+            studentValueList = []
+            studentValueList.append(rank) #등수
+            studentValueList.append(topStudent[1]) #총점
+            studentValueList.append(StudentGrade.objects.filter(hukbun=topStudent[0]).order_by('yearNsemester', 'subject'))
+            rank += 1
+            resultList.append(studentValueList)
+
+        return resultList
+
 class RetakeRecommandView(LoginRequiredMixin, TemplateView):
     template_name = "classes/retaking_recommand.html"
     """
