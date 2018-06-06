@@ -135,7 +135,7 @@ class Course(models.Model):
     # 강의시수
     course_time = models.CharField(max_length=15, blank=True, null=True)
     # 설계시수
-    design_score = models.CharField(max_length=15, blank=True, null=True)
+    design_score = models.CharField(max_length=15, blank=True, null=True, default="0")
 
     # table[1] 교과목 해설
     desription = models.CharField(max_length=1000,blank=True, null=True)
