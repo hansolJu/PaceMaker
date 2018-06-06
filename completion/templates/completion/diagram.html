@@ -5,14 +5,72 @@
     <script>
         $(document).ready(function(){
             // 이 안쪽에 함수를 정의 해준다.
+            var total = {{ score.0 }};
+            var major = {{ score.1 }};
+            var design = {{ score.4 }};
+            var gyoyang = {{ score.2 }};
+            var msc = {{ score.3 }};
+            var bbsreplll;
+
+
 
             // 과목을 클릭시 활성화 시킨다.
             $("div").click(function(){
+
                 if($(this).hasClass("subject-box")){
                     if($(this).hasClass("active")){
-                        $(this).removeClass("active");
+                        $(this).removeClass("active");//제거
+                        bbsreplll= $(this).attr('id');
+                        bbsreplll=bbsreplll.split(',');
+                        alert(bbsreplll[0]);
+                        total = parseFloat(total) + parseFloat(bbsreplll[1]);
+                        document.getElementById('total_score').innerHTML = "남은 전체 학점: "+total;
+                        design = parseInt(design) + parseInt(bbsreplll[2]);
+                        document.getElementById('design_score').innerHTML = "남은 설계 학점: "+design;
+                        if (bbsreplll[3]=='전공'){
+                            major = parseInt(major)+parseInt(bbsreplll[1]);
+                            document.getElementById('major_score').innerHTML = "남은 전공 학점: "+major;
+                        }
+                        else if (bbsreplll[3]=='MSC'){
+                            msc = parseInt(msc) + parseInt(bbsreplll[1]);
+                            document.getElementById('msc_score').innerHTML = "남은 MSC 학점: "+msc;
+                        }
+                        else if(bbsreplll[3]=='교양'){
+                            gyoyang = parseInt(gyoyang) + parseInt(bbsreplll[1]);
+                            document.getElementById('gyoyang_score').innerHTML = "남은 교양 학점: "+gyoyang;
+                        }
+                        else {
+                            alert("오류 정보가 검색되지 않습니다.")
+                        }
+
+                        alert(total+"//"+major+"//"+msc+"//"+gyoyang+"//"+design)
                     }else{
                         $(this).addClass("active");
+                        bbsreplll = $(this).attr('id');
+                        bbsreplll=bbsreplll.split(',');
+                        alert(bbsreplll);
+                        alert(bbsreplll[0]);
+
+                        total = parseInt(total) - parseInt(bbsreplll[1]);
+                        document.getElementById('total_score').innerHTML = "남은 전체 학점: "+total;
+                        design = parseFloat(design) - parseFloat(bbsreplll[2]);
+                        document.getElementById('design_score').innerHTML = "남은 설계 학점: "+design;
+                        if (bbsreplll[3]=='전공'){
+                            major = parseInt(major)-parseInt(bbsreplll[1]);
+                            document.getElementById('major_score').innerHTML = "남은 전공 학점: "+major;
+                        }
+                        else if (bbsreplll[3]=='MSC'){
+                            msc = parseInt(msc) - parseInt(bbsreplll[1]);
+                            document.getElementById('msc_score').innerHTML = "남은 MSC 학점: "+msc;
+                        }
+                        else if(bbsreplll[3]=='교양'){
+                            gyoyang = parseInt(gyoyang) - parseInt(bbsreplll[1]);
+                            document.getElementById('gyoyang_score').innerHTML = "남은 교양 학점: "+gyoyang;
+                        }
+                        else {
+                            alert("오류 정보가 검색되지 않습니다.")
+                        }
+                        alert(total+"//"+major+"//"+msc+"//"+gyoyang)
                     }
                 }
             });
@@ -88,6 +146,13 @@
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
                             {% endfor %}
+                        {% elif eisu.0 %}
+                            {% for course in eisu.0 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
                         {% else %}
                             <div class="subject-box active">
                                 컴퓨터 과학 전공 및 진로탐색
@@ -125,6 +190,13 @@
                         {% if course_list.1 %}
                             {% for course in course_list.1 %}
                                 <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% elif eisu.1 %}
+                            {% for course in eisu.1 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
                                     <div id="subject-title">{{ course.0 }}</div>
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
@@ -178,6 +250,13 @@
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
                             {% endfor %}
+                        {% elif eisu.2 %}
+                            {% for course in eisu.2 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
                         {% else %}
                             <div class="subject-box">
                                 자바프로그래밍
@@ -208,6 +287,13 @@
                         {% if course_list.3 %}
                             {% for course in course_list.3 %}
                                 <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% elif eisu.3 %}
+                            {% for course in eisu.3 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
                                     <div id="subject-title">{{ course.0 }}</div>
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
@@ -255,6 +341,13 @@
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
                             {% endfor %}
+                        {% elif eisu.4 %}
+                            {% for course in eisu.4 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
                         {% else %}
                             <div class="subject-box">
                                 워크플로우 시스템
@@ -285,6 +378,13 @@
                         {% if course_list.5 %}
                             {% for course in course_list.5 %}
                                 <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% elif eisu.5 %}
+                            {% for course in eisu.5 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
                                     <div id="subject-title">{{ course.0 }}</div>
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
@@ -336,6 +436,13 @@
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
                             {% endfor %}
+                        {% elif eisu.6 %}
+                            {% for course in eisu.6 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
                         {% else %}
                             <div class="subject-box">
                                 컴퓨터 과학 전공 및 진로탐색
@@ -373,6 +480,14 @@
                                     <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
                                 </div>
                             {% endfor %}
+                        {% elif eisu.7 %}
+                            {% for course in eisu.7 %}
+                                <div id="{{ course.0 }},{{ course.1 }},{{ course.2 }},{{ course.3 }}" class="subject-box">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+
                         {% else %}
                             <div class="subject-box">
                                 컴퓨터비전
@@ -394,18 +509,16 @@
 <div>
     <!--공학인증-->
     <i>|</i>
-    <span>남은 전공학점: 67</span>
+    <span id="total_score">남은 전체학점: {{ score.0 }}</span>
     <i>|</i>
+    <span id="major_score">남은 전공학점: {{ score.1 }}</span>
     <i>|</i>
-    <span>남은 교양학점: 67</span>
+    <span id="design_score">남은 설계학점: {{ score.4 }}</span>
     <i>|</i>
+    <span id="gyoyang_score">남은 교양학점: {{ score.2 }}</span>
     <i>|</i>
-    <span>남은 msc학점: 67</span>
+    <span id="msc_score">남은 MSC학점: {{ score.3 }}</span>
     <i>|</i>
-    <i>|</i>
-    <span>남은 학점: 67</span>
-    <i>|</i>
-    <span></span>
 </div>
 </body>
 </html>
