@@ -30,4 +30,5 @@ urlpatterns = [
                   path('graduate/', include('graduate.urls')),
                   path('course/', include('completion_diagram.urls')),
                   path('rank/', include('rank.urls')),
+                  path('user/', UserView.as_view(), name='user'),
               ]+ static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)

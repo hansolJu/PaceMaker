@@ -40,9 +40,9 @@
                                         {% endif %}
 
                                         {% if c|to_int <= total_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:total_grade|floatformat:"0" }}</td>
+                                            <td class="danger">{{ c|subtract:total_grade|floatformat:"0" }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
@@ -57,9 +57,9 @@
                                         {% endif %}
 
                                         {% if c|to_int <= major_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:major_grade|floatformat:"0" }}</td>
+                                            <td class="danger">{{ c|subtract:major_grade|floatformat:"0" }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
@@ -74,9 +74,9 @@
                                         {% endif %}
 
                                         {% if c|to_int <= ge_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:ge_grade|floatformat:"0" }}</td>
+                                            <td class="danger">{{ c|subtract:ge_grade|floatformat:"0" }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
@@ -91,9 +91,9 @@
                                         {% endif %}
 
                                         {% if c|to_int <= msc_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:msc_grade|floatformat:"0" }}</td>
+                                            <td class="danger">{{ c|subtract:msc_grade|floatformat:"0" }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
@@ -108,9 +108,9 @@
                                         {% endif %}
 
                                         {% if c|to_int <= design_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:design_grade }}</td>
+                                            <td class="danger">{{ c|subtract:design_grade }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
@@ -125,13 +125,29 @@
                                         {% endif %}
 
                                         {% if c|to_int <= engineer_cer_ge_grade %}
-                                        <td style="background-color:rgba( 0, 255, 0, 0.5 );">{{ 0 }}</td>
+                                            <td class="info">{{ 0 }}</td>
                                         {% else %}
-                                        <td style="background-color: rgba( 255, 0, 0, 0.5 );">{{ c|subtract:engineer_cer_ge_grade|floatformat:"0" }}</td>
+                                            <td class="danger">{{ c|subtract:engineer_cer_ge_grade|floatformat:"0" }}</td>
                                         {% endif %}
                                     {% endwith %}
                                 </tr>
                                 </tbody>
+                            </table>
+                        <hr>
+                            <!-- 학기별로 듣지 않은 전공 과목 리스트 보여주기 -->
+                            <h3 style="padding-bottom: 10px">수강하지 않은 전공 과목</h3>
+                            <table class="table table-bordered table-hover table-striped">
+                                {% for semesterlist in list %}
+                                    {% if semesterlist %}
+                                        <tr>
+                                        <td><strong>{{ forloop.counter0|change_semester }}</strong></td>
+                                            {% for grade in semesterlist %}
+                                                <td class="success">{{ grade }}</td>
+{#                                                <td class="col-xs-3 col-sm-2">{{ grade }}</td>#}
+                                            {% endfor %}
+                                        </tr>
+                                    {% endif %}
+                                {% endfor %}
                             </table>
                         </div>
                         <!-- /.table-responsive -->
