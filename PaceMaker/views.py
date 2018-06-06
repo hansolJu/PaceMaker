@@ -80,7 +80,14 @@ class HomeView(LoginRequiredMixin,TemplateView):
                 continue
             else:
                 temp = temp + float(sc.score)
-        avg = sum/temp
+                print('***')
+                print(temp)
+        print('^^^')
+        print(temp)
+        try:
+            avg = sum/temp
+        except:
+            avg = 0.0
         return avg
 
 

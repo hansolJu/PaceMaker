@@ -3,5 +3,5 @@ from .views import *
 
 app_name='course'
 urlpatterns = [
-    path('diagram/', diagramBV.as_view(), name= 'diagram'),
+    path('diagram/', DiagramTV.as_view(), name='diagram'),
 ]

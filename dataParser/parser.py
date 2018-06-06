@@ -318,8 +318,14 @@ class ServerParser(KutisParser):
     @staticmethod
     def save_course_major(year, semester, parsed_data_list):
         """ td 단위로 구성된 리스트를 DB에 저장한다. """
-        Course.objects.filter(year=year,semester = semester).delete()
+        # 처음 시작시 기존꺼를 다 지워버림.
+        Course.objects.filter(year=year, semester=semester).delete()
+        #
         for table_data in parsed_data_list:
+            j=0
+            for i in table_data:
+                print(j,i)
+                j+=1
             course_object = Course(
                 # 년도
                 year=year,
@@ -342,93 +348,102 @@ class ServerParser(KutisParser):
                 # 교시
                 time=table_data[7].strip(),
                 # 강의실
-                lectureRoom=table_data[8].strip()
+                lectureRoom=table_data[8].strip(),
+                # +10
+                # table[0]
             )
             course_object.save()
+            try:
+                Course.objects.filter(year=year).filter(semester=semester).filter(
+                    subjectCode=course_object.subjectCode).update(
+                    huksu_code=table_data[9][0].strip(),
+                    course_time=table_data[9][1].strip(),
+                    design_score=table_data[9][2].strip(),
+                )
+            except:
+                pass
+            try:
+                Course.objects.filter(year=year).filter(semester=semester).filter(
+                    subjectCode=course_object.subjectCode).update(
+                    # 1교과목 해설
+                    desription=table_data[10].strip(),
 
-    @staticmethod
-    def save_course_detail(course_id, parsed_data_list):
-        # table[0] 교과목 해설
-        desription_object = Subject_desription(
-            course_id=course_id,
-            desription=parsed_data_list[0].strip()
-        )
-        desription_object.save()
-        # table[1] 새부핵심역량 과의 관계
-        Competence_object = Core_Competence(
-            course_id = course_id,
-            # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
-            Knowledge_application=parsed_data_list[1][0].strip(),
-            verification_ability=parsed_data_list[1][1].strip(),
-            problem_solving=parsed_data_list[1][2].strip(),
-            tool_utilization=parsed_data_list[1][3].strip(),
-            design_ability=parsed_data_list[1][4].strip(),
-            teamwork_skill=parsed_data_list[1][5].strip(),
-            communication=parsed_data_list[1][6].strip(),
-            understanding_of_influence=parsed_data_list[1][7].strip(),
-            responsibility=parsed_data_list[1][8].strip()
+                    # 2새부핵심역량 과의 관계
+                    Knowledge_application=table_data[11][0].strip(),
+                    verification_ability=table_data[11][1].strip(),
+                    problem_solving=table_data[11][2].strip(),
+                    tool_utilization=table_data[11][3].strip(),
+                    design_ability=table_data[11][4].strip(),
+                    teamwork_skill=table_data[11][5].strip(),
+                    communication=table_data[11][6].strip(),
+                    understanding_of_influence=table_data[11][7].strip(),
+                    responsibility=table_data[11][8].strip(),
 
-        )
-        Competence_object.save()
-        # table[2] 교과목 학습목표 및 평가방법
-        for i in parsed_data_list[2]:
-            Learning_object = Learning_Objectives(
-                course_id=course_id,
-                Core_competencies=i[0].strip(),
-                detailed_core_competencies=i[1].strip(),
-                reflectance=i[2].strip(),
-                learning_objectives=i[3].strip(),
-                performance_criteria=i[4].strip(),
-                achievement_goals=i[5].strip(),
-                evaluation_methods=i[6].strip(),
-            )
-            Learning_object.save()
-        # table[3] 강의방법
-        Lecture_object = Lecture_method(
-            course_id=course_id,
-            # [강의형태, 수업방식, 교육용기자재]
-            Lecture_type=parsed_data_list[3][0].strip(),
-            teaching_method=parsed_data_list[3][1].strip(),
-            educational_equipment=parsed_data_list[3][2].strip()
-        )
-        Lecture_object.save()
-        # table[4] 과제물
-        Assignment_object = Assignment(
-            course_id=course_id,
-            Assignment=parsed_data_list[4].strip()
-        )
-        Assignment_object.save()
-        # table[5] 성적 구성비율
-        ratio_object = School_composition_ratio(
-            course_id=course_id,
-            Midterm_exam=parsed_data_list[5][0].strip(),
-            final_exam=parsed_data_list[5][1].strip(),
-            attendance=parsed_data_list[5][2].strip(),
-            assignments_and_others=parsed_data_list[5][3].strip(),
-            grading_division=parsed_data_list[5][4].strip()
-        )
-        ratio_object.save()
-        # table[6] 주별 강좌내용
-        for i in parsed_data_list[6]:
-            Weekly_object = Weekly_course_contents(
-                course_id=course_id,
+                    # 3 교과목 학습목표 및 평가방법
 
-                week=i[0].strip(),
-                contents=i[1].strip(),
-                methods=i[2].strip(),
-                related_materials=i[3].strip(),
-                assignments=i[4].strip()
-            )
-            Weekly_object.save()
-        # table[7] 책
-        Book_object = Book(
-            course_id=course_id,
-            title=parsed_data_list[7][0].strip(),
-            author=parsed_data_list[7][1].strip(),
-            publisher=parsed_data_list[7][2].strip(),
-            year_of_publication=parsed_data_list[7][3].strip(),
-        )
-        Book_object.save()
+                    # 4 강의방법  --- [' 이론중심', '강의식', '세미나식', '토론식', '질의/응답', 'OHP', '컴퓨터', '유인물']
+                    # [강의형태, 수업방식, 교육용기자재]
+                    Lecture_type=table_data[13][0].strip(),
+                    teaching_method=table_data[13][1].strip(),
+                    educational_equipment=table_data[13][2].strip(),
+
+                    # 5 과제물
+                    Assignment=table_data[14].strip(),
+                )
+            except:
+                pass
+            try:
+                Course.objects.filter(year=year).filter(semester=semester).filter(
+                    subjectCode=course_object.subjectCode).update(
+                    Midterm_exam=table_data[15][0].strip(),
+                    final_exam=table_data[15][1].strip(),
+                    attendance=table_data[15][2].strip(),
+                    assignments_and_others=table_data[15][3].strip(),
+                    grading_division=table_data[15][4].strip(),
+
+                    # 7 책
+                    title=table_data[17][0].strip(),
+                    author=table_data[17][1].strip(),
+                    publisher=table_data[17][2].strip(),
+                    year_of_publication=table_data[17][3].strip()
+                )
+            except:
+                pass
+
+            course_ids = Course.objects \
+                .filter(year=course_object.year) \
+                .filter(subjectCode=course_object.subjectCode) \
+                .values_list('pk', flat=True)[0]
+            print(course_ids)
+            print(type(course_ids))
+
+            # 12 교과목 학습목표 및 평가방법
+            # for i in table_data[12]:
+            #     learning_object = Course(
+            #         course_id=course_id,
+            #         Core_competencies=i[0].strip(),
+            #         detailed_core_competencies=i[1].strip(),
+            #         reflectance=i[2].strip(),
+            #         learning_objectives=i[3].strip(),
+            #         performance_criteria=i[4].strip(),
+            #         achievement_goals=i[5].strip(),
+            #         evaluation_methods=i[6].strip()
+            #     )
+            #     learning_object.save()
+            # 16 주별 강좌내용
+            try:
+                for i in table_data[16]:
+                    weekly_object = Weekly_course_contents(
+                        course_id=course_ids,
+                        week=i[0].strip(),
+                        contents=i[1].strip(),
+                        methods=i[2].strip(),
+                        related_materials=i[3].strip(),
+                        assignments=i[4].strip()
+                    )
+                    weekly_object.save()
+            except:
+                print("크롤링 실패로 인한 저장 오류!")
 
     def parse_course_major(self, year, semester):
         """년도와 원하는 학기를 받으면 해당 년도 학기에 열린 과목의 정보를 크롤하여 parse한후 리스트에 담아서 리턴한다.
@@ -463,23 +478,10 @@ class ServerParser(KutisParser):
         except IndexError:
             return None
 
-        # 교수 학번 추적 후 디비 저장
-        tds = soup.findAll("td")
-        for td in tds:
-            if "detailView_gyosu" in str(td):
-                tmp = self.remove_html_tags(str(td))
-                name = tmp.split("\r")[0]
-
-                spans = td.findAll("span")[1]
-                id = str(spans).split("\'")[3]
-
-                # 하드코딩 디비저장
-                Professor(hukbun=id, name=name).save()
-                print("-----")
-
         # 파싱 시작.
         parsed_table_header = []
-        result = []
+        course = []
+        detail_list = []
         while True:
             tables = soup.findAll("table", {'class': 'list02'})
             for table in tables:
@@ -504,21 +506,71 @@ class ServerParser(KutisParser):
                         tmp = tmp.replace('공학인증', "")
                         parsed_table_data.append(tmp)
                     # resultTd에 아무정보 없으면 저장X(Th 단 걸러내기)
+                    # course_detail_parsing 시작
                     if parsed_table_data:
-                        result.append(parsed_table_data)
+                        course.append(parsed_table_data)
                     else:
                         pass
 
             # 다른 페이지도 크롤링
             if page >= totalpage:
+                # 교수 학번 추적 후 디비 저장
+                tds = soup.findAll("td")
+                for td in tds:
+                    if "detailView_gyosu" in str(td):
+                        tmp = self.remove_html_tags(str(td))
+                        print(self.remove_line_feed(tmp).strip())
+                        name = tmp.split("\r")[0]
+
+                        spans = td.findAll("span")[1]
+                        profess_id = str(spans).split("\'")[3]
+
+                        # 하드코딩 디비저장
+                        Professor(hukbun=profess_id, name=name).save()
+                        print("-----교수 정보 저장 완료---------")
                 break
             else:
+                # 교수 학번 추적 후 디비 저장
+                tds = soup.findAll("td")
+                for td in tds:
+                    if "detailView_gyosu" in str(td):
+                        tmp = self.remove_html_tags(str(td))
+                        print(self.remove_line_feed(tmp).strip())
+                        name = tmp.split("\r")[0]
+
+                        spans = td.findAll("span")[1]
+                        profess_id = str(spans).split("\'")[3]
+
+                        # 하드코딩 디비저장
+                        Professor(hukbun=profess_id, name=name).save()
+                        print("-----교수 정보 저장 완료---------")
                 page += 1
                 scheduleUrl = "http://kutis.kyonggi.ac.kr/webkutis/view/hs/wssu2/wssu222s.jsp?curPage=" \
                               + str(page) + "&hakgwa_cd=91017&gyear=" + year + "&gwamok_name=&ghakgi=" + semester
                 soup = self.get_original_data(scheduleUrl, self.s)
 
-        print("course result: ", result)
+        for i in course:
+            print("course result: ", i)
+        # 디테일 크롤링 시작!
+        result = []
+        print(course)
+        try:
+            for major in course:
+                print(type(major))
+                print(major)
+                course_code = major[0]
+                professor_num = Professor.objects.filter(name=major[5]).values_list('hukbun', flat=True)[0]
+                print(professor_num)
+                detail_list = self.parse_course_detail(year, semester, course_code, professor_num)
+                for detail in detail_list:
+                    major.append(detail)
+                result.append(major)
+        except:
+            print("***********************오류!!!!!!!!!************************")
+        for ser in result:
+            for j in ser:
+                print(j)
+                print("------------")
         return result
 
     # course_num = 그학기에 해당하는 과목번호
@@ -544,18 +596,32 @@ class ServerParser(KutisParser):
                "&gwamok_no=1199" \
                "&gyosu_no=20100118" \
                "&gwajung=1"
-        soup = self.get_original_data(test , self.s)
+
+        soup = self.get_original_data(url, self.s)
 
         result = []
         tables = soup.findAll("table", {'class': 'list06'})
+        # table[0] 학수코드 강의시수 설계시수 가져옴
+        ths = self.remove_html_tags(str(tables[0].findAll("th")))
+        tds = (tables[0].findAll("td"))
+        tmp = []
+        # 학수코드
+        tmp.append(self.remove_html_tags(str(tds[0])))
+        # 강의시수
+        tmp.append(self.remove_html_tags(str(tds[5])))
+        # 설계시수
+        tmp.append(self.remove_html_tags(str(tds[7])))
+        result.append(tmp)
+        # print(ths)
+        # print(tds)
         # table[1] 교과목 해설
         description_tableheader = self.remove_html_tags(str(tables[1].findAll("th")))
         description_table_data = self.remove_html_tags(str(tables[1].findAll("td")[0]))
         result.append(description_table_data)
 
-        print(description_tableheader)
-        print(description_table_data)
-        print("----------------")
+        # print(description_tableheader)
+        # print(description_table_data)
+        # print("----------------")
 
         # table[2] 새부핵심역량 과의 관계
         competencies_table_header = self.remove_html_tags(str(tables[2].findAll("th")))
@@ -565,13 +631,14 @@ class ServerParser(KutisParser):
         for td in competencies_table_data:
             competencies_parsed_list.append(self.remove_html_tags(str(td)))
         result.append(competencies_parsed_list)
-        print(competencies_table_header)
-        print(competencies_parsed_list)
-        print("----------------")
+        # print(competencies_table_header)
+        # print(competencies_parsed_list)
+        # print("----------------")
 
+        index = 3
         # table[3] 교과목 학습목표 및 평가방법 td 갯수세기
-        evaluation_table_headers = self.remove_html_tags(str(tables[3].findAll("th")))
-        evaluation_table_rows = tables[3].findAll("tr")
+        evaluation_table_headers = self.remove_html_tags(str(tables[index].findAll("th")))
+        evaluation_table_rows = tables[index].findAll("tr")
 
         attribute_data = ''
         is_attribute = False
@@ -606,98 +673,111 @@ class ServerParser(KutisParser):
                 attribute_data = ''
 
         result.append(evaluation_parsed_list)
+        index += 1
 
-        print(evaluation_table_headers)
-        print(evaluation_parsed_list)
-        print("----------------")
+        # print(evaluation_table_headers)
+        # print(evaluation_parsed_list)
+        # print("----------------")
 
-        # table[4] 강의방법 <input 으로 split 후 'checked'을 포함하는지 확인후, 테그삭제후 리턴
-        table_header = self.remove_html_tags(str(tables[4].findAll("th")))
-        print(table_header)
+        if int(year) < 2012:
+            pass
+        if 2011 < int(year) < 2018:
+            index = 5
+        else:
+            index = 4
+        try:
+            # table[4] 강의방법 [' 이론중심', '강의식', '세미나식', '토론식', '질의/응답', 'OHP', '컴퓨터', '유인물']
+            table_header = self.remove_html_tags(str(tables[index].findAll("th")))
+            # print(table_header)
 
-        table_data_list = tables[4].findAll("td")
-        parsed_data_list = []
-        for table_data in table_data_list:
-            tmp = str(table_data)
-            tmp = self.remove_line_feed(tmp)
+            table_data_list = tables[index].findAll("td")
+            parsed_data_list = []
+            for table_data in table_data_list:
+                tmp = str(table_data)
+                tmp = self.remove_line_feed(tmp)
 
-            # 체크된 데이터만 분리
-            tmp = tmp.split('<input')
-            for i in tmp:
-                if 'checked' in i:
-                    i = '<input' + i
-                    i = self.remove_html_tags(i)
-                    parsed_data_list.append(i)
+                # 체크된 데이터만 분리
+                tmp = tmp.split('<input')
+                for i in tmp:
+                    if 'checked' in i:
+                        i = '<input' + i
+                        i = self.remove_html_tags(i)
+                        parsed_data_list.append(i)
 
-        result.append(parsed_data_list)
-        print(parsed_data_list)
-        print("------------------")
+            result.append(parsed_data_list)
+            # print(parsed_data_list)
+            index += 1
+            # print("------------------")
 
-        # table[5] 과제물
-        table_header = self.remove_html_tags(str(tables[5].findAll("th")))
-        table_data = self.remove_html_tags(str(tables[5].findAll("td")[0]))
-        result.append(table_data)
+            # table[5] 과제물
+            table_header = self.remove_html_tags(str(tables[index].findAll("th")))
+            table_data = self.remove_html_tags(str(tables[index].findAll("td")[0]))
+            result.append(table_data)
 
-        print(table_header)
-        print(table_data)
-        print("----------------")
+            # print(table_header)
+            # print(table_data)
+            index += 1
+            # print("----------------")
 
-        # table[6] 성적 구성비율 존나 머리 안돌아가서 하드코딩되있음.
-        table_data = self.remove_html_tags(str(tables[6].findAll("td"))
-                                           .replace('\n', "")
-                                           .replace("\t", "")
-                                           .replace("\xa0", ""))
-        tmp_list = table_data.replace('[', "").replace(']', "").split(",")
+            # table[6] 성적 구성비율 존나 머리 안돌아가서 하드코딩되있음.
+            table_data = self.remove_html_tags(str(tables[index].findAll("td"))
+                                               .replace('\n', "")
+                                               .replace("\t", "")
+                                               .replace("\xa0", ""))
+            tmp_list = table_data.replace('[', "").replace(']', "").split(",")
 
-        tableheader = []
-        table_data = []
-        for i in tmp_list:
-            th_td = i.split(" ")
-            if th_td.__len__() > 2:
-                tableheader.append(th_td[0] + th_td[1] + th_td[2])
-                table_data.append(th_td[3])
+            tableheader = []
+            table_data = []
+            for i in tmp_list:
+                th_td = i.split(" ")
+                if th_td.__len__() > 2:
+                    tableheader.append(th_td[0] + th_td[1] + th_td[2])
+                    table_data.append(th_td[3])
 
-                tableheader.append(th_td[5])
-                table_data.append(th_td[7])
-            else:
-                tableheader.append(th_td[0])
-                table_data.append(th_td[1])
-        result.append(table_data)
-        print(tableheader)
-        print(table_data)
-        print("----------------")
+                    tableheader.append(th_td[5])
+                    table_data.append(th_td[7])
+                else:
+                    tableheader.append(th_td[0])
+                    table_data.append(th_td[1])
+            result.append(table_data)
+            # print(tableheader)
+            # print(table_data)
+            index += 1
+            # print("----------------")
 
-        # table[7] 주별 강좌내용
-        table_header = self.remove_html_tags(str(tables[7].findAll("th")))
-        Contents_table_rows = tables[7].findAll("tr")
-        Content_parsed_data = []
-        for table_data_lists in Contents_table_rows:
-            parsed_table_data = []
-            table_data_lists = table_data_lists.findAll("td")
-            for table_data in table_data_lists:
-                parsed_table_data.append(
-                    self.remove_html_tags(str(table_data)).replace('\n', "").replace("\t", "").replace("\xa0", ""))
-                # print("result td :",parsed_table_data)
-            if parsed_table_data:
-                Content_parsed_data.append(parsed_table_data)
+            # table[7] 주별 강좌내용
+            table_header = self.remove_html_tags(str(tables[index].findAll("th")))
+            Contents_table_rows = tables[index].findAll("tr")
+            Content_parsed_data = []
+            for table_data_lists in Contents_table_rows:
+                parsed_table_data = []
+                table_data_lists = table_data_lists.findAll("td")
+                for table_data in table_data_lists:
+                    parsed_table_data.append(
+                        self.remove_html_tags(str(table_data)).replace('\n', "").replace("\t", "").replace("\xa0", ""))
+                    # print("result td :",parsed_table_data)
+                if parsed_table_data:
+                    Content_parsed_data.append(parsed_table_data)
 
-        result.append(Content_parsed_data)
-        print(table_header)
-        print(Content_parsed_data)
+            result.append(Content_parsed_data)
+            # print(table_header)
+            # print(Content_parsed_data)
+            index += 1
+            # print("----------------")
 
-        print("----------------")
+            # table[8] 책
+            book_table_header = self.remove_html_tags(str(tables[index].findAll("th")))
+            book_table_datas = tables[index].findAll("td")
+            book_parsed_list = []
+            for table_data in book_table_datas:
+                book_parsed_list.append(self.remove_html_tags(str(table_data)))
+            result.append(book_parsed_list)
 
-        # table[8] 책
-        book_table_header = self.remove_html_tags((str)(tables[8].findAll("th")))
-        book_table_datas = tables[8].findAll("td")
-        book_parsed_list = []
-        for table_data in book_table_datas:
-            book_parsed_list.append(self.remove_html_tags(str(table_data)))
-        result.append(book_parsed_list)
+            # print(book_table_header)
+            # print(book_parsed_list)
+            # print("----------------")
 
-        print(book_table_header)
-        print(book_parsed_list)
-        print("----------------")
-
-        print(result)
+            # print(result)
+        except:
+            print("---------------------세부내역 크롤링 오류 -------------------------------------")
         return result

@@ -304,7 +304,9 @@ class SemesterGradeLV(LoginRequiredMixin,ListView):
         semesterlist = self.get_queryset()
         scorelist = []
         for i in range(0, len(semesterlist)):
-            temp = StudentGrade.objects.filter(hukbun=s).filter(yearNsemester=semesterlist[i]).filter(valid='유효')
+            temp = StudentGrade.objects.filter(hukbun=s)\
+                .filter(yearNsemester=semesterlist[i])\
+                .filter(valid='유효')
             temp = temp.exclude(grade__contains='P')
             scorelist.append(temp.values_list('score', flat=True))
         print(scorelist)
