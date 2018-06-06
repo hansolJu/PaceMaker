@@ -7,7 +7,7 @@ from django.utils.text import slugify
 class PostIF(models.Model):
     title =  models.CharField('제목', max_length=50)
     slug = models.SlugField('슬러그', unique=True, allow_unicode=True, help_text='one word for title alias.')
-    description = models.CharField('요약 설명', max_length=100, blank=True,
+    description = models.CharField('한줄 내용', max_length=100, blank=True,
                                    help_text='simple description text.')
     content = models.TextField('내용')
     tag = TagField('태그')
@@ -45,7 +45,7 @@ class PostIF(models.Model):
 class PostOB(models.Model):
     title =  models.CharField('제목', max_length=50)
     slug = models.SlugField('슬러그', unique=True, allow_unicode=True, help_text='one word for title alias.')
-    description = models.CharField('요약 설명', max_length=100, blank=True,
+    description = models.CharField('한줄 내용', max_length=100, blank=True,
                                    help_text='simple description text.')
     content = models.TextField('내용')
     tag = TagField('태그')
@@ -54,6 +54,9 @@ class PostOB(models.Model):
     owner = models.ForeignKey(StudentInfo, on_delete=models.CASCADE)
     file = models.FileField('파일',blank=True, upload_to='documents/%Y/%m/%d')
     hits = models.IntegerField('조회수', default=0)
+    BUYSELL_CHOICES = (('사기','삽니다'),
+                       ('팔기','팝니다'),)
+    buysell = models.CharField('필수선택',max_length=10, choices=BUYSELL_CHOICES, default='Buy')
 #tagField는 CharField를 상속받아서 디폴트로 amx_length=255,Blank=True로 정의하고 있어서 따로 내용을 안채워도됨
 
 

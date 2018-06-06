@@ -5,9 +5,8 @@ from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 class StudentInfo(AbstractUser):
-
     hukbun = models.CharField(max_length=15, primary_key=True)
-    #name = models.CharField(max_length=10, blank=True, null=True) username으로 사용합시다
+    # name = models.CharField(max_length=10, blank=True, null=True) username으로 사용합시다
     jumin = models.CharField(max_length=12, blank=True, null=True)
     # 과정구분
     course = models.CharField(max_length=5, blank=True, null=True)
@@ -34,6 +33,7 @@ class StudentInfo(AbstractUser):
 
     USERNAME_FIELD = 'hukbun'
     REQUIRED_FIELDS = ['username', 'email']
+
     # is_anonymous = models.NullBooleanField()
     # is_active = models.BooleanField(default=True)
     # is_admin = models.BooleanField(default=False)
@@ -103,8 +103,8 @@ class StudentHopeCareers(models.Model):
 
 
 class Professor(models.Model):
-    hukbun = models.CharField(max_length=20,primary_key=True)
-    name = models.CharField(max_length=20,null=False)
+    hukbun = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=20, null=False)
 
 
 class Course(models.Model):
@@ -130,6 +130,65 @@ class Course(models.Model):
     time = models.CharField(max_length=50, blank=True, null=True)
     # 강의실
     lectureRoom = models.CharField(max_length=100, blank=True, null=True)
+    # 학수코드
+    huksu_code = models.CharField(max_length=50, blank=True, null=True)
+    # 강의시수
+    course_time = models.CharField(max_length=15, blank=True, null=True)
+    # 설계시수
+    design_score = models.CharField(max_length=15, blank=True, null=True)
+
+    # table[1] 교과목 해설
+    desription = models.CharField(max_length=1000,blank=True, null=True)
+
+    # table[2] 새부핵심역량 과의 관계
+    # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
+    Knowledge_application = models.CharField(max_length=5,blank=True, null=True)
+    verification_ability = models.CharField(max_length=5,blank=True, null=True)
+    problem_solving = models.CharField(max_length=5,blank=True, null=True)
+    tool_utilization = models.CharField(max_length=5,blank=True, null=True)
+    design_ability = models.CharField(max_length=5,blank=True, null=True)
+    teamwork_skill = models.CharField(max_length=5,blank=True, null=True)
+    communication = models.CharField(max_length=5,blank=True, null=True)
+    understanding_of_influence = models.CharField(max_length=5,blank=True, null=True)
+    responsibility = models.CharField(max_length=5,blank=True, null=True)
+    self_led = models.CharField(max_length=5,blank=True, null=True)
+
+    # # table[3] 교과목 학습목표
+    # # [핵심역량, 세부핵심역량, 반영률, 학습목표, 수행준거, 성취목표, 평가방법]
+    # core_competencies = models.CharField(max_length=10,blank=True, null=True)
+    # detailed_core_competencies = models.CharField(max_length=10,blank=True, null=True)
+    # reflectance = models.CharField(max_length=5,blank=True, null=True)
+    # learning_objectives = models.CharField(max_length=200,blank=True, null=True)
+    # performance_criteria = models.CharField(max_length=200,blank=True, null=True)
+    # achievement_goals = models.CharField(max_length=5,blank=True, null=True)
+    # evaluation_methods = models.CharField(max_length=10,blank=True, null=True)
+
+    # table[4] 강의방법
+    # [강의형태, 수업방식, 교육용기자재]
+    Lecture_type = models.CharField(max_length=100,blank=True, null=True)
+    teaching_method = models.CharField(max_length=100,blank=True, null=True)
+    educational_equipment = models.CharField(max_length=100,blank=True, null=True)
+
+    # table[5] 과제물
+    # [과제물]
+    Assignment = models.CharField(max_length=500,blank=True, null=True)
+
+    # table[6] 성적 구성비율 존나 머리 안돌아가서 하드코딩되있음.
+    # ['중간시험', '기말시험', '출석', '과제물및기타', '성적평가구분']
+    Midterm_exam = models.CharField(max_length=10,blank=True, null=True)
+    final_exam = models.CharField(max_length=10,blank=True, null=True)
+    attendance = models.CharField(max_length=10,blank=True, null=True)
+    assignments_and_others = models.CharField(max_length=10,blank=True, null=True)
+    grading_division = models.CharField(max_length=10,blank=True, null=True)
+
+    # table[7] 주별 강좌내용
+
+    # table[8] 책
+    # [도서명, 저자, 출판사, 출판년도]
+    title = models.CharField(max_length=200,blank=True, null=True)
+    author = models.CharField(max_length=300,blank=True, null=True)
+    publisher = models.CharField(max_length=100,blank=True, null=True)
+    year_of_publication = models.CharField(max_length=20,blank=True, null=True)
 
     # class Meta:
     #     unique_together = ('year', 'semester', 'subjectCode')z
@@ -138,84 +197,13 @@ class Course(models.Model):
         return self.subjectName
 
 
-# table[1] 교과목 해설
-class Subject_desription(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    desription = models.CharField(max_length=1000)
 
-
-# table[2] 새부핵심역량 과의 관계
-class Core_Competence(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    # [지식응용, 검증능력, 문제해결, 도구활용, 설계능력, 팀웍스킬, 의사전달, 영향이해, 책임의식, 자기주도]
-    Knowledge_application = models.CharField(max_length=5)
-    verification_ability = models.CharField(max_length=5)
-    problem_solving = models.CharField(max_length=5)
-    tool_utilization = models.CharField(max_length=5)
-    design_ability = models.CharField(max_length=5)
-    teamwork_skill = models.CharField(max_length=5)
-    communication = models.CharField(max_length=5)
-    understanding_of_influence = models.CharField(max_length=5)
-    responsibility = models.CharField(max_length=5)
-    self_led = models.CharField(max_length=5)
-
-
-# table[3] 교과목 학습목표
-class Learning_Objectives(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    # [핵심역량, 세부핵심역량, 반영률, 학습목표, 수행준거, 성취목표, 평가방법]
-    Core_competencies = models.CharField(max_length=10)
-    detailed_core_competencies = models.CharField(max_length=10)
-    reflectance = models.CharField(max_length=5)
-    learning_objectives = models.CharField(max_length=200)
-    performance_criteria = models.CharField(max_length=200)
-    achievement_goals = models.CharField(max_length=5)
-    evaluation_methods = models.CharField(max_length=10)
-
-
-# table[4] 강의방법
-class Lecture_method(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    #[강의형태, 수업방식, 교육용기자재]
-    Lecture_type = models.CharField(max_length=100)
-    teaching_method = models.CharField(max_length=100)
-    educational_equipment = models.CharField(max_length=100)
-
-
-# table[5] 과제물
-class Assignment(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    #[과제물]
-    Assignment = models.CharField(max_length=500)
-
-
-# table[6] 성적 구성비율 존나 머리 안돌아가서 하드코딩되있음.
-class School_composition_ratio(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    #['중간시험', '기말시험', '출석', '과제물및기타', '성적평가구분']
-    Midterm_exam = models.CharField(max_length=10)
-    final_exam = models.CharField(max_length=10)
-    attendance = models.CharField(max_length=10)
-    assignments_and_others = models.CharField(max_length=10)
-    grading_division = models.CharField(max_length=10)
-
-
-# table[7] 주별 강좌내용
+# table[6] 주별 강좌내용
 class Weekly_course_contents(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     # [주, 교수내용, 방법, 관련자료, 과제물]
-    week = models.CharField(max_length=1)
-    contents = models.CharField(max_length=500)
-    methods = models.CharField(max_length=20)
-    related_materials = models.CharField(max_length=20)
-    assignments = models.CharField(max_length=200)
-
-
-# table[8] 책
-class Book(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    #[도서명, 저자, 출판사, 출판년도]
-    title= models.CharField(max_length=200)
-    author= models.CharField(max_length=300)
-    publisher= models.CharField(max_length=100)
-    year_of_publication= models.CharField(max_length=20)
+    week = models.CharField(max_length=1,blank=True, null=True)
+    contents = models.CharField(max_length=500,blank=True, null=True)
+    methods = models.CharField(max_length=20,blank=True, null=True)
+    related_materials = models.CharField(max_length=20,blank=True, null=True)
+    assignments = models.CharField(max_length=200,blank=True, null=True)

@@ -214,7 +214,7 @@ grades/__pycache__/
 community/migrations/
 /dataParser/migrations/
 /community/migrations/
-/completion_diagram/migrations/
+/completion/migrations/
 .idea/dataSources.xml
 .idea/dataSources/
 .idea/inspectionProfiles/
