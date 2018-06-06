@@ -5,7 +5,7 @@ class ClassesConfig(AppConfig):
 
     def ready(self):
         from dataParser.models import Course as dataCourse
-        from classes.models import Course as classCourse
+        from classes.models import Course as classCourse, necessaryCourse, promotedCourse
         allDataCourses = dataCourse.objects.all()
         for dataCourse in allDataCourses:
             if classCourse.objects.filter(subjectName=dataCourse.subjectName).count() == 0:
@@ -75,4 +75,4 @@ class ClassesConfig(AppConfig):
                     year_of_publication =  dataCourse.year_of_publication
                 ).save()
 
-
+        #저장완료
