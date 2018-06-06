@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}수강신청추천{% endblock %}
+
+{% load staticfiles %}
+{% block extrastyle %}
+
+{% endblock %}
+
+{% block content %}
+    <div id="page-wrapper">
+        <div class="row">
+            <div class="col-lg-12">
+                <h1 class="page-header">선수 과목에 따른 전공 추천</h1>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-lg-10">
+                        <ul>
+                            <div class="table-responsive">
+                                <li><h4>선수 과목 추천</h4></li>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>년도 및 학기</th>
+                                        <th>과목명</th>
+                                        <th>이수구분</th>
+                                        <th>인증구분</th>
+                                        <th>학점</th>
+                                        <th>설계학점</th>
+                                        <th>유효구분</th>
+                                    </tr>
+                                    {% for grade in necessrayGrades %}
+                                        <td>{{ grade.yearNsemester }}</td>
+                                        <td><a href="#">{{ grade.subject }}</a></td>
+                                        <td>{{ grade.eisu }}</td>
+                                        <td>{{ grade.certification }}</td>
+                                        <td>{{ grade.score }}</td>
+                                        <td>{{ grade.grade_design }}</td>
+                                        <td>{{ grade.valid }}</td>
+                                        <tr />
+                                    {% endfor %}
+                                </table>
+                            </div>
+                            <div class="table-responsive">
+                                <li><h4>권장 과목 추천</h4></li>
+                                <table class="table table-bordered table-hover table-striped">
+                                    <tr>
+                                        <th>년도 및 학기</th>
+                                        <th>과목명</th>
+                                        <th>이수구분</th>
+                                        <th>인증구분</th>
+                                        <th>학점</th>
+                                        <th>설계학점</th>
+                                        <th>유효구분</th>
+                                    </tr>
+                                    {% for grade in necessrayGrades %}
+                                        <td>{{ grade.yearNsemester }}</td>
+                                        <td><a href="#">{{ grade.subject }}</a></td>
+                                        <td>{{ grade.eisu }}</td>
+                                        <td>{{ grade.certification }}</td>
+                                        <td>{{ grade.score }}</td>
+                                        <td>{{ grade.grade_design }}</td>
+                                        <td>{{ grade.valid }}</td>
+                                        <tr />
+                                    {% endfor %}
+                                </table>
+                            </div>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

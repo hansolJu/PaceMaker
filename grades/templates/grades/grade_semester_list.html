@@ -4,11 +4,8 @@
     home.html
 {% endblock title%}
 {% load static %}
-
-{% load index %}
-{{ List|index:x }}
-
 {% load staticfiles %}
+{% load hi %}
 {% block extrastyle %}
 
 {% endblock %}
@@ -24,7 +21,7 @@
                     <div class="col-lg-8">
                         <div class="table-responsive">
                             {% for semester in semestergradelist %}
-                                <h4 style="text-align : left">{{ semesterlist|index:forloop.counter0 }}</h4>
+                                <h4 style="text-align : left">{{ semesterlist|get_at_index:forloop.counter0 }}</h4>
                                 <table class="table table-bordered table-hover table-striped">
                                     <thead>
                                     <tr>
@@ -65,9 +62,9 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>{{ total_sumlist|index:forloop.counter0 }}</td>
-                                        <td>{{ sumlist|index:forloop.counter0 }}</td>
-                                        <td>{{ avglist|index:forloop.counter0|floatformat:2 }}</td>
+                                        <td>{{ total_sumlist|get_at_index:forloop.counter0 }}</td>
+                                        <td>{{ sumlist|get_at_index:forloop.counter0 }}</td>
+                                        <td>{{ avglist|get_at_index:forloop.counter0|floatformat:2 }}</td>
                                     </tr>
                                     </tbody>
                                 </table>

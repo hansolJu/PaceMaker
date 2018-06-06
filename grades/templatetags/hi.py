@@ -13,5 +13,5 @@ def subtract(value, arg):
 
 
 @register.filter
-def index(List, i):
-    return List[int(i)]
+def get_at_index(list, index):
+    return list[index]
