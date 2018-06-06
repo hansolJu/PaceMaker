@@ -2,29 +2,16 @@
 <!-- 별도로 html태그가 없으면 장고는 body영역으로 간주함-->
 
 {% load static %}
-
 {% block title %}Information_detail.html{% endblock %}
 
 {% block content %}
     <div id="page-wrapper">
         <div class="row">
-{#            <div class="align-center mt-60 ">#}
-{#                <h3 class="font-nanumGth-hard White" style="font-size: 18px; display: inline-block; ">{{ object.buysell }}</h3>#}
-{#                <h3 class="font-jeH heavy red" style="font-size: 24px; display: inline-block;">{{ object.title }}</h3>#}
-{#                <h3 class="font-nanumGth-hard white" style="font-size: 18px; display: inline-block;">만다르게 하고 싶을때!</h3>#}
-{#            </div>#}
-            {#            <div class="col-lg-12">#}
-            {#                <i><h1 class="page-header">정보 교류 </h1></i>#}
-            {#            </div>#}
-            <h5>{{ object.buysell }}</h5><h1 class="post-title" style="text-align:center">{{ object.title }}</h1>
+            <h1 class="post-title">{{ object.title }}</h1>
+
             <div class="panel heading">
                 <div align="right">
-                    <span class="post-date">{{ object.modify_date|date:"Y.m.j. H:m" }}</span>
-                    {#                <{% if disqus_comments %}#}
-                    {#                    - <a href="{{ site.url }}{{ page.url }}#disqus_thread">Link</a>#}
-                    {#                {% else %}#}
-                    {#                    <a href="{{ site.url }}{{ page.url }}#disqus_thread">0 Comments</a>#}
-                    {#                {% endif %}#}
+                    <span class="post-date">{{ object.modify_date|date:"Y.m.d a H:i l" }}</span>
                     <a href="{{ site.url }}{{ page.url }}#disqus_thread" data-disqus-identifier="{{ page.id }}">댓글 보기</a>
                     <span  class="read">  조회수 {{ object.hits }}</span>
                 </div>
@@ -41,7 +28,6 @@
                 <p>{{ object.content|linebreaksbr }}</p>
                 <br/><br/><br/>
 
-
                 {% if postob.file %}
                     <img src="{{ postob.file.url }}" alt="">
                     <br/>
@@ -49,10 +35,14 @@
 
                 <br/><br/><br/>
 
+                <div>
+                    {% if object.owner.hukbun == user.hukbun %}
+                        <a class="btn btn-default pull-right" href="{% url 'community:ob_delete' object.id %}">Delete</a>
+                        <a class="btn btn-default pull-right" href="{% url 'community:ob_update' object.id %}">Update</a>
+                    {% endif %}
+                    <a class="btn btn-default pull-left"  href="{% url 'community:ob_list' %}" >목록</a>
+                </div>
 
-                <div><a class="btn btn-default pull-right"href="{% url 'community:ob_delete' object.id %}">Delete</a>
-                    <a class="btn btn-default pull-right" href="{% url 'community:ob_update' object.id %}">Update</a>
-                    <a class="btn btn-default pull-left" href="{% url 'community:ob_list' %}" >목록</a></div>
                 {#                OnClick="location.href='{% url 'blog:update' %}'"#}
                 <br/>
                 <br/>
@@ -76,10 +66,7 @@
                 </div>
             </div>
         </div>
-
     </div>
-    {#    path: {{ post.file.path }}#}
-    {#    url:  {{ post.file.url }}#}
 
     <script id="dsq-count-scr" src="//paker.disqus.com/count.js" async></script>
     <br/>

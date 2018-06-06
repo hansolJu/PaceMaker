@@ -29,7 +29,6 @@
             </div>
         {% endfor %}
 
-
         <div class="center-block" style='width:300px'>
             <input class = "btn btn-default" type="submit" value="저장하기">
             <input class = "btn btn-default" type="reset" value="다시쓰기">
@@ -37,43 +36,6 @@
 
         <script type="text/javascript">document.getElementById('id_title').focus();</script>
     </form>
-
-
+    </div>
 {% endblock %}
-{#        {% if form.errors %}#}
-{#            <p class="errornote">Wrong! Please correct the error(s) below.</p>#}
-{#        {% endif %}#}
 
-{#            <div class="form-group">#}
-{#            <label for="subject">{{ form.title.label_tag }}</label>#}
-{#            <input type="text" class="form-control" name ="subject" id="subject" placeholder="Enter title" >#}
-{#                {{ form.title }}#}
-{#            </div>#}
-{##}
-{#            <div class="form-group">#}
-{#            <label for="slug">{{ form.slug.label_tag }}</label>#}
-{#            <input type="text" class="form-control" name ="slug" id="slug" placeholder="slug">#}
-{#                {{ form.slug }}#}
-{#            </div>#}
-{##}
-{#            <div class="form-group">#}
-{#            <label for="description">{{ form.description.label_tag }}</label>#}
-{#            <input type="text" class="form-control" name ="description" id="description" placeholder="한줄로 쓰시오">#}
-{#                {{ form.description }}#}
-{#            </div>#}
-{##}
-{#            <div class="form-group">#}
-{#            <label for="tag">{{ form.tag.label_tag }}</label>#}
-{#            <input type="text" class="form-control" name ="tag" id="tag" placeholder="한줄로 쓰시오">#}
-{#                {{ form.tag }}#}
-{#            </div>#}
-{##}
-{#            <div class="form-group">#}
-{#            <label for="content">{{ form.content.label_tag }}</label>#}
-{#            <textarea class="form-control" rows="10" name="content" id="content"></textarea>#}
-{#                {{ form.content }}#}
-{#            </div>#}
-
-
-
-{# <li {% if not page_obj.has_next %}class="disabled"{% endif %}>  #}
