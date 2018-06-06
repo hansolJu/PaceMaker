@@ -1,10 +1,7 @@
 from django.shortcuts import render
-from dataParser.models import (StudentInfo, Course, StudentGrade, Subject_desription,
-                               Core_Competence, Learning_Objectives, Lecture_method,
-                               Assignment, School_composition_ratio, Weekly_course_contents, Book)
-from django.views.generic import ListView, DetailView, TemplateView
+from dataParser.models import StudentInfo, Course, StudentGrade
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import View
+from django.views.generic import View, ListView, TemplateView
 from datetime import datetime
 from django.db.models import Q
 from grades.views import getIntScore
@@ -108,20 +105,14 @@ class SpecialCourseRecommandView(LoginRequiredMixin, TemplateView):
         return context
 
     def getSpecialCase(self):  # 자신의 학년과 맞지 않게 다른 학년의 수업을 들은 경우를 보여줌
-        """
-        grade에 yearNsemester에서 yyyy년도s학기 정보가 나옴.
-        filter로 학생의 모든 grade정보를 가져와서 yearNsemester를 중복제거한 리스트로 보자. 이의 개수 하나당 학기 하나 -> 들었을 때 학년을 알 수 있다.
-        얻어진 학년과 studentGrade에서 year,semester,subject_code를 이용해서 얻어진 course의 학년과 비교해서 다를 경우
-            과목, 들었을 때의 학년 정보를 딕셔너리화해서 저장하자
-        """
         specialCoursesDic = dict()
+
         for student in StudentInfo.objects.all():  # 모든 학생
             studentGrades = StudentGrade.objects.filter(hukbun=student.hukbun)  # 학생의 grade 쿼리셋
             semesterList = studentGrades.values_list('yearNsemester', flat=True)  # 학생의 학기 list
             semesterList = sorted(list(set(semesterList)))  # 중복제거하여 정렬
             for grade in studentGrades:  # 학생이 과목을 들었을 때 학년이 일치하는 지 확인한다.
-                semester = semesterList.index(  # semester = 학생이 들었던 해당 수업을 들었을 때의 학기
-                    grade.yearNsemester)  # 해당 과목의 학기가 semesterList에서 검색해 index를 반환한다 => 해당 과목이 몇학기에 들은 과목인가 검사
+                semester = semesterList.index(grade.yearNsemester)  # 해당 과목의 학기가 semesterList에서 검색해 index를 반환한다 => 해당 과목이 몇학기에 들은 과목인가 검사
                 courses = Course.objects.filter(subjectName=grade.subject)  # 해당 수업의 이름과 동일한 course 쿼리셋 가져오기
                 if courses.count() == 0:  # 만약 해당하는 수업이 없다면 걍 무시
                     continue
