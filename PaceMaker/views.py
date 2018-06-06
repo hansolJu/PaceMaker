@@ -265,7 +265,11 @@ class UserView(TemplateView):
                 continue
             else:
                 temp = temp + float(sc.score)
-        avg = sum/temp
+        try:
+            avg = sum/temp
+        except:
+            avg = 0.0
+
         return avg
 
 

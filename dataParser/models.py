@@ -194,7 +194,7 @@ class Course(models.Model):
     #     unique_together = ('year', 'semester', 'subjectCode')z
 
     def __str__(self):
-        return self.subjectName
+        return self.subjectName +"\\"+ self.year +"\\" +self.semester
 
 
 
