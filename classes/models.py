@@ -1,17 +1,17 @@
 from django.db import models
 from dataParser.models import Course
-
+from .models import Course as classCourse
 
 class necessaryCourse(models.Model):
     year = models.CharField(max_length=6)
-    childCourse = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='necessary_child')
-    parentCourse = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='necessary_parent')
+    childCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='necessary_child')
+    parentCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='necessary_parent')
 
 
 class promotedCourse(models.Model):
     year = models.CharField(max_length=6)
-    childCourse = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='promoted_child')
-    parentCourse = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='promoted_parent')
+    childCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='promoted_child')
+    parentCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='promoted_parent')
 
 
 class Course(models.Model):
