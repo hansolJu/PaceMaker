@@ -39,12 +39,13 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',    # custom auth
     'community.apps.CommunityConfig',  #커뮤니티 게시판
     'tagging.apps.TaggingConfig',      #게시판 태그
-    'widget_tweaks',                     #게시판 form 관련설치
-    'disqus',
+    # 'widget_tweaks',                     #게시판 form 관련설치
+    # 'disqus',
     'django.contrib.sites',
     'grades.apps.GradesConfig',         # 성적
     'classes.apps.ClassesConfig',
     'graduate.apps.GraduateConfig',     # 졸업
+    'completion.apps.CompletionDiagramConfig',
 
 
 ]

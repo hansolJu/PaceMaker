@@ -1,0 +1,411 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            // 이 안쪽에 함수를 정의 해준다.
+
+            // 과목을 클릭시 활성화 시킨다.
+            $("div").click(function(){
+                if($(this).hasClass("subject-box")){
+                    if($(this).hasClass("active")){
+                        $(this).removeClass("active");
+                    }else{
+                        $(this).addClass("active");
+                    }
+                }
+            });
+
+
+
+        });
+    </script>
+    <style type="text/css">
+        .project-columns-container > div {
+            background-color: #f1f1f1;
+            margin: 10px;
+            padding: 5px;
+            border-radius: 6px;
+        }
+        .subject-box {
+            background: #fffffa;
+            min-width: 130px;
+            max-width: 130px;
+            min-height: 60px;
+            font-size: 15px;
+            border-radius: 5px;
+            border:1px solid;
+            padding:5px;
+            margin: 10px;
+        }
+        .semester{
+            display: flex;
+        }
+        .grade-container{
+            background:#f1f1f1 ;
+            min-width: 355px;
+            max-width: 355px;
+            margin-right: 16px;
+            padding: 10px;
+            border-width: 1px;
+            border-radius: 6px;
+        }
+        .active{
+            background: #32acff;
+        }
+        .deactive{
+            background: #31b131;
+        }
+        .d-flex{
+            display:flex;
+        }
+        .wrapper{
+            background: #fffffa;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class = "wrapper d-flex">
+    <div id = 'first' class="grade-container">
+        <div class = "title">
+            1학년
+        </div>
+        <div class = "content-container">
+            <div class = "semester-container d-flex">
+                <div id="1-1">
+                    <div class = "semester-title">
+                        1학기
+                    </div>
+
+                    <div class = "subject-container">
+                        {% if course_list.0 %}
+                            {% for course in course_list.0 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box active">
+                                컴퓨터 과학 전공 및 진로탐색
+                            </div>
+                            <div class="subject-box">
+                                <div id="subject-title">C프로그래밍 기초</div>
+
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="1-2">
+                    <div class = "semester-title">
+                        2학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.1 %}
+                            {% for course in course_list.1 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                창의기초설계
+                            </div>
+                            <div class="subject-box">
+                                C 프로그래밍
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                MSC
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="second" class="grade-container">
+        <div class = "title">
+            2학년
+        </div>
+        <div class = "content-container">
+            <div class = "semester-container d-flex">
+                <div id="2-1">
+                    <div class = "semester-title">
+                        1학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.2 %}
+                            {% for course in course_list.2 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                자바프로그래밍
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터 구조
+                            </div>
+                            <div class="subject-box">
+                                자료구조론
+                            </div>
+                            <div class="subject-box">
+                                일반통계학
+                            </div>
+                            <div class="subject-box">
+                                이산수학(MSC)
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="2-2">
+                    <div class = "semester-title">
+                        2학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.3 %}
+                            {% for course in course_list.3 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                계산이론
+                            </div>
+                            <div class="subject-box">
+                                시스템 소프트웨어
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터 네트워크
+                            </div>
+                            <div class="subject-box">
+                                데이터 베이스
+                            </div>
+                            <div class="subject-box">
+                                수치계산 MSC
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="third" class="grade-container">
+        <div class = "title">
+            3학년
+        </div>
+        <div class = "content-container">
+            <div class = "semester-container d-flex">
+                <div id="3-1">
+                    <div class = "semester-title">
+                        1학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.4 %}
+                            {% for course in course_list.4 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                워크플로우 시스템
+                            </div>
+                            <div class="subject-box">
+                                운영체제
+                            </div>
+                            <div class="subject-box">
+                                네트워크시스템 프로그래밍
+                            </div>
+                            <div class="subject-box">
+                                프로그래밍 언어론
+                            </div>
+                            <div class="subject-box">
+                                데이터베이스 프로그래밍
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="3-2">
+                    <div class = "semester-title">
+                        2학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.5 %}
+                            {% for course in course_list.5 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                소프트웨어공학
+                            </div>
+                            <div class="subject-box">
+                                분산및병렬처리
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터과학개별진로연구
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터 보안
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터 그래픽스
+                            </div>
+                            <div class="subject-box">
+                                인공지능
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="fourth" class="grade-container">
+        <div class = "title">
+            4학년
+        </div>
+        <div class = "content-container">
+            <div class = "semester-container d-flex">
+                <div id="4-1">
+                    <div class = "semester-title">
+                        1학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.6 %}
+                            {% for course in course_list.6 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                컴퓨터 과학 전공 및 진로탐색
+                            </div>
+                            <div class="subject-box">
+                                캡스톤 설계
+                            </div>
+                            <div class="subject-box">
+                                데이터 마이닝
+                            </div>
+                            <div class="subject-box">
+                                웹서비스 설계
+                            </div>
+                            <div class="subject-box">
+                                알고리듬
+                            </div>
+                            <div class="subject-box">
+                                멀티미디어 처리 기술
+                            </div>
+                            <div class="subject-box">
+                                교양
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div id="4-2">
+                    <div class = "semester-title">
+                        2학기
+                    </div>
+                    <div class = "subject-container">
+                        {% if course_list.7 %}
+                            {% for course in course_list.7 %}
+                                <div class="subject-box deactive">
+                                    <div id="subject-title">{{ course.0 }}</div>
+                                    <div id="subject-score">({{ course.1 }}/{{ course.2}})</div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="subject-box">
+                                컴퓨터비전
+                            </div>
+                            <div class="subject-box">
+                                내장형 시스템
+                            </div>
+                            <div class="subject-box">
+                                컴퓨터 과학 특강
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div>
+    <!--공학인증-->
+    <i>|</i>
+    <span>남은 전공학점: 67</span>
+    <i>|</i>
+    <i>|</i>
+    <span>남은 교양학점: 67</span>
+    <i>|</i>
+    <i>|</i>
+    <span>남은 msc학점: 67</span>
+    <i>|</i>
+    <i>|</i>
+    <span>남은 학점: 67</span>
+    <i>|</i>
+    <span></span>
+</div>
+</body>
+</html>
