@@ -1,12 +1,12 @@
 from django.shortcuts import render
-from dataParser.models import StudentInfo, Course, StudentGrade
+from dataParser.models import StudentInfo, Course, StudentGrade, Weekly_course_contents
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View, ListView, TemplateView
 from datetime import datetime
 from django.db.models import Q
 from grades.views import getIntScore
 import operator
-from .models import *
+from .models import Course as classCourse
 
 
 def get_score_sum(hukbun):
@@ -56,39 +56,63 @@ class majorDV(LoginRequiredMixin, TemplateView):
         # Subject_desription, Core_Competence, Learning_Objectives,
         # Lecture_method, Assignment, School_composition_ratio, Weekly_course_contents, Book
         try:
-            context['subjectName'] = Course.objects.get(id=context['pk'])
+            context['subjectName'] = Course.objects.get(id=context['pk']).subjectName
         except:
             context['subjectName'] = None
         try:
-            context['subjectDescriptions'] = Subject_desription.objects.filter(course=context['pk'])
+            context['subjectDescriptions'] = Course.objects.get(id=context['pk']).desription
         except:
             context['subjectDescriptions'] = None
         try:
-            context['coreCompetences'] = Core_Competence.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Knowledge_application)
+            temp.append(Course.objects.get(id=context['pk']).verification_ability)
+            temp.append(Course.objects.get(id=context['pk']).problem_solving)
+            temp.append(Course.objects.get(id=context['pk']).tool_utilization)
+            temp.append(Course.objects.get(id=context['pk']).design_ability)
+            temp.append(Course.objects.get(id=context['pk']).teamwork_skill)
+            temp.append(Course.objects.get(id=context['pk']).communication)
+            temp.append(Course.objects.get(id=context['pk']).understanding_of_influence)
+            temp.append(Course.objects.get(id=context['pk']).responsibility)
+            temp.append(Course.objects.get(id=context['pk']).self_led)
+            context['coreCompetences'] = temp
         except:
             context['coreCompetences'] = None
         try:
-            context['learningObjectives'] = Learning_Objectives.objects.filter(id=context['pk'])
-        except:
-            context['learningObjectives'] = None
-        try:
-            context['lectureMethods'] = Lecture_method.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Lecture_type)
+            temp.append(Course.objects.get(id=context['pk']).teaching_method)
+            temp.append(Course.objects.get(id=context['pk']).educational_equipment)
+            context['lectureMethods'] = temp
         except:
             context['lectureMethods'] = None
         try:
-            context['assignments'] = Assignment.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Assignment)
+            context['assignments'] = temp
         except:
             context['assignments'] = None
         try:
-            context['schoolCompositionRatios'] = School_composition_ratio.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).Midterm_exam)
+            temp.append(Course.objects.get(id=context['pk']).final_exam)
+            temp.append(Course.objects.get(id=context['pk']).attendance)
+            temp.append(Course.objects.get(id=context['pk']).assignments_and_others)
+            temp.append(Course.objects.get(id=context['pk']).grading_division)
+            context['schoolCompositionRatios'] = temp
         except:
             context['schoolCompositionRatios'] = None
         try:
-            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(id=context['pk'])
+            context['weeklyCourseContents'] = Weekly_course_contents.objects.filter(course_id=context['pk'])
         except:
             context['weeklyCourseContents'] = None
         try:
-            context['books'] = Book.objects.filter(id=context['pk'])
+            temp = []
+            temp.append(Course.objects.get(id=context['pk']).title)
+            temp.append(Course.objects.get(id=context['pk']).author)
+            temp.append(Course.objects.get(id=context['pk']).publisher)
+            temp.append(Course.objects.get(id=context['pk']).year_of_publication)
+            context['books'] = temp
         except:
             context['books'] = None
         return context
