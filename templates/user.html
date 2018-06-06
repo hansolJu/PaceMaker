@@ -38,9 +38,7 @@
                                 <h5>학기 : {{ user_info.2 }}</h5>
                                 <h5>공학인증 : {{ user_info.3 }}</h5>
                             </div>
-
                         </div>
-
                     </div>
                 </div>
                 <div class="panel panel-default">
@@ -50,10 +48,10 @@
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         {% if percent < 0.057 %}
-                            <span>Challenge</span>
                             <div style="float:left" padding="5px">
                                 <img src="../static/asset/rank/challenger.png" alt="challenger" style="float:right;width:42px;height:42px;">
                             </div>
+                            <h1>Challenge</h1>
                             <div class="user-grade-stat">
                                 <i>|</i>
                                 <span>상위 {% widthratio percent 1 100 %}%</span>
@@ -61,8 +59,8 @@
                             </div>
                         {% elif 0.057 < percent and percent < 0.143 %}
                             <div class="user-grade-tier">
-                                <h1>Master</h1>
                                 <img src="../static/asset/rank/master.png" alt="Master">
+                                <h1>Master</h1>
                             </div>
                             <div class="user-grade-stat">
                                 <i>|</i>
@@ -71,8 +69,8 @@
                             </div>
                         {% elif 0.143 < percent and percent < 0.235 %}
                             <div class="user-grade-tier">
-                                <h1>Diamond</h1>
                                 <img src="../static/asset/rank/diamond.png" alt="Diamond">
+                                <h1>Diamond</h1>
                             </div>
                             <div class="user-grade-stat">
                                 <i>|</i>
@@ -81,8 +79,8 @@
                             </div>
                         {% elif 0.235 < percent and percent < 0.366 %}
                             <div class="user-grade-tier">
-                                <h1>Platinum</h1>
                                 <img src="../static/asset/rank/platinum.png" alt="platinum">
+                                <h1>Platinum</h1>
                             </div>
                             <div class="user-grade-stat">
                                 <i>|</i>
@@ -90,19 +88,21 @@
                                 <i>|</i>
                             </div>
                         {% elif 0.366 < percent and percent < 0.572 %}
-                            <div class="user-grade-tier">
-                                <h1>Gold</h1>
-                                <img src="../static/asset/rank/gold.png" alt="gold">
+                            <div class="user-thumb" style="float:left; padding:20px">
+                                <div class="user-thumb-img">
+                                    <img src="../static/asset/rank/gold.png" alt="gold" width="140" height="170">
+                                </div>
+                                <div class="user-thumb-img-default">
+                                </div>
                             </div>
-                            <div class="user-grade-stat">
-                                <i>|</i>
-                                <span>상위 {% widthratio percent 1 100 %}%</span>
-                                <i>|</i>
+                            <div class="user-grade-tier" style="float:left; padding:10px">
+                                <h1>Gold</h1>
+                                <h4>상위 {% widthratio percent 1 100 %}%</h4>
                             </div>
                         {% elif 0.572 < percent and percent < 0.873 %}
                             <div class="user-grade-tier">
-                                <h1>Silver</h1>
                                 <img src="../static/asset/rank/silver.png" alt="Silver">
+                                <h1>Silver</h1>
                             </div>
                             <div class="user-grade-stat">
                                 <i>|</i>
@@ -111,8 +111,8 @@
                             </div>
                         {% elif 0.873 < percent and percent <= 1 %}
                             <div class="user-grade-tier">
-                                <h1>Unranked</h1>
                                 <img src="../static/asset/rank/Unranked.png" alt="Unranked">
+                                <h1>Unranked</h1>
                             </div>
                             <div class="user-grade-stat">
                                 <i>|</i>
@@ -128,34 +128,67 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <i class="fa fa-bar-chart-o fa-fw"></i> 성적분석표
-                        {#                        <div class="pull-right">#}
-                        {#                            <div class="btn-group">#}
-                        {#                                <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">#}
-                        {#                                    Actions#}
-                        {#                                    <span class="caret"></span>#}
-                        {#                                </button>#}
-                        {#                                <ul class="dropdown-menu pull-right" role="menu">#}
-                        {#                                    <li><a href="#">Action</a>#}
-                        {#                                    </li>#}
-                        {#                                    <li><a href="#">Another action</a>#}
-                        {#                                    </li>#}
-                        {#                                    <li><a href="#">Something else here</a>#}
-                        {#                                    </li>#}
-                        {#                                    <li class="divider"></li>#}
-                        {#                                    <li><a href="#">Separated link</a>#}
-                        {#                                    </li>#}
-                        {#                                </ul>#}
-                        {#                            </div>#}
-                        {#                        </div>#}
                     </div>
                     <!-- /.panel-heading -->
                     <div class="panel-body">
                         <canvas id="myChart" width="300" height="180"></canvas>
                     </div>
                     <!-- /.panel-body -->
+                </div>
+                <!-- /.panel -->
+            </div>
+            <div class="col-lg-8">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> 성적분석표 - 학기별 변화
+                    </div>
+                    <!-- /.panel-body -->
                     <div class="panel-body">
                         <canvas id="mySemester" width="300" height="180"></canvas>
                     </div>
+                    <script src="analyser.js"></script>
+                    <script>
+                        var ctx = document.getElementById('mySemester').getContext('2d');
+                        var mySemester = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                {#        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],#}
+                                labels: [{% for semester in semesterlist %} "{{ semester }}", {% endfor %}],
+                                datasets: [
+                                    {
+                                        label: '학기 평점',
+                                        {#            data: [12, 19, 3, 17, 6, 3, 7],#}
+                                        data: [{% for avg in avglist %} "{{ avg }}", {% endfor %}],
+                                        backgroundColor: 'rgba(223, 240, 216,1)',
+                                        borderColor: 'rgba(223,240,216,1)',
+                                    },
+                                    {
+                                        label: '전공 평점',
+                                        data: [{% for major_avg in major_avglist %} "{{ major_avg }}", {% endfor %}],
+                                        backgroundColor: 'rgb(217, 237, 247,1)',
+                                        borderColor: 'rgba(217, 237, 247,1)',
+                                    },
+                                    {
+                                        label: '교양 평점',
+                                        data: [{% for ge_avg in ge_avglist %} "{{ ge_avg }}",{% endfor %}],
+                                        backgroundColor: 'rgba(242,222,222,1)',
+                                        borderColor: 'rgba(242,222,222,1)',
+                                    },
+                                ]
+                            },
+                            options: {
+                                scales: {
+                                    yAxes: [{
+                                        ticks: {
+                                            min: 0,
+                                            max: 4.5,
+                                            beginAtZero:true
+                                        }
+                                    }]
+                                }
+                            }
+                        });
+                    </script>
                 </div>
                 <!-- /.panel -->
             </div>
@@ -184,7 +217,7 @@
                 datasets: [
                     {
                         data: Scoure,
-                        label: "Scoure",
+                        label: "Source",
                         borderColor: "#3e95cd",
                         fill: false
                     },
