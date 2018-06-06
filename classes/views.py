@@ -8,7 +8,6 @@ from grades.views import getIntScore
 import operator
 from .models import Course as classCourse
 
-
 def get_score_sum(hukbun):
     s = hukbun
     sum = 0

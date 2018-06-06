@@ -2,7 +2,6 @@ from django.db import models
 from dataParser.models import Course
 from .models import Course as classCourse
 
-
 class necessaryCourse(models.Model):
     year = models.CharField(max_length=6)
     childCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='necessary_child')
