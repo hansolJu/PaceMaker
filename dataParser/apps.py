@@ -17,18 +17,22 @@ class DataparserConfig(AppConfig):
     #
     #
     #
-    def ready(self):
-            from dataParser.parser import ServerParser
-            from datetime import datetime
-            admin_id = "201511868"
-            admin_pw = "1019711"
-            print("init")
-            parser = ServerParser(admin_id, admin_pw)
-            for year in range(2010, 2018):
-                print(year)
-                print(datetime.today().year)
-                for semester in range(1, 3):
-                    print(semester)
-                    tmp= parser.parse_course_major(year, semester*10)
-                    print(tmp)
-                    parser.save_course_major(year, semester*10, tmp)
+    # def ready(self):
+    #         from dataParser.parser import ServerParser
+    #         from datetime import datetime
+    #         admin_id = "201511868"
+    #         admin_pw = "1019711"
+    #         print("init")
+    #         parser = ServerParser(admin_id, admin_pw)
+    #
+    #         # tmp = parser.parse_course_major(2017, 1 * 10)
+    #         # print(tmp)
+    #
+    #         for year in range(2010, 2018):
+    #             print(year)
+    #             print(datetime.today().year)
+    #             for semester in range(1, 3):
+    #                 print(semester)
+    #                 tmp= parser.parse_course_major(year, semester*10)
+    #                 print(tmp)
+    #                 parser.save_course_major(year, semester*10, tmp)
