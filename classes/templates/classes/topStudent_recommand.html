@@ -2,6 +2,7 @@
 {% block title %}수강신청추천{% endblock %}
 
 {% load staticfiles %}
+{% load custom %}
 {% block extrastyle %}
 
 {% endblock %}
@@ -17,23 +18,23 @@
                     <div class="col-lg-10">
                         <ul>
                             <div class="table-responsive">
-                                {% for hukbun, valueDict in Top5Grades.items %}
-                                    {% for grades, score in valueDict.items %}
-                                        <strong><h4><li>등 평점 평균: {{ score }}</li></h4></strong>
-                                        <table class="table table-bordered table-hover table-striped">
-                                            <tr>
-                                                <th>년도 및 학기</th>
-                                                <th>과목명</th>
-                                                <th>이수구분</th>
-                                                <th>인증구분</th>
-                                                <th>학점</th>
-                                                <th>설계학점</th>
-                                                <th>점수</th>
-                                                <th>유효구분</th>
-                                            </tr>
-                                            {% for grade in grades %}
+                                {% for scoreInfo in ScoreList %}
+                                    <strong><h4><li>{{ scoreInfo.0 }}등 평점 평균: {{ scoreInfo.1 }}</li></h4></strong>
+                                    <table class="table table-bordered table-hover table-striped">
+                                        <tr>
+                                            <th>년도 및 학기</th>
+                                            <th>과목명</th>
+                                            <th>이수구분</th>
+                                            <th>인증구분</th>
+                                            <th>학점</th>
+                                            <th>설계학점</th>
+                                            <th>점수</th>
+                                            <th>유효구분</th>
+                                        </tr>
+                                        {% for gradeQueryset in  Top5GradesList  %}
+                                            {% for grade in gradeQueryset %}
                                                 <tr>
-                                                    <td>{{ grade.yearNsemester }}</td>
+                                                    <td>{{ dicList|index:forloop.parentloop.counter0 | change:grade.yearNsemester }}</td>
                                                     <td><a href="#">{{ grade.subject }}</a></td>
                                                     <td>{{ grade.eisu }}</td>
                                                     <td>{{ grade.certification }}</td>
@@ -44,10 +45,10 @@
                                                 <tr />
                                             {% endfor %}
                                         </table>
-                                        <br />
-                                        <hr />
-                                    {% endfor %}
+                                    <br />
+                                    <hr />
                                 {% endfor %}
+                            {% endfor %}
                             </div>
                         </ul>
                     </div>
@@ -55,4 +56,4 @@
             </div>
         </div>
     </div>
-{% endblock %}
+{% endblock %}오후 6:36 2018-06-06
