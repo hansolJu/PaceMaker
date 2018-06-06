@@ -54,6 +54,7 @@
 
     <ul class="nav navbar-top-links navbar-right">
         <li class="dropdown">
+            <a href="{% url 'user' %}"><i class="fa fa-user fa-fw"></i>My Page</a>
 {#            <a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
 {#                <i class="fa fa-envelope fa-fw"></i> <i class="fa fa-caret-down"></i>#}
 {#            </a>#}
@@ -104,7 +105,7 @@
             <!-- /.dropdown-messages -->
         </li>
         <!-- /.dropdown -->
-        <li class="dropdown">
+{#        <li class="dropdown">#}
 {#            <a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
 {#                <i class="fa fa-tasks fa-fw"></i> <i class="fa fa-caret-down"></i>#}
 {#            </a>#}
@@ -181,9 +182,9 @@
 {#                </li>#}
 {#            </ul>#}
             <!-- /.dropdown-tasks -->
-        </li>
+{#        </li>#}
         <!-- /.dropdown -->
-        <li class="dropdown">
+{#        <li class="dropdown">#}
 {#            <a class="dropdown-toggle" data-toggle="dropdown" href="#">#}
 {#                <i class="fa fa-bell fa-fw"></i> <i class="fa fa-caret-down"></i>#}
 {#            </a>#}
@@ -241,7 +242,7 @@
 {#                </li>#}
 {#            </ul>#}
             <!-- /.dropdown-alerts -->
-        </li>
+{#        </li>#}
         <!-- /.dropdown -->
         <li class="dropdown">
             <a href= "{% url 'accounts:logout' %}"><i class="fa fa-sign-out fa-fw"></i> Logout</a>
@@ -277,9 +278,9 @@
 {#                    </div>#}
 {#                    <!-- /input-group -->#}
 {#                </li>#}
-                <li>
-                    <a href="{% url 'user' %}"><i class="fa fa-user fa-fw"></i>마이 페이지</a>
-                </li>
+{#                <li>#}
+{#                    <a href="{% url 'user' %}"><i class="fa fa-user fa-fw"></i>마이 페이지</a>#}
+{#                </li>#}
                 <li>
                     <a href="#"><i class="fa fa-table fa-fw"></i> 수강정보<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -293,13 +294,13 @@
                                     <a href="{% url 'classes:retake' %}">재수강 추천</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'classes:top' %}">우수학생 수강 신청 추천</a>
+                                    <a href="#">타학생 전공</a>
                                 </li>
                                 <li>
                                     <a href="{% url 'classes:special' %}">학년과 맞지 않는 전공 추천</a>
                                 </li>
                                 <li>
-                                    <a href="{% url 'classes:pre' %}">선수과목에 따른 전공 추천</a>
+                                    <a href="#">선수과목에 따른 전공 추천</a>
                                 </li>
                             </ul>
                         </li>

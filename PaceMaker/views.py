@@ -266,10 +266,9 @@ class UserView(TemplateView):
             else:
                 temp = temp + float(sc.score)
         try:
-            avg = sum/temp
+            avg = sum / temp
         except:
             avg = 0.0
-
         return avg
 
 
@@ -390,10 +389,187 @@ class UserView(TemplateView):
 
         return user_info
 
+    # 이수한 학기 리스트를 리턴한다.
+    def get_queryset(self):
+        s = self.request.user.hukbun
+        semesterlist = StudentGrade.objects.filter(hukbun=s).values_list('yearNsemester',
+                                                                         flat=True).distinct().order_by('yearNsemester')
+        list = []
+        for i in range(0, semesterlist.count()):
+            list.append(semesterlist[i])
+
+        return list
+
+    ##전체 평점 산출 학점##
+    def get_score_sum(self):
+        s = self.request.user.hukbun
+        sum = 0
+        semesterlist = self.get_queryset()
+        scorelist = []
+        for i in range(0, len(semesterlist)):
+            temp = StudentGrade.objects.filter(hukbun=s) \
+                .filter(yearNsemester=semesterlist[i]) \
+                .filter(valid='유효')
+            temp = temp.exclude(grade__contains='P')
+            scorelist.append(temp.values_list('score', flat=True))
+        print(scorelist)
+        sumlist = []
+        for i in scorelist:
+            for j in i:
+                sum = sum + float(j)
+            sumlist.append(sum)
+            sum = 0
+
+        return sumlist
+
+    ##평점 평균##
+    def avgGrade(self):
+        s = self.request.user.hukbun
+        avg = 0.0
+        sum = 0.0
+        semesterlist = self.get_queryset()
+        gradelist = []
+        avglist = []
+        for i in range(0, len(semesterlist)):
+            gradelist.append(
+                StudentGrade.objects.filter(hukbun=s).filter(yearNsemester=semesterlist[i]).filter(valid='유효').filter(
+                    Q(grade='A+') | Q(grade='A') | Q(grade='B+') | Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(
+                        grade='D+') | Q(grade='D') | Q(grade='F')))
+        print(gradelist)
+        score_sumlist = self.get_score_sum()  # list
+        print(score_sumlist)
+        for i in range(0, len(gradelist)):
+            for g in gradelist[i]:
+                s = getIntScore(self,g.grade) * int(g.score)
+                sum = sum + s
+            print(sum)
+            avg = sum / score_sumlist[i]
+            avglist.append(avg)
+            sum = 0
+
+        return avglist
+
+    # 전공
+    def major_get_score_sum(self):
+        s = self.request.user.hukbun
+        sum = 0
+        semesterlist = self.get_queryset()
+        scorelist = []
+        for i in range(0, len(semesterlist)):
+            temp = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(yearNsemester=semesterlist[i]).filter(
+                valid='유효').exclude(grade__contains='F').exclude(grade__contains='P').values_list('score', flat=True)
+
+            scorelist.append(temp.values_list('score', flat=True))
+
+        print(scorelist)
+
+        sumlist = []
+        for i in scorelist:
+            for j in i:
+                sum = sum + float(j)
+            sumlist.append(sum)
+            sum = 0
+
+        return sumlist
+
+
+    def major_get_avgGrade(self):
+        s = self.request.user.hukbun
+        avg = 0.0
+        sum = 0.0
+        semesterlist = self.get_queryset()
+        gradelist = []
+        major_avglist = []
+        for i in range(0, len(semesterlist)):
+            gradelist.append(StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='컴과') | Q(eisu='전필')).filter(yearNsemester=semesterlist[i]).filter(valid='유효').filter(
+                Q(grade='A+') | Q(grade='A') | Q(grade='B+') | Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(
+                    grade='D+') | Q(grade='D') | Q(grade='F')))
+        print(gradelist)
+        score_sumlist = self.major_get_score_sum()  # list
+        print(score_sumlist)
+        for i in range(0, len(gradelist)):
+            for g in gradelist[i]:
+                s = getIntScore(self, g.grade) * float(g.score)
+                sum = sum + s
+            print(sum)
+            try:
+                avg = sum / score_sumlist[i]
+            except:
+                avg = 0.0
+
+            major_avglist.append(avg)
+            sum = 0
+
+        return major_avglist
+
+        # 교양
+    def ge_get_score_sum(self):
+        s = self.request.user.hukbun
+        sum = 0
+        semesterlist = self.get_queryset()
+        scorelist = []
+        for i in range(0, len(semesterlist)):
+            temp = StudentGrade.objects.filter(hukbun=s).filter(valid='유효').filter(yearNsemester=semesterlist[i]).filter(
+                Q(eisu='M자') | Q(eisu='수리') | Q(eisu='필수') | Q(eisu='언문') | Q(eisu='진') | Q(eisu='창융') | Q(
+                    eisu='체육') | Q(eisu='취봉') | Q(eisu='예술') | Q(eisu='인문') | Q(eisu='이계') | Q(eisu='사고') | Q(
+                    eisu='역철') | Q(eisu='문화') | Q(eisu='경사')
+                | Q(eisu='체기') | Q(eisu='사회') | Q(eisu='과기') | Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') |
+                Q(eisu='문예') | Q(eisu='언문')).exclude(grade__contains='F').exclude(grade__contains='P').values_list('score', flat=True)
+
+            scorelist.append(temp.values_list('score', flat=True))
+
+        print(scorelist)
+
+        sumlist = []
+        for i in scorelist:
+            for j in i:
+                sum = sum + float(j)
+            sumlist.append(sum)
+            sum = 0
+
+        return sumlist
+
+    # 교양
+    def ge_get_avgGrade(self):
+        s = self.request.user.hukbun
+        avg = 0.0
+        sum = 0.0
+        semesterlist = self.get_queryset()
+        gradelist = []
+        ge_avglist = []
+        for i in range(0, len(semesterlist)):
+            gradelist.append(StudentGrade.objects.filter(hukbun=s).filter(valid='유효').filter(yearNsemester=semesterlist[i]).filter(
+                Q(eisu='M자') | Q(eisu='수리') | Q(eisu='필수') | Q(eisu='언문') | Q(eisu='진') | Q(eisu='창융') | Q(
+                    eisu='체육') | Q(eisu='취봉') | Q(eisu='예술') | Q(eisu='인문') | Q(eisu='이계') | Q(eisu='사고') | Q(
+                    eisu='역철') | Q(eisu='문화') | Q(eisu='경사')
+                | Q(eisu='체기') | Q(eisu='사회') | Q(eisu='과기') | Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') |
+                Q(eisu='문예') | Q(eisu='언문')).exclude(grade__contains='F').exclude(grade__contains='P'))
+
+        print(gradelist)
+        score_sumlist = self.ge_get_score_sum()  # list
+        print(score_sumlist)
+        for i in range(0, len(gradelist)):
+            for g in gradelist[i]:
+                s = getIntScore(self, g.grade) * float(g.score)
+                sum = sum + s
+            print(sum)
+            try:
+                avg = sum / score_sumlist[i]
+            except:
+                avg = 0.0
+
+            ge_avglist.append(avg)
+            sum = 0
+
+        return ge_avglist
 
     def get_context_data(self, **kwargs):
         context = super(UserView, self).get_context_data(**kwargs)
         context['chart_data'] =  self.Make_chart_data()
         context['percent'] = self.rank_statistic()
         context['user_info'] = self.user_info()
+        context['avglist'] = self.avgGrade()
+        context['major_avglist'] = self.major_get_avgGrade()
+        context['ge_avglist'] = self.ge_get_avgGrade()
+        context['semesterlist'] = self.get_queryset()
         return context
