@@ -14,7 +14,7 @@
                 <h1 class="post-title">{{ object.title }}</h1>
 
                 <div align="right">
-                    <span class="post-date">{{ object.modify_date|date:"Y.m.j. H:m" }}</span>
+                    <span class="post-date">{{ object.modify_date|date:"Y.m.d a H:i l" }}</span>
                     <a href="{{ site.url }}{{ page.url }}#disqus_thread" data-disqus-identifier="{{ page.id }}">댓글 보기</a>
                     <span  class="read">  조회수 {{ object.hits }}</span>
                 </div>
@@ -38,9 +38,13 @@
 
                 <br/><br/><br/>
 
-                <div><a class="btn btn-default pull-right"href="{% url 'community:Info_delete' object.id %}">Delete</a>
+                <div>
+                    {% if object.owner.hukbun == user.hukbun %}
+                    <a class="btn btn-default pull-right" href="{% url 'community:Info_delete' object.id %}">Delete</a>
                     <a class="btn btn-default pull-right" href="{% url 'community:Info_update' object.id %}">Update</a>
-                    <a class="btn btn-default pull-left" href="{% url 'community:Info_list' %}" >목록</a></div>
+                    {% endif %}
+                    <a class="btn btn-default pull-left" href="{% url 'community:Info_list' %}" >목록</a>
+                </div>
 
                 <br/>
                 <br/>
