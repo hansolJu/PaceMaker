@@ -37,11 +37,52 @@ def convert_year_semester(year_semester):
 def get_lastyear_course_list():
     present = datetime.today().year
     last = present - 1
-    last_list = Course.objects.filter(year=last).filter(semester=10).values_list('subjectName', flat=True).distinct()
-    print(last_list)
+    result = []
+    semester = []
+
+    last_1st_spring_list = Course.objects.filter(year=last).filter(grade=1).filter(semester=10).values_list('subjectName', flat=True).distinct()
+    for i in last_1st_spring_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_1st_fall_list = Course.objects.filter(year=last).filter(grade=1).filter(semester=20).values_list('subjectName', flat=True).distinct()
+    for i in last_1st_fall_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_2nd_spring_list = Course.objects.filter(year=last).filter(grade=2).filter(semester=10).values_list('subjectName', flat=True).distinct()
+    for i in last_2nd_spring_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_2nd_fall_list = Course.objects.filter(year=last).filter(grade=2).filter(semester=20).values_list('subjectName', flat=True).distinct()
+    for i in last_2nd_fall_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_3th_spring_list = Course.objects.filter(year=last).filter(grade=3).filter(semester=10).values_list('subjectName', flat=True).distinct()
+    for i in last_3th_spring_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_3th_fall_list = Course.objects.filter(year=last).filter(grade=3).filter(semester=20).values_list('subjectName', flat=True).distinct()
+    for i in last_3th_fall_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_4th_spring_list = Course.objects.filter(year=last).filter(grade=4).filter(semester=10).values_list('subjectName', flat=True).distinct()
+    for i in last_4th_spring_list:
+        semester.append(i)
+    result.append(semester)
+    semester = []
+    last_4th_fall_list = Course.objects.filter(year=last).filter(grade=4).filter(semester=20).values_list('subjectName', flat=True).distinct()
+    for i in last_4th_fall_list:
+        semester.append(i)
+    result.append(semester)
+    print(result)
+    return result
 
 
-last_year_course_list = []
 eisu_2012_list = [
     # 1-1 1
     ['창의기초설계', '컴퓨터과학전공및진로탐색'],
@@ -136,8 +177,7 @@ class DiagramTV(LoginRequiredMixin, TemplateView):
 
     # 이수체계도에서 들은 과목을 제거하고 남은 리스트 반납
     def custom_eisu(self):
-        # 2012 이수체계도 하드코딩함 ------고쳐야함.
-        my_eisu = eisu_2012_list
+        my_eisu = get_lastyear_course_list()
         my_taken_course = self.get_course_taken()
         for c_semester in my_taken_course:
             for c_subject in c_semester:
@@ -326,4 +366,4 @@ class DiagramTV(LoginRequiredMixin, TemplateView):
         return result
 
     # def get(self, request, *args, **kwargs):
-    #     return HttpResponse(self.set_course_score())
+    #     return HttpResponse(get_lastyear_course_list())

@@ -22,7 +22,6 @@
                         $(this).removeClass("active");//제거
                         bbsreplll= $(this).attr('id');
                         bbsreplll=bbsreplll.split(',');
-                        alert(bbsreplll[0]);
                         total = parseFloat(total) + parseFloat(bbsreplll[1]);
                         document.getElementById('total_score').innerHTML = "남은 전체 학점: "+total;
                         design = parseInt(design) + parseInt(bbsreplll[2]);
@@ -43,13 +42,10 @@
                             alert("오류 정보가 검색되지 않습니다.")
                         }
 
-                        alert(total+"//"+major+"//"+msc+"//"+gyoyang+"//"+design)
                     }else{
                         $(this).addClass("active");
                         bbsreplll = $(this).attr('id');
                         bbsreplll=bbsreplll.split(',');
-                        alert(bbsreplll);
-                        alert(bbsreplll[0]);
 
                         total = parseInt(total) - parseInt(bbsreplll[1]);
                         document.getElementById('total_score').innerHTML = "남은 전체 학점: "+total;
@@ -70,7 +66,6 @@
                         else {
                             alert("오류 정보가 검색되지 않습니다.")
                         }
-                        alert(total+"//"+major+"//"+msc+"//"+gyoyang)
                     }
                 }
             });
