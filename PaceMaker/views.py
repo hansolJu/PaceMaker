@@ -373,6 +373,9 @@ class UserView(TemplateView):
 
         percent = ((idx+1)/size)
 
+        if percent <= 0:
+            return 0
+
         return percent
 
     def user_info(self):
