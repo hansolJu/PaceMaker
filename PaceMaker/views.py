@@ -299,7 +299,11 @@ class UserView(TemplateView):
 
             # up_scale
             grow = grow * 5
-            return grow
+            
+            if grow < 0:
+                return 0
+            else:
+                return grow
 
     # 성적데이터에서 현재까지 들은 학기리스트를 가져옴
     def get_course_taken(self):
@@ -373,10 +377,7 @@ class UserView(TemplateView):
 
         percent = ((idx+1)/size)
 
-        if percent <= 0:
-            return 0
-        else:
-            return percent
+        return percent
 
     def user_info(self):
         s = self.request.user.hukbun
