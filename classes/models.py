@@ -90,7 +90,6 @@ class classCourse(models.Model):
     def __str__(self):
         return self.subjectName + "\\" + self.year + "\\" + self.semester
 
-
 class necessaryCourse(models.Model):
     year = models.CharField(max_length=6)
     childCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='necessary_child')
@@ -101,5 +100,3 @@ class promotedCourse(models.Model):
     year = models.CharField(max_length=6)
     childCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='promoted_child')
     parentCourse = models.ForeignKey(classCourse, on_delete=models.CASCADE, related_name='promoted_parent')
-
-
