@@ -41,13 +41,13 @@
                                         <th>자기주도</th>
                                     </tr>
                                     <tr>
-                                    {% for coreCompetence in coreCompetences %}
-                                        {% if coreCompetence == None %}
-                                            <td></td>
-                                        {% else %}
-                                            <td>{{ coreCompetence}}</td>
-                                        {% endif %}
-                                    {% endfor %}
+                                        {% for coreCompetence in coreCompetences %}
+                                            {% if coreCompetence == None %}
+                                                <td></td>
+                                            {% else %}
+                                                <td>{{ coreCompetence}}</td>
+                                            {% endif %}
+                                        {% endfor %}
                                     </tr>
                                 </table>
                             </div>
@@ -112,9 +112,9 @@
                                         <th>출판년도</th>
                                     </tr>
                                     <tr>
-                                    {% for book in books %}
-                                        <td>{{ book }}</td>
-                                    {% endfor %}
+                                        {% for book in books %}
+                                            <td>{{ book }}</td>
+                                        {% endfor %}
                                     </tr>
                                 </table>
                             </div>
@@ -122,6 +122,30 @@
                     </div>
                 </div>
             </div>
+            <div class="panel-body">
+                <canvas id="Average" width="300" height="180"></canvas>
+            </div>
+            <script>
+                var ctx = document.getElementById('Average').getContext('2d');
+                var Average = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        {#        labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],#}
+                        labels: ['1학년', '2학년', '3학년', '4학년'],
+                        datasets: [
+                            {
+                                {#            data: [12, 19, 3, 17, 6, 3, 7],#}
+                                data: [{% for c in cnt %} "{{ c }}", {% endfor %}],
+                                backgroundColor: ['rgba(223, 240, 216,1)',
+                                                    'rgba(242,222,222,1)',
+                                                    'rgba(217, 237, 247,1)',
+                                                'rgba(240,173,78,1)'
+                                    ]
+                            },
+                        ]
+                    },
+                });
+            </script>
         </div>
     </div>
 {% endblock %}

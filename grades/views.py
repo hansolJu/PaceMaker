@@ -194,7 +194,11 @@ class GeGradeLV(LoginRequiredMixin,ListView):
 
     def get_fake_grade_sum(self):
         s = self.request.user.hukbun
-        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(Q(eisu='M자') | Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') | Q(eisu='사회') | Q(eisu='과기') | Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') | Q(eisu='문예') | Q(eisu='언문')).values_list('score', flat=True)
+        fake_grade_sum = StudentGrade.objects.filter(hukbun=s).filter(
+            Q(eisu='M자')|Q(eisu='수리')| Q(eisu='필수') | Q(eisu='역철') | Q(eisu='경사') | Q(eisu='체기') |
+            Q(eisu='사회') | Q(eisu='과기') | Q(eisu='자협') | Q(eisu='미래') | Q(eisu='직필') | Q(eisu='문예') |
+            Q(eisu='언문')).filter(Q(grade='A+') | Q(grade='A') | Q(grade='B+')|
+            Q(grade='B') | Q(grade='C+') | Q(grade='C') | Q(grade='D+') | Q(grade='D') | Q(grade='F')).values_list('score', flat=True)
         sum = 0
         for i in fake_grade_sum:
             sum = sum + float(i)

@@ -7,6 +7,7 @@ from django.db.models import Q
 from grades.views import getIntScore
 import operator
 from .models import classCourse, necessaryCourse, promotedCourse
+from django.db.models import Count
 
 def get_score_sum(hukbun):
     s = hukbun
@@ -47,6 +48,7 @@ class majorLV(LoginRequiredMixin, ListView):
 
 class majorDV(LoginRequiredMixin, TemplateView):
     template_name = 'classes/majorDetail.html'
+
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
@@ -115,8 +117,81 @@ class majorDV(LoginRequiredMixin, TemplateView):
             context['books'] = temp
         except:
             context['books'] = None
+
+        subjectName = Course.objects.get(id=context['pk']).subjectName
+        context['cnt'] = self.get_gradelist(subjectName)
         return context
 
+
+    # 학번을 가진 학생의 이수한 학기 리스트를 가져옴
+    def get_semesterlist(self, hukbun):
+        semesterlist = []
+        temp = StudentGrade.objects.filter(hukbun=hukbun).filter(valid='유효').values_list('yearNsemester', flat=True).order_by('yearNsemester').distinct()
+        for i in range(0, temp.count()):
+            semesterlist.append(temp[i])
+        return semesterlist
+
+    # 인덱스를 넣으면 학년을 리턴함
+    def get_year(self, idx):
+        if (idx == 7) or (idx == 6):
+            return 4
+        elif (idx == 5) or (idx == 4):
+            return 3
+        elif (idx == 3) or (idx == 2):
+            return 2
+        elif (idx == 1) or (idx == 0):
+            return 1
+        else:
+            return 0
+
+    def check_year(self, yearNsemester, semesterlist):
+        idx = semesterlist.index(yearNsemester)
+
+        return idx
+    # 학번을 가진 학생의 이수한 학기 리스트를 가져옴
+    # 과목 코스의 pk를 가지고 과목 이름을 리턴
+    # 그 과목이름을 가진 그레이드 객체들을 리스트에 넣는다.
+    # 그 성적 리스트에서 학번들만 가져와서 그 학번들이 몇학년인지 알아내어 딕셔너리에 {성적객체, 학년} 으로 추가 한다.
+    # 딕셔너리를 학년별로 정렬한다.(오름차순)
+    # 딕셔너리에 있는 학년별로 성적 객체의 수를 카운트한다.
+    # 리스트 2개를 반환한다. [1학년, 2학년, ..,], [cnt1, cnt2, ...]
+    def get_gradelist(self, subjectName):
+        gradelist = []
+        cnt = [0,0,0,0]
+        dic = {}
+
+        temp = StudentGrade.objects.filter(subject=subjectName)
+        for i in range(0, temp.count()):
+            gradelist.append(temp[i]) # 같은 과목이름을 가진 StudentGrade객체들을 리스트에 넣는다.
+
+        print(gradelist)
+        for i in range(0, len(gradelist)):
+            semesterlist = self.get_semesterlist(gradelist[i].hukbun)
+            idx = self.check_year(gradelist[i].yearNsemester, semesterlist)
+            year = self.get_year(idx)
+            dic[gradelist[i]] = year
+
+        print("dic", end="")
+        print(dic)
+        dic = sorted(dic.items(), key=operator.itemgetter(1))
+        print(dic)
+
+        for object in dic:
+            if object[1] == 1:
+                cnt[0] = cnt[0] + 1
+            elif object[1] == 2:
+                cnt[1] = cnt[1] + 1
+            elif object[1] == 3:
+                cnt[2] = cnt[2] + 1
+            elif object[1] == 4:
+                cnt[3] = cnt[3] + 1
+            else:
+                continue
+
+        print("cnt",end="")
+        print(cnt)
+
+        return cnt
 
 class SpecialCourseRecommandView(LoginRequiredMixin, TemplateView):
     template_name = "classes/special_recommand.html"
@@ -251,6 +326,7 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
         # self.getRetakeCourses(student,dent) takenCoursesGrades)
         context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('-grade', 'yearNsemester', 'subject')
         context['retakeGradesCountList'] = self.topRetakeCourses()
+        context['retakeCourceTopTen'] = self.getTopTeReTakeCourse()
 
         return context
 
@@ -315,6 +391,28 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
 
         return resultGrades.difference(resultGrades.filter(valid='재수강무효')).difference(
             resultGrades.filter(subject__in=canceledList)).difference(self.disapprovalCourses(student))
+
+    def getTopTeReTakeCourse(self):
+        # Members.objects.order_by('disignation').values('designation').annotate(dcount=Count('designation'))
+        gradelist = StudentGrade.objects.filter(valid='재수강무효').order_by('subject').values('subject').annotate(cnt=Count('subject'))
+        temp = []
+        list_subject = []
+        grade = []
+        dic = {}
+
+        print(gradelist)
+        for i in range(0, gradelist.count()):
+            temp.append(gradelist[i])
+
+        print(temp)
+        for i in range(0, len(temp)):
+            valuelist = list(temp[i].values())
+            dic[valuelist[0]] = valuelist[1]
+        dic = sorted(dic.items(), key=operator.itemgetter(1), reverse=True)
+        print(dic)
+        dic = dic[:5]
+
+        return dic
 
 class preCourseRecommandView(LoginRequiredMixin, TemplateView):
     template_name = "classes/pre_recommand.html"
