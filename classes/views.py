@@ -41,7 +41,6 @@ class majorLV(LoginRequiredMixin, ListView):
     paginate_by = 20
 
     def get_queryset(self):
-        print(Course.objects.filter(year=datetime.today().year).order_by('grade', 'subjectName'))
         return Course.objects.filter(year=datetime.today().year).order_by('grade', 'subjectName')
 
 
@@ -153,7 +152,7 @@ class SpecialCourseRecommandView(LoginRequiredMixin, TemplateView):
                     courseInfoes.append(course.eisu)  # 이수
                     courseInfoes.append(course.score)  # 학점
                     specialCoursesDic[grade] = courseInfoes
-    
+
         # 이제 중복된 전공을 없애고 카운트하는게 필요
         grades = list(specialCoursesDic.keys())  # grade 객체 리스트
         gradesSubjectName = []
@@ -249,7 +248,7 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
         student = StudentInfo.objects.get(hukbun=self.request.user.hukbun)
         takenCoursesGrades = StudentGrade.objects.filter(hukbun=student.hukbun)
         # self.getRetakeCourses(student,dent) takenCoursesGrades)
-        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades).order_by('-grade', 'yearNsemester', 'subject')
+        context['retakeGrades'] = self.getRetakeCourses(student, takenCoursesGrades)
         context['retakeGradesCountList'] = self.topRetakeCourses()
 
         return context
@@ -305,57 +304,99 @@ class RetakeRecommandView(LoginRequiredMixin, TemplateView):
 
         resultGrades = StudentGrade.objects.filter(subject__in=retakeCoursesName,
                                                    hukbun=student.hukbun)  # 재수강 추천 과목 쿼리셋을 리턴
+        if resultGrades.count() == 0:
+            return None
         for resultGrade in resultGrades:
+            differenceList  = []
             try:
                 if getIntScore(resultGrade.grade) >= 2.5:
-                    resultGrades.difference(resultGrades.filter(subject=resultGrade.subject))
+                    differenceList.append(resultGrades.filter(subject=resultGrade.subject))
             except:
                 continue
         canceledList = resultGrades.filter(Q(valid='재수강무효') | Q(grade='P')).values_list('subject')
+        for differenceGrade in differenceList:
+            resultGrades.difference(differenceGrade)
+        try:
+            resultGrades =  resultGrades.difference(resultGrades.filter(valid='재수강무효')).difference(
+                resultGrades.filter(subject__in=canceledList)).difference(self.disapprovalCourses(student))
+        except:
+            return None
 
-        return resultGrades.difference(resultGrades.filter(valid='재수강무효')).difference(
-            resultGrades.filter(subject__in=canceledList)).difference(self.disapprovalCourses(student))
+        return resultGrades.order_by('-grade', 'yearNsemester', 'subject')
 
 class preCourseRecommandView(LoginRequiredMixin, TemplateView):
     template_name = "classes/pre_recommand.html"
-
+    scoreList = []
     def get_context_data(self, **kwargs):
         context = super(preCourseRecommandView, self).get_context_data(**kwargs)
         context['necessaryGrades'] = self.getNecessrayGrades()
         context['promotedGrades'] = self.getPromotedGrades()
+
         return context
 
     def getNecessrayGrades(self): #선수 과목
         student = self.request.user #현재 로그인된 학생
-        currentSemester = len((list(set(StudentGrade.objects.all().values_list('yearNsemester'))))) #학생이 현재까지 들은 학기
-        if(currentSemester%2 == 1): #홀수라면
-            nextGrade = (currentSemester+1)/2
-        else: #짝수일 경우
-            nextGrade = currentSemester/2 + 1
-        recommendedCoursesNameList = Course.objects.filter(grade=nextGrade).values_list('subjectName') #해당 학년에 해당하는 추천 course 이름 리스트를 가져옴
-        recommendedCoursesNameList = list(set(recommendedCoursesNameList)) #중복제거
-        necessrayCourses = necessaryCourse.objects.filter(childCourse__in=recommendedCoursesNameList)
-        necessaryCourseNameList = []
-        for necessaryCourse1 in necessrayCourses:
-            if necessaryCourse1.childCourse.subjectName in recommendedCoursesNameList:
-                necessaryCourseNameList.append(necessaryCourse1.childCourse.subjectName)
+        takenGrades = StudentGrade.objects.filter(hukbun=student.hukbun).values_list('subject', flat=True).distinct()
+        allCourseList = Course.objects.filter(year__in=[datetime.today().year-1, datetime.today().year], semester__in=[10, 20]).values_list('subjectName', flat=True).distinct()
+        notTakenGrades = list(set(allCourseList) - set(takenGrades))
+        necessaryCourses = necessaryCourse.objects.filter(parentCourse__subjectName__in = notTakenGrades) #내가 듣지 않은 전공들의 선수과목 쿼리셋
 
-        return StudentGrade.objects.filter(subject__in=necessaryCourseNameList).order_by('yearNsemester', 'subject')
+        childList = []
+        scoreList = []
+        returnList = []
+        studentList = []
+        for nCourse in necessaryCourses:
+            subjectName = nCourse.parentCourse.subjectName
+            if subjectName in studentList:
+                continue
+            studentList.append(subjectName)
+
+            childList = necessaryCourse.objects.filter(parentCourse__subjectName=subjectName).values_list('childCourse__subjectName', flat=True).distinct()
+            scoreList = StudentGrade.objects.filter(hukbun=student.hukbun, subject__in=childList).values_list('grade', flat=True).distinct()
+
+            returnList.append([subjectName, childList, scoreList])
+
+        return returnList
+
+        # currentSemester = len((list(set(StudentGrade.objects.all().values_list('yearNsemester'))))) #학생이 현재까지 들은 학기
+        # if(currentSemester%2 == 1): #홀수라면
+        #     nextGrade = (currentSemester+1)/2
+        # else: #짝수일 경우
+        #     nextGrade = currentSemester/2 + 1
+        # recommendedCoursesNameList = Course.objects.filter(grade=nextGrade).values_list('subjectName') #해당 학년에 해당하는 추천 course 이름 리스트를 가져옴
+        # recommendedCoursesNameList = list(set(recommendedCoursesNameList)) #중복제거
+        # necessrayCourses = necessaryCourse.objects.filter(childCourse__in=recommendedCoursesNameList)
+        # necessaryCourseNameList = []
+        # for necessaryCourse1 in necessrayCourses:
+        #     if necessaryCourse1.childCourse.subjectName in recommendedCoursesNameList:
+        #         necessaryCourseNameList.append(necessaryCourse1.childCourse.subjectName)
+
+        #return StudentGrade.objects.filter(subject__in=necessaryCourseNameList).order_by('yearNsemester', 'subject')
 
     def getPromotedGrades(self): #권장 과목
         student = self.request.user  # 현재 로그인된 학생
-        currentSemester = len((list(set(StudentGrade.objects.all().values_list('yearNsemester')))))  # 학생이 현재까지 들은 학기
-        if (currentSemester % 2 == 1):  # 홀수라면
-            nextGrade = (currentSemester + 1) / 2
-        else:  # 짝수일 경우
-            nextGrade = currentSemester / 2 + 1
-        recommendedCoursesNameList = Course.objects.filter(grade=nextGrade).values_list(
-            'subjectName')  # 해당 학년에 해당하는 추천 course 이름 리스트를 가져옴
-        recommendedCoursesNameList = list(set(recommendedCoursesNameList))  # 중복제거
-        promotedCourses = promotedCourse.objects.filter(childCourse__in=recommendedCoursesNameList)
-        promotedCourseNameList = []
-        for promotedCourse1 in promotedCourses:
-            if promotedCourse1.childCourse.subjectName in recommendedCoursesNameList:
-                promotedCourseNameList.append(promotedCourse1.childCourse.subjectName)
+        takenGrades = StudentGrade.objects.filter(hukbun=student.hukbun).values_list('subject', flat=True).distinct()
+        allCourseList = Course.objects.filter(year__in=[datetime.today().year - 1, datetime.today().year],
+                                              semester__in=[10, 20]).values_list('subjectName', flat=True).distinct()
+        notTakenGrades = list(set(allCourseList) - set(takenGrades))
+        promotedCourses = promotedCourse.objects.filter(
+            parentCourse__subjectName__in=notTakenGrades)  # 내가 듣지 않은 전공들의 선수과목 쿼리셋
 
-        return StudentGrade.objects.filter(subject__in=promotedCourseNameList).order_by('yearNsemester', 'subject')
+        childList = []
+        scoreList = []
+        returnList = []
+        studentList = []
+        for pCourse in promotedCourses:
+            subjectName = pCourse.parentCourse.subjectName
+            if subjectName in studentList:
+                continue
+            studentList.append(subjectName)
+
+            childList = promotedCourse.objects.filter(parentCourse__subjectName=subjectName).values_list(
+                'childCourse__subjectName', flat=True).distinct()
+            scoreList = StudentGrade.objects.filter(hukbun=student.hukbun, subject__in=childList).values_list('grade',
+                                                                                                              flat=True).distinct()
+
+            returnList.append([subjectName, childList, scoreList])
+
+        return returnList

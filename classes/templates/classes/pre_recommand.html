@@ -2,6 +2,7 @@
 {% block title %}수강신청추천{% endblock %}
 
 {% load staticfiles %}
+{% load custom %}
 {% block extrastyle %}
 
 
@@ -21,22 +22,15 @@
                                 <li><h4>선수 과목 추천</h4></li>
                                 <table class="table table-bordered table-hover table-striped">
                                     <tr>
-                                        <th>년도 및 학기</th>
                                         <th>과목명</th>
-                                        <th>이수구분</th>
-                                        <th>인증구분</th>
-                                        <th>학점</th>
-                                        <th>설계학점</th>
-                                        <th>유효구분</th>
+                                        <th>선수과목명</th>
+                                        <th>선수과목 점수</th>
                                     </tr>
-                                    {% for grade in necessrayGrades %}
-                                        <td>{{ grade.yearNsemester }}</td>
-                                        <td><a href="#">{{ grade.subject }}</a></td>
-                                        <td>{{ grade.eisu }}</td>
-                                        <td>{{ grade.certification }}</td>
-                                        <td>{{ grade.score }}</td>
-                                        <td>{{ grade.grade_design }}</td>
-                                        <td>{{ grade.valid }}</td>
+                                    {% for necessaryGrade in necessaryGrades %}
+                                        <tr>
+                                            <td>{{ necessaryGrade.0 }}</td>
+                                            <td>{{ necessaryGrade.1.0 }}</td>
+                                            <td>{{ necessaryGrade.2.0 }}</td>
                                         <tr />
                                     {% endfor %}
                                 </table>
@@ -45,22 +39,15 @@
                                 <li><h4>권장 과목 추천</h4></li>
                                 <table class="table table-bordered table-hover table-striped">
                                     <tr>
-                                        <th>년도 및 학기</th>
                                         <th>과목명</th>
-                                        <th>이수구분</th>
-                                        <th>인증구분</th>
-                                        <th>학점</th>
-                                        <th>설계학점</th>
-                                        <th>유효구분</th>
+                                        <th>권장과목명</th>
+                                        <th>권장과목 점수</th>
                                     </tr>
-                                    {% for grade in necessrayGrades %}
-                                        <td>{{ grade.yearNsemester }}</td>
-                                        <td><a href="#">{{ grade.subject }}</a></td>
-                                        <td>{{ grade.eisu }}</td>
-                                        <td>{{ grade.certification }}</td>
-                                        <td>{{ grade.score }}</td>
-                                        <td>{{ grade.grade_design }}</td>
-                                        <td>{{ grade.valid }}</td>
+                                    {% for promotedGrade in promotedGrades %}
+                                        <tr>
+                                            <td>{{ promotedGrade.0 }}</td>
+                                            <td>{{ promotedGrade.1.0 }}</td>
+                                            <td>{{ promotedGrade.2.0 }}</td>
                                         <tr />
                                     {% endfor %}
                                 </table>
