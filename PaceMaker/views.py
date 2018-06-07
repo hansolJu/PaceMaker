@@ -375,8 +375,8 @@ class UserView(TemplateView):
 
         if percent <= 0:
             return 0
-
-        return percent
+        else:
+            return percent
 
     def user_info(self):
         s = self.request.user.hukbun
